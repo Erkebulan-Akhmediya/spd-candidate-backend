@@ -2,6 +2,7 @@ package kz.afm.candidate.user;
 
 import jakarta.persistence.*;
 import kz.afm.candidate.candidate.CandidateEntity;
+import kz.afm.candidate.employee.EmployeeEntity;
 import kz.afm.candidate.role.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,6 +44,9 @@ public class UserEntity implements UserDetails {
 
     @OneToOne(mappedBy = "user")
     private CandidateEntity candidate;
+
+    @OneToOne(mappedBy = "user")
+    private EmployeeEntity employee;
 
     @Override
     public String getUsername() {
