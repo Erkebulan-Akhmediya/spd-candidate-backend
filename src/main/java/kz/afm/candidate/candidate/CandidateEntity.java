@@ -1,0 +1,82 @@
+package kz.afm.candidate.candidate;
+
+import jakarta.persistence.*;
+import kz.afm.candidate.experience.ExperienceEntity;
+import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
+import kz.afm.candidate.reference.language.LanguageEntity;
+import kz.afm.candidate.reference.nationality.NationalityEntity;
+import kz.afm.candidate.reference.recruited_method.RecruitedMethodEntity;
+import kz.afm.candidate.user.UserEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Date;
+import java.util.Set;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "candidate")
+public class CandidateEntity {
+
+    @Id
+    private String identificationNumber;
+
+    private String lastName;
+
+    @Column(nullable = false)
+    private String firstName;
+
+    private String middleName;
+
+    @Column(nullable = false)
+    private Date birthDate;
+
+    private String birthPlace;
+
+    private String phoneNumber;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "nationality_code", referencedColumnName = "code")
+    private NationalityEntity nationality;
+
+    private String education;
+
+    @ManyToMany
+    @JoinTable(
+            name = "candidate_language_rel",
+            joinColumns = @JoinColumn(name = "candidate_identification_number"),
+            inverseJoinColumns = @JoinColumn(name = "language_code")
+    )
+    private Set<LanguageEntity> languages;
+
+    @ManyToMany
+    @JoinTable(
+            name = "candidate_driver_license_rel",
+            joinColumns = @JoinColumn(name = "candidate_identification_number"),
+            inverseJoinColumns = @JoinColumn(name = "driver_license_code")
+    )
+    private Set<DriverLicenseEntity> driverLicenses;
+
+    private String sport;
+
+    private String additionalData;
+
+    @ManyToOne
+    @JoinColumn(name = "recruited_method_id", nullable = false)
+    private RecruitedMethodEntity recruitedMethod;
+
+    private String securityCheckResult;
+
+    @OneToMany(mappedBy = "candidate")
+    private Set<ExperienceEntity> experiences;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity user;
+
+}

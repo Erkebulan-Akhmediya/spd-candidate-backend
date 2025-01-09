@@ -1,9 +1,7 @@
-package kz.afm.candidate.nationality;
+package kz.afm.candidate.reference.nationality;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import kz.afm.candidate.candidate.CandidateEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,5 +23,8 @@ public class NationalityEntity {
 
     @Column(name = "name_rus", nullable = false)
     private String nameRus;
+
+    @OneToOne(mappedBy = "nationality")
+    private CandidateEntity candidate;
 
 }

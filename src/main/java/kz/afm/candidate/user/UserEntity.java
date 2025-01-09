@@ -1,6 +1,7 @@
 package kz.afm.candidate.user;
 
 import jakarta.persistence.*;
+import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.role.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +40,9 @@ public class UserEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_code")
     )
     private Set<RoleEntity> roles;
+
+    @OneToOne(mappedBy = "user")
+    private CandidateEntity candidate;
 
     @Override
     public String getUsername() {
