@@ -1,10 +1,7 @@
 package kz.afm.candidate.role;
 
 import jakarta.persistence.*;
-import kz.afm.candidate.user.UserEntity;
 import lombok.*;
-
-import java.util.Set;
 
 @Getter
 @Setter
@@ -23,8 +20,5 @@ public class RoleEntity {
 
     @Column(name = "name_kaz", nullable = false)
     private String nameKaz;
-
-    @ManyToMany(mappedBy = "roles")
-    private Set<UserEntity> users;
 
 }

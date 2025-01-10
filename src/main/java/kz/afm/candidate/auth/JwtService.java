@@ -3,16 +3,16 @@ package kz.afm.candidate.auth;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import kz.afm.candidate.role.RoleEntity;
+import kz.afm.candidate.user.UserEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -32,8 +32,26 @@ public class JwtService {
                 .getPayload();
     }
 
-    public UserDetails extractUser(String token) {
-        return (UserDetails) this.extractAllClaims(token).get("user");
+    public UserEntity extractUser(String token) {
+        Claims user = extractAllClaims(token);
+        List<Map<String, Object>> roles = extractAllClaims(token).get("roles", List.class);
+
+        Set<RoleEntity> roleSet = roles.stream()
+                .map(
+                        (Map<String, Object> role) -> RoleEntity.builder()
+                                .code(role.get("code").toString())
+                                .nameKaz(role.get("nameKaz").toString())
+                                .nameRus(role.get("nameRus").toString())
+                                .build()
+                )
+                .collect(Collectors.toSet());
+
+        return UserEntity.builder()
+                .id(Long.valueOf(user.get("id").toString()))
+                .username(user.get("username").toString())
+                .password(user.get("password").toString())
+                .roles(roleSet)
+                .build();
     }
 
     private String extractIssuer(String token) {

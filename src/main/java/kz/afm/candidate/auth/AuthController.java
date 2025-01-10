@@ -12,8 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-
 @RequiredArgsConstructor
 @RequestMapping("auth")
 @RestController
@@ -22,6 +20,7 @@ public class AuthController {
     private final AuthenticationManager authManager;
     private final UserService userService;
     private final JwtService jwtService;
+    private final AuthService authService;
 
     @PostMapping("login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
@@ -36,7 +35,7 @@ public class AuthController {
 
             final UserEntity user = this.userService.getByUsername(request.getUsername());
             final String token = this.jwtService.generateToken(
-                    new HashMap<>(){{ put("user", user); }},
+                    this.authService.userToExtraClaims(user),
                     user
             );
             return ResponseEntity.ok().body(new LoginResponse(null, token));
@@ -49,7 +48,7 @@ public class AuthController {
         } catch (Exception e) {
 
             System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().body(new LoginResponse(e.getMessage(), null));
+            return ResponseEntity.internalServerError().body(new LoginResponse("Ошибка на сервере", null));
 
         }
     }
