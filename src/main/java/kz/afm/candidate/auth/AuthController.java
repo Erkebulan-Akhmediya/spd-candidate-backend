@@ -26,24 +26,31 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         try {
+
             this.authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
                             request.getPassword()
                     )
             );
+
             final UserEntity user = this.userService.getByUsername(request.getUsername());
             final String token = this.jwtService.generateToken(
                     new HashMap<>(){{ put("user", user); }},
                     user
             );
             return ResponseEntity.ok().body(new LoginResponse(null, token));
+
         } catch (AuthenticationException e) {
+
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(new LoginResponse("Ошибка входа", null));
+
         } catch (Exception e) {
+
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().body(new LoginResponse(e.getMessage(), null));
+
         }
     }
 

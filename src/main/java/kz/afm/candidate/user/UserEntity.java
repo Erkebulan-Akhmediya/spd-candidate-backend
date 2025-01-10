@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.employee.EmployeeEntity;
 import kz.afm.candidate.role.RoleEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +17,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "`user`")
 public class UserEntity implements UserDetails {

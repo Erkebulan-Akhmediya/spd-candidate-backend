@@ -2,10 +2,7 @@ package kz.afm.candidate.role;
 
 import jakarta.persistence.*;
 import kz.afm.candidate.user.UserEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -13,6 +10,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "role")
 public class RoleEntity {
