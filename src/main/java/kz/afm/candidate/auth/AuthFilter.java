@@ -1,6 +1,5 @@
 package kz.afm.candidate.auth;
 
-import kz.afm.candidate.user.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +20,6 @@ import java.io.IOException;
 public class AuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserService userService;
 
     @Override
     protected void doFilterInternal(
@@ -37,11 +35,10 @@ public class AuthFilter extends OncePerRequestFilter {
         }
 
         final String token = authHeader.substring(7);
-        final String username = this.jwtService.extractUsername(token);
+        final UserDetails userDetails = this.jwtService.extractUser(token);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userService.getByUsername(username);
-            if (this.jwtService.isValid(token, userDetails)) {
+        if (userDetails != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (this.jwtService.isValid(token)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

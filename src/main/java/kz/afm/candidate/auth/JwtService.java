@@ -8,8 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 
 @Service
@@ -18,9 +20,8 @@ public class JwtService {
     @Value("${ACCESS_KEY}")
     private String accessKey;
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
+    @Value("${ISSUERS}")
+    private String issuers;
 
     private Claims extractAllClaims(String token) {
         return Jwts
@@ -29,6 +30,14 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    public UserDetails extractUser(String token) {
+        return (UserDetails) this.extractAllClaims(token).get("user");
+    }
+
+    private String extractIssuer(String token) {
+        return this.extractClaim(token, Claims::getIssuer);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -41,19 +50,26 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    private String getRandomIssuer() {
+        String[] issuers = this.issuers.split(" ");
+        Random random = new Random();
+        final int i = random.nextInt(issuers.length);
+        return issuers[i];
+    }
+
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
                 .builder()
                 .claims(extraClaims)
+                .issuer(this.getRandomIssuer())
                 .subject(userDetails.getUsername())
                 .signWith(this.getSecretKey())
                 .compact();
     }
 
-    public boolean isValid(String token, UserDetails userDetails) {
-        // TODO: reconsider the logic
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername());
+    public boolean isValid(String token) {
+        final String issuer = this.extractIssuer(token);
+        return Arrays.asList(this.issuers.split(" ")).contains(issuer);
     }
 
 }
