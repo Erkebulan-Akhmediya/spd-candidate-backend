@@ -28,7 +28,8 @@ public class ReferenceController {
                                     region.getNameRus(),
                                     region.getNameKaz()
                             )
-                    ).toList();
+                    )
+                    .toList();
             return ResponseEntity.ok(regions);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
