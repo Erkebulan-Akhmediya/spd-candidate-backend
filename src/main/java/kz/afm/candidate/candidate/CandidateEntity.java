@@ -1,6 +1,7 @@
 package kz.afm.candidate.candidate;
 
 import jakarta.persistence.*;
+import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.experience.ExperienceEntity;
 import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
 import kz.afm.candidate.reference.language.LanguageEntity;
@@ -78,5 +79,9 @@ public class CandidateEntity {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
+
+    @OneToOne
+    @JoinColumn(name = "status_id", referencedColumnName = "id")
+    private CandidateStatusEntity status;
 
 }
