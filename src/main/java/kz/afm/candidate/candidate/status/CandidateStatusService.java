@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -18,6 +19,12 @@ public class CandidateStatusService {
 
     public List<CandidateStatusEntity> getAll() {
         return this.candidateStatusRepository.findAll();
+    }
+
+    public CandidateStatusEntity getById(final int id) throws NoSuchElementException {
+        return this.candidateStatusRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Статус с ID: " + id + " не найден")
+        );
     }
 
 }

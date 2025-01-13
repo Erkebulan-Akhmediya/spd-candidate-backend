@@ -40,11 +40,11 @@ public class UserEntity implements UserDetails {
     )
     private Set<RoleEntity> roles;
 
-    @OneToOne(mappedBy = "user")
-    private CandidateEntity candidate;
-
-    @OneToOne(mappedBy = "user")
-    private EmployeeEntity employee;
+    public UserEntity(String username, String password, Set<RoleEntity> roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
 
     @Override
     public String getUsername() {

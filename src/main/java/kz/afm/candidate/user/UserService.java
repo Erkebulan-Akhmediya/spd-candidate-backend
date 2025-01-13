@@ -1,9 +1,12 @@
 package kz.afm.candidate.user;
 
+import kz.afm.candidate.role.RoleEntity;
+import kz.afm.candidate.role.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -11,6 +14,7 @@ import java.util.NoSuchElementException;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
     public UserEntity getByUsername(String username) {
         return this.userRepository.findByUsername(username).orElseThrow(
@@ -20,6 +24,16 @@ public class UserService {
 
     public UserDetailsService getUserDetailsService() {
         return this::getByUsername;
+    }
+
+    public UserEntity createForCandidate(String username, String password) throws NoSuchElementException {
+        final RoleEntity role = this.roleService.getByCode("candidate");
+        final UserEntity user = new UserEntity(
+                username,
+                password,
+                new HashSet<>(){{ add(role); }}
+        );
+        return this.userRepository.save(user);
     }
 
 }

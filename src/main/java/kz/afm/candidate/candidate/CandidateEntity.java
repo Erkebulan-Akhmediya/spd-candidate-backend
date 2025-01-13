@@ -8,10 +8,7 @@ import kz.afm.candidate.reference.language.LanguageEntity;
 import kz.afm.candidate.reference.nationality.NationalityEntity;
 import kz.afm.candidate.reference.recruited_method.RecruitedMethodEntity;
 import kz.afm.candidate.user.UserEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.Set;
@@ -20,6 +17,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "candidate")
 public class CandidateEntity {
@@ -73,9 +71,6 @@ public class CandidateEntity {
 
     private String securityCheckResult;
 
-    @OneToMany(mappedBy = "candidate")
-    private Set<ExperienceEntity> experiences;
-
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
@@ -83,5 +78,8 @@ public class CandidateEntity {
     @OneToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private CandidateStatusEntity status;
+
+    @Builder.Default
+    private Date createDate = new Date();
 
 }

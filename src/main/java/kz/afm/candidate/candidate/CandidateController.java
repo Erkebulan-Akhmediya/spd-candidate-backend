@@ -1,15 +1,17 @@
 package kz.afm.candidate.candidate;
 
+import jakarta.transaction.Transactional;
 import kz.afm.candidate.candidate.dto.CandidateStatusResponse;
+import kz.afm.candidate.candidate.dto.CreateCandidateRequest;
+import kz.afm.candidate.candidate.dto.CreateCandidateResponse;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @RequestMapping("candidate")
@@ -17,6 +19,7 @@ import java.util.List;
 public class CandidateController {
 
     private final CandidateStatusService candidateStatusService;
+    private final CandidateService candidateService;
 
     @GetMapping("status/all")
     public ResponseEntity<List<CandidateStatusResponse>> getAllCandidateStatus() {
@@ -34,6 +37,18 @@ public class CandidateController {
             return ResponseEntity.ok(statuses);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<CreateCandidateResponse> create(@RequestBody CreateCandidateRequest candidate) {
+        try {
+            this.candidateService.create(candidate);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().body(new CreateCandidateResponse(e.toString()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(new CreateCandidateResponse("Ошибка на сервере"));
         }
     }
 

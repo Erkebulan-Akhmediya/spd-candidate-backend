@@ -2,10 +2,7 @@ package kz.afm.candidate.experience;
 
 import jakarta.persistence.*;
 import kz.afm.candidate.candidate.CandidateEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -13,6 +10,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "experience")
 public class ExperienceEntity {
