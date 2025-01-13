@@ -1,6 +1,5 @@
 package kz.afm.candidate.candidate;
 
-import jakarta.transaction.Transactional;
 import kz.afm.candidate.candidate.dto.CandidateStatusResponse;
 import kz.afm.candidate.candidate.dto.CreateCandidateRequest;
 import kz.afm.candidate.candidate.dto.CreateCandidateResponse;

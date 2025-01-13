@@ -2,7 +2,6 @@ package kz.afm.candidate.candidate;
 
 import jakarta.persistence.*;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
-import kz.afm.candidate.experience.ExperienceEntity;
 import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
 import kz.afm.candidate.reference.language.LanguageEntity;
 import kz.afm.candidate.reference.nationality.NationalityEntity;

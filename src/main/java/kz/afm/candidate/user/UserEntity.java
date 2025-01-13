@@ -1,8 +1,6 @@
 package kz.afm.candidate.user;
 
 import jakarta.persistence.*;
-import kz.afm.candidate.candidate.CandidateEntity;
-import kz.afm.candidate.employee.EmployeeEntity;
 import kz.afm.candidate.role.RoleEntity;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
