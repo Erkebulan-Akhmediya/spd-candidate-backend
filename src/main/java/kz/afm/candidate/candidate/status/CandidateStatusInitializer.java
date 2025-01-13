@@ -16,8 +16,8 @@ public class CandidateStatusInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         this.candidateStatusService.createIfNotExists(1, "Новый кандидат", "Жаңа үміткер");
         this.candidateStatusService.createIfNotExists(2, "На проверке ВБ", "ЖҚ тексерісінде");
-        this.candidateStatusService.createIfNotExists(3, "На согласовании", "Келісімде");
-        this.candidateStatusService.createIfNotExists(4, "Согласован", "Келісілді");
+        this.candidateStatusService.createIfNotExists(3, "На согласовании", "Бекітуде");
+        this.candidateStatusService.createIfNotExists(4, "Согласован", "Бекітілді");
         this.candidateStatusService.createIfNotExists(5, "Отказан", "Бас тартылды");
     }
 
