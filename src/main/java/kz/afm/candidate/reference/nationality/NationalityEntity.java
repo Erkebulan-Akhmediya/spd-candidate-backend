@@ -1,7 +1,6 @@
 package kz.afm.candidate.reference.nationality;
 
 import jakarta.persistence.*;
-import kz.afm.candidate.candidate.CandidateEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
