@@ -1,7 +1,5 @@
-package kz.afm.candidate.reference;
+package kz.afm.candidate.reference.region;
 
-import kz.afm.candidate.reference.region.RegionEntity;
-import kz.afm.candidate.reference.region.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +7,11 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class ReferenceService {
+public class RegionService {
 
     private final RegionRepository regionRepository;
 
-    public List<RegionEntity> getAllRegions() {
+    public List<RegionEntity> getAll() {
         return this.regionRepository.findAll();
     }
 

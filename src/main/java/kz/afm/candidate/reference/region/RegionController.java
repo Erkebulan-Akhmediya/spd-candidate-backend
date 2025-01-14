@@ -1,7 +1,6 @@
-package kz.afm.candidate.reference;
+package kz.afm.candidate.reference.region;
 
 import kz.afm.candidate.reference.dto.RegionResponse;
-import kz.afm.candidate.reference.region.RegionEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,16 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("reference")
+@RequestMapping("region")
 @RestController
-public class ReferenceController {
+public class RegionController {
 
-    private final ReferenceService referenceService;
+    private final RegionService regionService;
 
-    @GetMapping("region/all")
-    public ResponseEntity<List<RegionResponse>> getAllRegions() {
+    @GetMapping("all")
+    public ResponseEntity<List<RegionResponse>> getAll() {
         try {
-            final List<RegionResponse> regions = this.referenceService.getAllRegions()
+            final List<RegionResponse> regions = this.regionService.getAll()
                     .stream()
                     .map(
                             (RegionEntity region) -> new RegionResponse(
