@@ -1,4 +1,4 @@
-package kz.afm.candidate.reference.dto;
+package kz.afm.candidate.reference.region.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

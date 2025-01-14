@@ -1,6 +1,6 @@
 package kz.afm.candidate.reference.region;
 
-import kz.afm.candidate.reference.dto.RegionResponse;
+import kz.afm.candidate.reference.region.dto.RegionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

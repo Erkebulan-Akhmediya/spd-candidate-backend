@@ -24,7 +24,4 @@ public class NationalityEntity {
     @Column(name = "name_rus", nullable = false)
     private String nameRus;
 
-    @OneToOne(mappedBy = "nationality")
-    private CandidateEntity candidate;
-
 }
