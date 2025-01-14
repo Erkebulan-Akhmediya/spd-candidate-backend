@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -21,6 +22,14 @@ public class DriverLicenseService {
         final Set<DriverLicenseEntity> driverLicenses = new HashSet<>(
                 this.driverLicenseRepository.findAllById(codes)
         );
+        if (!notEmpty) return driverLicenses;
+
+        if (driverLicenses.isEmpty()) throw new NoSuchElementException("Водительские права не найдены");
+        return driverLicenses;
+    }
+
+    public List<DriverLicenseEntity> getAll(boolean notEmpty) throws NoSuchElementException {
+        final List<DriverLicenseEntity> driverLicenses = this.driverLicenseRepository.findAll();
         if (!notEmpty) return driverLicenses;
 
         if (driverLicenses.isEmpty()) throw new NoSuchElementException("Водительские права не найдены");
