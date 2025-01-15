@@ -19,6 +19,7 @@ public class DriverLicenseService {
     }
 
     public Set<DriverLicenseEntity> getAllSetByCodes(Set<String> codes, boolean notEmpty) throws NoSuchElementException {
+        if (codes.isEmpty()) return new HashSet<>();
         final Set<DriverLicenseEntity> driverLicenses = new HashSet<>(
                 this.driverLicenseRepository.findAllById(codes)
         );

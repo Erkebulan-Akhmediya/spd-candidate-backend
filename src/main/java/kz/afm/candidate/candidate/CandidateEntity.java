@@ -68,6 +68,8 @@ public class CandidateEntity {
     @JoinColumn(name = "recruited_method_id", nullable = false)
     private RecruitedMethodEntity recruitedMethod;
 
+    private String recruitedMethodComment;
+
     private String securityCheckResult;
 
     @OneToOne

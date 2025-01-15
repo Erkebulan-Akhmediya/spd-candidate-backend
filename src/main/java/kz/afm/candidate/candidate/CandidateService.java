@@ -60,6 +60,7 @@ public class CandidateService {
                 .sport(candidateDto.getSport())
                 .additionalData(candidateDto.getAdditionalData())
                 .recruitedMethod(recruitedMethod)
+                .recruitedMethodComment(candidateDto.getRecruitedMethodComment())
                 .securityCheckResult(candidateDto.getSecurityCheckResult())
                 .user(user)
                 .status(status)

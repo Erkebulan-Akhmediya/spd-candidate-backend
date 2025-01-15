@@ -25,6 +25,7 @@ public class CreateCandidateRequest {
     private String sport;
     private String additionalData;
     private int recruitedMethodId;
+    private String recruitedMethodComment;
     private String securityCheckResult;
     private Set<ExperienceRequest> experiences;
     private String username;
