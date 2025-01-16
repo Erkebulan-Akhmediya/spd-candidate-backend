@@ -9,6 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 public class GetAllCandidateResponse {
     private String error;
-    private List<CandidateResponse> candidates;
+    private List<CandidateListItemResponse> candidates;
     private long count;
 }

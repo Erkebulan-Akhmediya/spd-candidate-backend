@@ -1,7 +1,7 @@
 package kz.afm.candidate.candidate;
 
 import jakarta.transaction.Transactional;
-import kz.afm.candidate.candidate.dto.CreateCandidateRequest;
+import kz.afm.candidate.candidate.dto.CandidateRequest;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusService;
 import kz.afm.candidate.experience.ExperienceService;
@@ -51,8 +51,14 @@ public class CandidateService {
         return candidateRepository.findByStatus_IdAndTestingRegion_Id(statusId, testingRegionId, pageRequest);
     }
 
+    public CandidateEntity getById(String id) throws NoSuchElementException {
+        return this.candidateRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Не найден кандидат с ID: " + id)
+        );
+    }
+
     @Transactional
-    public void create(CreateCandidateRequest candidateDto) throws NoSuchElementException {
+    public void create(CandidateRequest candidateDto) throws NoSuchElementException {
 
         final NationalityEntity nationality = this.nationalityService.getById(candidateDto.getNationalityCode());
         final Set<LanguageEntity> languages = this.languageService.getAllSetByCodes(candidateDto.getLanguageCodes(), true);
@@ -87,6 +93,40 @@ public class CandidateService {
         final CandidateEntity savedCandidate = this.candidateRepository.save(candidate);
 
         this.experienceService.createAll(savedCandidate, candidateDto.getExperiences());
+    }
+
+    @Transactional
+    public void sendToSecurityCheck(CandidateRequest candidateDto) throws NoSuchElementException {
+        final NationalityEntity nationality = this.nationalityService.getById(candidateDto.getNationalityCode());
+        final Set<LanguageEntity> languages = this.languageService.getAllSetByCodes(candidateDto.getLanguageCodes(), true);
+        final Set<DriverLicenseEntity> driverLicenses = this.driverLicenseService.getAllSetByCodes(candidateDto.getDriverLicenseCodes(), true);
+        final RecruitedMethodEntity recruitedMethod = this.recruitedMethodService.getById(candidateDto.getRecruitedMethodId());
+        final CandidateStatusEntity status = this.candidateStatusService.getById(2);
+        final RegionEntity testingRegion = this.regionService.getById(candidateDto.getTestingRegionId());
+
+        final CandidateEntity candidate = this.candidateRepository.findById(candidateDto.getIdentificationNumber())
+                .orElseThrow(() -> new NoSuchElementException("Кандидат не найден"));
+        candidate.setLastName(candidateDto.getLastName());
+        candidate.setFirstName(candidateDto.getFirstName());
+        candidate.setMiddleName(candidateDto.getMiddleName());
+        candidate.setBirthDate(candidateDto.getBirthDate());
+        candidate.setBirthPlace(candidateDto.getBirthPlace());
+        candidate.setTestingRegion(testingRegion);
+        candidate.setPhoneNumber(candidateDto.getPhoneNumber());
+        candidate.setNationality(nationality);
+        candidate.setEducation(candidateDto.getEducation());
+        candidate.setLanguages(languages);
+        candidate.setDriverLicenses(driverLicenses);
+        candidate.setSport(candidateDto.getSport());
+        candidate.setAdditionalData(candidateDto.getAdditionalData());
+        candidate.setRecruitedMethod(recruitedMethod);
+        candidate.setRecruitedMethodComment(candidateDto.getRecruitedMethodComment());
+        candidate.setSecurityCheckResult(candidateDto.getSecurityCheckResult());
+        this.userService.updateUsername(candidateDto.getUsername(), candidate.getUser());
+        candidate.setStatus(status);
+        this.candidateRepository.save(candidate);
+
+        this.experienceService.updateAll(candidate, candidateDto.getExperiences());
     }
 
 }

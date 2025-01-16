@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExperienceRequest {
+public class ExperienceDto {
     private Date startDate;
     private Date endDate;
     private String position;

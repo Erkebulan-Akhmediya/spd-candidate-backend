@@ -19,6 +19,7 @@ public class LanguageService {
     }
 
     public Set<LanguageEntity> getAllSetByCodes(Set<String> codes, boolean notEmpty) throws NoSuchElementException {
+        if (codes.isEmpty()) return new HashSet<>();
         final Set<LanguageEntity> languages = new HashSet<>(
                 this.languageRepository.findAllById(codes)
         );

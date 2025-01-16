@@ -24,6 +24,11 @@ public class UserService {
         );
     }
 
+    public void updateUsername(String username, UserEntity user) {
+        user.setUsername(username);
+        this.userRepository.save(user);
+    }
+
     public UserDetailsService getUserDetailsService() {
         return this::getByUsername;
     }

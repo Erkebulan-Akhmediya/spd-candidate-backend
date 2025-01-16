@@ -3,6 +3,10 @@ package kz.afm.candidate.candidate;
 import kz.afm.candidate.candidate.dto.*;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusService;
+import kz.afm.candidate.experience.ExperienceEntity;
+import kz.afm.candidate.experience.ExperienceService;
+import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
+import kz.afm.candidate.reference.language.LanguageEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +21,7 @@ public class CandidateController {
 
     private final CandidateStatusService candidateStatusService;
     private final CandidateService candidateService;
+    private final ExperienceService experienceService;
 
     @GetMapping("status/all")
     public ResponseEntity<List<CandidateStatusResponse>> getAllCandidateStatus() {
@@ -38,7 +43,7 @@ public class CandidateController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateCandidateResponse> create(@RequestBody CreateCandidateRequest candidate) {
+    public ResponseEntity<CreateCandidateResponse> create(@RequestBody CandidateRequest candidate) {
         try {
             this.candidateService.create(candidate);
             return ResponseEntity.ok(new CreateCandidateResponse(null));
@@ -57,11 +62,12 @@ public class CandidateController {
             @RequestParam int pageSize
     ) {
         try {
-            final List<CandidateResponse> candidates = this.candidateService
+            final List<CandidateListItemResponse> candidates = this.candidateService
                     .getAll(statusId, regionId, pageNumber, pageSize)
                     .stream()
                     .map(
-                            (CandidateEntity candidate) -> new CandidateResponse(
+                            (CandidateEntity candidate) -> new CandidateListItemResponse(
+                                    candidate.getIdentificationNumber(),
                                     candidate.getLastName(),
                                     candidate.getFirstName(),
                                     candidate.getMiddleName()
@@ -74,6 +80,76 @@ public class CandidateController {
             return ResponseEntity.internalServerError().body(
                     new GetAllCandidateResponse("Ошибка сервера", null, 0)
             );
+        }
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<CandidateResponse> getById(@PathVariable String id) {
+        try {
+            final CandidateEntity candidate = this.candidateService.getById(id);
+            final List<String> languageCodes = candidate.getLanguages()
+                    .stream()
+                    .map(LanguageEntity::getCode)
+                    .toList();
+            final List<String> driverLicenseCodes = candidate.getDriverLicenses()
+                    .stream()
+                    .map(DriverLicenseEntity::getCode)
+                    .toList();
+            final List<ExperienceDto> experiences = this.experienceService
+                    .getByCandidate(candidate.getIdentificationNumber())
+                    .stream()
+                    .map(
+                            (ExperienceEntity experience) -> new ExperienceDto(
+                                    experience.getStartDate(),
+                                    experience.getEndDate(),
+                                    experience.getPosition(),
+                                    experience.getCompanyName()
+                            )
+                    )
+                    .toList();
+            final CandidateResponse candidateResponse = CandidateResponse.builder()
+                    .lastName(candidate.getLastName())
+                    .firstName(candidate.getFirstName())
+                    .middleName(candidate.getMiddleName())
+                    .birthDate(candidate.getBirthDate())
+                    .birthPlace(candidate.getBirthPlace())
+                    .testingRegionId(candidate.getTestingRegion().getId())
+                    .identificationNumber(candidate.getIdentificationNumber())
+                    .phoneNumber(candidate.getPhoneNumber())
+                    .nationalityCode(candidate.getNationality().getCode())
+                    .languageCodes(languageCodes)
+                    .driverLicenseCodes(driverLicenseCodes)
+                    .education(candidate.getEducation())
+                    .sport(candidate.getSport())
+                    .recruitedMethodId(candidate.getRecruitedMethod().getId())
+                    .recruitedMethodComment(candidate.getRecruitedMethodComment())
+                    .experiences(experiences)
+                    .securityCheckResult(candidate.getSecurityCheckResult())
+                    .additionalData(candidate.getAdditionalData())
+                    .username(candidate.getUser().getUsername())
+                    .build();
+            return ResponseEntity.ok(candidateResponse);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.internalServerError().body(
+                    CandidateResponse.builder().error(e.getMessage()).build()
+            );
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(
+                    CandidateResponse.builder().error("Ошибка сервера").build()
+            );
+        }
+    }
+
+    @PutMapping("to/security")
+    public ResponseEntity<String> sendToSecurityCheck(@RequestBody CandidateRequest candidate) {
+        try {
+            this.candidateService.sendToSecurityCheck(candidate);
+            return ResponseEntity.ok("we're so back");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body("Ошибка на сервере");
         }
     }
 

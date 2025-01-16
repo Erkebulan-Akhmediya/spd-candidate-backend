@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CreateCandidateRequest {
+public class CandidateRequest {
 
     @NotNull(message = "ИИН обязателен")
     @NotEmpty(message = "ИИН не должен быть пуст")
@@ -72,7 +72,7 @@ public class CreateCandidateRequest {
     @NotEmpty(message = "результат проверки ВБ не должен быть пуст")
     private String securityCheckResult;
 
-    private Set<ExperienceRequest> experiences;
+    private Set<ExperienceDto> experiences;
 
     @NotNull(message = "имя пользователя обязательно")
     @NotEmpty(message = "имя пользователя не должно быть пустым")
