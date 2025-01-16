@@ -10,4 +10,6 @@ import java.util.List;
 public interface CandidateRepository extends JpaRepository<CandidateEntity, String> {
 
     List<CandidateEntity> findByStatus_IdAndTestingRegion_Id(int statusId, int testingRegionId, Pageable pageable);
+
+    List<CandidateEntity> findByStatus_Id(int statusId, Pageable pageable);
 }

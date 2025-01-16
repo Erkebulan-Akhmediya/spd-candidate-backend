@@ -81,7 +81,7 @@ public class CandidateEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private CandidateStatusEntity status;
 

@@ -47,6 +47,7 @@ public class CandidateService {
 
     public List<CandidateEntity> getAll(int statusId, int testingRegionId, int pageNumber, int pageSize) {
         final PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by("createDate").descending());
+        if (testingRegionId == -1) return this.candidateRepository.findByStatus_Id(statusId, pageRequest);
         return candidateRepository.findByStatus_IdAndTestingRegion_Id(statusId, testingRegionId, pageRequest);
     }
 
