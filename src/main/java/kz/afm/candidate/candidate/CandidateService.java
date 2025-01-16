@@ -18,8 +18,11 @@ import kz.afm.candidate.reference.region.RegionService;
 import kz.afm.candidate.user.UserEntity;
 import kz.afm.candidate.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -37,6 +40,15 @@ public class CandidateService {
     private final RegionService regionService;
 
     private final CandidateRepository candidateRepository;
+
+    public long countAll() {
+        return this.candidateRepository.count();
+    }
+
+    public List<CandidateEntity> getAll(int statusId, int testingRegionId, int pageNumber, int pageSize) {
+        final PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by("createDate").descending());
+        return candidateRepository.findByStatus_IdAndTestingRegion_Id(statusId, testingRegionId, pageRequest);
+    }
 
     @Transactional
     public void create(CreateCandidateRequest candidateDto) throws NoSuchElementException {
