@@ -12,4 +12,8 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Stri
     List<CandidateEntity> findByStatus_IdAndTestingRegion_Id(int statusId, int testingRegionId, Pageable pageable);
 
     List<CandidateEntity> findByStatus_Id(int statusId, Pageable pageable);
+
+    long countByStatus_Id(int statusId);
+
+    long countByStatus_IdAndTestingRegion_Id(int statusId, int testingRegionId);
 }

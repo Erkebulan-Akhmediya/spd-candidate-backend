@@ -41,8 +41,9 @@ public class CandidateService {
 
     private final CandidateRepository candidateRepository;
 
-    public long countAll() {
-        return this.candidateRepository.count();
+    public long countAll(int statusId, int testingRegionId) {
+        if (testingRegionId == -1) return this.candidateRepository.countByStatus_Id(statusId);
+        return this.candidateRepository.countByStatus_IdAndTestingRegion_Id(statusId, testingRegionId);
     }
 
     public List<CandidateEntity> getAll(int statusId, int testingRegionId, int pageNumber, int pageSize) {

@@ -74,7 +74,7 @@ public class CandidateController {
                             )
                     )
                     .toList();
-            final long count = this.candidateService.countAll();
+            final long count = this.candidateService.countAll(statusId, regionId);
             return ResponseEntity.ok(new GetAllCandidateResponse(null, candidates, count));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(
