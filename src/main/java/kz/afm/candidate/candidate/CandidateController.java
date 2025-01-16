@@ -140,10 +140,36 @@ public class CandidateController {
         }
     }
 
+    @PutMapping("reject/{iin}")
+    public ResponseEntity<String> reject(@PathVariable String iin) {
+        try {
+            this.candidateService.reject(iin);
+            return ResponseEntity.ok("we're so back");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body("Ошибка на сервере");
+        }
+    }
+
     @PutMapping("to/security")
     public ResponseEntity<String> sendToSecurityCheck(@RequestBody CandidateRequest candidate) {
         try {
             this.candidateService.sendToSecurityCheck(candidate);
+            return ResponseEntity.ok("we're so back");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body("Ошибка на сервере");
+        }
+    }
+
+    @PutMapping("to/approval")
+    public ResponseEntity<String> sendToApproval(@RequestBody CandidateRequest candidate) {
+        try {
+            this.candidateService.sendToApproval(candidate);
             return ResponseEntity.ok("we're so back");
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(e.getMessage());

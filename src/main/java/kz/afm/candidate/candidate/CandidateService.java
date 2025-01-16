@@ -95,6 +95,14 @@ public class CandidateService {
         this.experienceService.createAll(savedCandidate, candidateDto.getExperiences());
     }
 
+    public void reject(String iin) {
+        final CandidateEntity candidate = this.candidateRepository.findById(iin)
+                .orElseThrow(() -> new NoSuchElementException("Кандидат не найден"));
+        final CandidateStatusEntity status = this.candidateStatusService.getById(5);
+        candidate.setStatus(status);
+        this.candidateRepository.save(candidate);
+    }
+
     @Transactional
     public void sendToSecurityCheck(CandidateRequest candidateDto) throws NoSuchElementException {
         final NationalityEntity nationality = this.nationalityService.getById(candidateDto.getNationalityCode());
@@ -127,6 +135,15 @@ public class CandidateService {
         this.candidateRepository.save(candidate);
 
         this.experienceService.updateAll(candidate, candidateDto.getExperiences());
+    }
+
+    public void sendToApproval(CandidateRequest candidateDto) throws NoSuchElementException {
+        final CandidateStatusEntity status = this.candidateStatusService.getById(3);
+        final CandidateEntity candidate = this.candidateRepository.findById(candidateDto.getIdentificationNumber())
+                .orElseThrow(() -> new NoSuchElementException("Кандидат не найден"));
+        candidate.setSecurityCheckResult(candidateDto.getSecurityCheckResult());
+        candidate.setStatus(status);
+        this.candidateRepository.save(candidate);
     }
 
 }
