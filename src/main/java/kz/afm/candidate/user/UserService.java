@@ -4,6 +4,7 @@ import kz.afm.candidate.role.RoleEntity;
 import kz.afm.candidate.role.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import java.util.NoSuchElementException;
 @Service
 public class UserService {
 
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleService roleService;
 
@@ -30,7 +32,7 @@ public class UserService {
         final RoleEntity role = this.roleService.getByCode("candidate");
         final UserEntity user = new UserEntity(
                 username,
-                password,
+                this.passwordEncoder.encode(password),
                 new HashSet<>(){{ add(role); }}
         );
         return this.userRepository.save(user);
