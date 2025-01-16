@@ -36,6 +36,10 @@ public class CreateCandidateRequest {
     @NotEmpty(message = "место рождения не должно быть пусто")
     private String birthPlace;
 
+    @NotNull(message = "регион тестирования обязателен")
+    @NotEmpty(message = "регион тестирования не должен быть пуст")
+    private int testingRegionId;
+
     @NotNull(message = "номер телефона обязателен")
     @NotEmpty(message = "номер телефона не должен быть пуст")
     private String phoneNumber;

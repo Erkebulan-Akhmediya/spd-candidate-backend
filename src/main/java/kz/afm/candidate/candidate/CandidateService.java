@@ -13,6 +13,8 @@ import kz.afm.candidate.reference.nationality.NationalityEntity;
 import kz.afm.candidate.reference.nationality.NationalityService;
 import kz.afm.candidate.reference.recruited_method.RecruitedMethodEntity;
 import kz.afm.candidate.reference.recruited_method.RecruitedMethodService;
+import kz.afm.candidate.reference.region.RegionEntity;
+import kz.afm.candidate.reference.region.RegionService;
 import kz.afm.candidate.user.UserEntity;
 import kz.afm.candidate.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class CandidateService {
     private final ExperienceService experienceService;
     private final UserService userService;
     private final CandidateStatusService candidateStatusService;
+    private final RegionService regionService;
 
     private final CandidateRepository candidateRepository;
 
@@ -44,6 +47,7 @@ public class CandidateService {
         final RecruitedMethodEntity recruitedMethod = this.recruitedMethodService.getById(candidateDto.getRecruitedMethodId());
         final UserEntity user = this.userService.createForCandidate(candidateDto.getUsername(), candidateDto.getPassword());
         final CandidateStatusEntity status = this.candidateStatusService.getById(1);
+        final RegionEntity testingRegion = this.regionService.getById(candidateDto.getTestingRegionId());
 
         final CandidateEntity candidate = CandidateEntity.builder()
                 .identificationNumber(candidateDto.getIdentificationNumber())
@@ -52,6 +56,7 @@ public class CandidateService {
                 .middleName(candidateDto.getMiddleName())
                 .birthDate(candidateDto.getBirthDate())
                 .birthPlace(candidateDto.getBirthPlace())
+                .testingRegion(testingRegion)
                 .phoneNumber(candidateDto.getPhoneNumber())
                 .nationality(nationality)
                 .education(candidateDto.getEducation())

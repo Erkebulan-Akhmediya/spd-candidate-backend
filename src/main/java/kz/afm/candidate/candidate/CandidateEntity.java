@@ -6,6 +6,7 @@ import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
 import kz.afm.candidate.reference.language.LanguageEntity;
 import kz.afm.candidate.reference.nationality.NationalityEntity;
 import kz.afm.candidate.reference.recruited_method.RecruitedMethodEntity;
+import kz.afm.candidate.reference.region.RegionEntity;
 import kz.afm.candidate.user.UserEntity;
 import lombok.*;
 
@@ -35,6 +36,10 @@ public class CandidateEntity {
     private Date birthDate;
 
     private String birthPlace;
+
+    @ManyToOne
+    @JoinColumn(name = "testing_region_id", nullable = false)
+    private RegionEntity testingRegion;
 
     private String phoneNumber;
 
