@@ -38,19 +38,21 @@ public class CandidateController {
                     .toList();
             return ResponseEntity.ok(statuses);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<CreateCandidateResponse> create(@RequestBody CandidateRequest candidate) {
+    public ResponseEntity<String> create(@RequestBody CandidateRequest candidate) {
         try {
             this.candidateService.create(candidate);
-            return ResponseEntity.ok(new CreateCandidateResponse(null));
+            return ResponseEntity.ok(null);
         } catch (NoSuchElementException e) {
-            return ResponseEntity.badRequest().body(new CreateCandidateResponse(e.toString()));
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new CreateCandidateResponse("Ошибка на сервере"));
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body("Ошибка на сервере");
         }
     }
 
