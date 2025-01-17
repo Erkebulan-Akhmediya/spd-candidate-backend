@@ -43,7 +43,7 @@ public class CandidateEntity {
 
     private String phoneNumber;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "nationality_code", referencedColumnName = "code")
     private NationalityEntity nationality;
 
