@@ -181,4 +181,17 @@ public class CandidateController {
         }
     }
 
+    @PutMapping("approve/{iin}")
+    public ResponseEntity<String> approve(@PathVariable String iin, @RequestParam String areaOfActivity) {
+        try {
+            this.candidateService.approve(iin, areaOfActivity);
+            return ResponseEntity.ok("we're so back");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().body("Ошибка на сервере");
+        }
+    }
+
 }

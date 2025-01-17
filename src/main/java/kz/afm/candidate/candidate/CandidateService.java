@@ -147,4 +147,13 @@ public class CandidateService {
         this.candidateRepository.save(candidate);
     }
 
+    public void approve(String iin, String areaOfActivity) throws NoSuchElementException {
+        final CandidateStatusEntity status = this.candidateStatusService.getById(4);
+        final CandidateEntity candidate = this.candidateRepository.findById(iin)
+                .orElseThrow(() -> new NoSuchElementException("Кандидат не найден"));
+        candidate.setStatus(status);
+        candidate.setAreaOfActivity(areaOfActivity);
+        this.candidateRepository.save(candidate);
+    }
+
 }

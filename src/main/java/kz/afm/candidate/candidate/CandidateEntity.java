@@ -88,4 +88,6 @@ public class CandidateEntity {
     @Builder.Default
     private Date createDate = new Date();
 
+    private String areaOfActivity;
+
 }
