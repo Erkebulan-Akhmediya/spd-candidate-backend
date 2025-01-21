@@ -19,18 +19,16 @@ public class OptionService {
         List<OptionEntity> options = new LinkedList<>();
         if (dtos == null || dtos.isEmpty()) return;
 
-        dtos.forEach((CreateOptionRequest dto) -> {
-            options.add(
-                    new OptionEntity(
-                            dto.isWithFile(),
-                            UUID.randomUUID(),
-                            dto.getNameRus(),
-                            dto.getNameKaz(),
-                            dto.getIsCorrect(),
-                            question
-                    )
-            );
-        });
+        dtos.forEach((CreateOptionRequest dto) -> options.add(
+                new OptionEntity(
+                        dto.isWithFile(),
+                        UUID.randomUUID(),
+                        dto.getNameRus(),
+                        dto.getNameKaz(),
+                        dto.getIsCorrect(),
+                        question
+                )
+        ));
         this.optionRepository.saveAll(options);
     }
 

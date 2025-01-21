@@ -1,4 +1,4 @@
-package kz.afm.candidate.experience;
+package kz.afm.candidate.candidate.experience;
 
 import jakarta.persistence.*;
 import kz.afm.candidate.candidate.CandidateEntity;

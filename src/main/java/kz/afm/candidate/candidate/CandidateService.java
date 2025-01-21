@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import kz.afm.candidate.candidate.dto.CandidateRequest;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusService;
-import kz.afm.candidate.experience.ExperienceService;
+import kz.afm.candidate.candidate.experience.ExperienceService;
 import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
 import kz.afm.candidate.reference.driver_license.DriverLicenseService;
 import kz.afm.candidate.reference.language.LanguageEntity;

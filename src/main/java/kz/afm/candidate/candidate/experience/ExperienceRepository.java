@@ -1,4 +1,4 @@
-package kz.afm.candidate.experience;
+package kz.afm.candidate.candidate.experience;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

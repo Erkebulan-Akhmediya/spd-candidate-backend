@@ -1,4 +1,4 @@
-package kz.afm.candidate.experience;
+package kz.afm.candidate.candidate.experience;
 
 import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.dto.ExperienceDto;
