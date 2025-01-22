@@ -2,10 +2,13 @@ package kz.afm.candidate.test;
 
 import jakarta.persistence.*;
 
+import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,11 +33,20 @@ public class TestEntity {
 
     private int duration;
 
-    public TestEntity(String nameRus, String nameKaz, boolean isLimitless, int duration) {
+    @ManyToMany
+    @JoinTable(
+            name = "test_area_of_activity_rel",
+            joinColumns = @JoinColumn(name = "test_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "area_of_activity_name", nullable = false)
+    )
+    Set<AreaOfActivityEntity> areaOfActivities;
+
+    public TestEntity(String nameRus, String nameKaz, boolean isLimitless, int duration, Set<AreaOfActivityEntity> areaOfActivities) {
         this.nameRus = nameRus;
         this.nameKaz = nameKaz;
         this.isLimitless = isLimitless;
         this.duration = duration;
+        this.areaOfActivities = areaOfActivities;
     }
 
 }

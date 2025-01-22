@@ -17,4 +17,5 @@ public class CreateTestRequest {
     private String isLimitless;
     private int duration;
     private List<CreateVariantRequest> variants;
+    private List<String> areasOfActivities;
 }
