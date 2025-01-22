@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import kz.afm.candidate.test.question.QuestionEntity;
 import lombok.*;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,7 +19,7 @@ public class OptionEntity {
     @Column(nullable = false)
     private boolean withFile;
 
-    private UUID fileId;
+    private String fileName;
 
     @Column(nullable = false)
     private String nameRus;
@@ -37,14 +35,14 @@ public class OptionEntity {
 
     public OptionEntity(
             boolean withFile,
-            UUID fileId,
+            String fileName,
             String nameRus,
             String nameKaz,
             Boolean isCorrect,
             QuestionEntity question
     ) {
         this.withFile = withFile;
-        this.fileId = fileId;
+        this.fileName = fileName;
         this.nameRus = nameRus;
         this.nameKaz = nameKaz;
         this.isCorrect = isCorrect;

@@ -5,8 +5,6 @@ import kz.afm.candidate.test.question.type.QuestionTypeEntity;
 import kz.afm.candidate.test.variant.VariantEntity;
 import lombok.*;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,7 +20,7 @@ public class QuestionEntity {
     @Column(nullable = false)
     private boolean withFile;
 
-    private UUID fileId;
+    private String fileName;
 
     @Column(nullable = false)
     private String nameRus;
@@ -40,14 +38,14 @@ public class QuestionEntity {
 
     public QuestionEntity(
             boolean withFile,
-            UUID fileId,
+            String fileName,
             String nameRus,
             String nameKaz,
             QuestionTypeEntity type,
             VariantEntity variant
     ) {
         this.withFile = withFile;
-        this.fileId = fileId;
+        this.fileName = fileName;
         this.nameRus = nameRus;
         this.nameKaz = nameKaz;
         this.type = type;
