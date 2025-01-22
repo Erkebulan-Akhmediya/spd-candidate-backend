@@ -6,6 +6,7 @@ import kz.afm.candidate.test.variant.VariantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -26,6 +27,10 @@ public class TestService {
                 )
         );
         this.variantService.create(test, dto.getVariants());
+    }
+
+    public List<TestEntity> getAll() {
+        return this.testRepository.findAll();
     }
 
 }

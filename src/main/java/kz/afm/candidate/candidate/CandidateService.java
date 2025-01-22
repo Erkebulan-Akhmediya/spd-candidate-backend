@@ -1,6 +1,7 @@
 package kz.afm.candidate.candidate;
 
 import jakarta.transaction.Transactional;
+import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
 import kz.afm.candidate.candidate.dto.CandidateRequest;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusService;
@@ -38,6 +39,7 @@ public class CandidateService {
     private final UserService userService;
     private final CandidateStatusService candidateStatusService;
     private final RegionService regionService;
+    private final AreaOfActivityService areaOfActivityService;
 
     private final CandidateRepository candidateRepository;
 
@@ -152,7 +154,7 @@ public class CandidateService {
         final CandidateEntity candidate = this.candidateRepository.findById(iin)
                 .orElseThrow(() -> new NoSuchElementException("Кандидат не найден"));
         candidate.setStatus(status);
-        candidate.setAreaOfActivity(areaOfActivity);
+        candidate.setAreaOfActivity(this.areaOfActivityService.getByName(areaOfActivity));
         this.candidateRepository.save(candidate);
     }
 

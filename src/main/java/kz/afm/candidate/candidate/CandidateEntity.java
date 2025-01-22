@@ -1,6 +1,7 @@
 package kz.afm.candidate.candidate;
 
 import jakarta.persistence.*;
+import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
 import kz.afm.candidate.reference.language.LanguageEntity;
@@ -88,6 +89,8 @@ public class CandidateEntity {
     @Builder.Default
     private Date createDate = new Date();
 
-    private String areaOfActivity;
+    @ManyToOne
+    @JoinColumn(name = "area_of_activity", referencedColumnName = "name")
+    private AreaOfActivityEntity areaOfActivity;
 
 }

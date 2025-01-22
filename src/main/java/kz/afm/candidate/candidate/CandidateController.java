@@ -1,5 +1,6 @@
 package kz.afm.candidate.candidate;
 
+import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.dto.*;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusService;
@@ -130,6 +131,12 @@ public class CandidateController {
                     .additionalData(candidate.getAdditionalData())
                     .username(candidate.getUser().getUsername())
                     .build();
+
+            final AreaOfActivityEntity areaOfActivity = candidate.getAreaOfActivity();
+            if (areaOfActivity != null) {
+                candidateResponse.setAreaOfActivity(areaOfActivity.getName());
+            }
+
             return ResponseEntity.ok(candidateResponse);
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(

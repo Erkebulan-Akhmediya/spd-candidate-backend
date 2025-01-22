@@ -2,6 +2,7 @@ package kz.afm.candidate.candidate.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
@@ -30,4 +31,7 @@ public class CandidateResponse {
     private String securityCheckResult;
     private String additionalData;
     private String username;
+
+    @Setter
+    private String areaOfActivity;
 }
