@@ -5,8 +5,10 @@ import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
 import kz.afm.candidate.test.dto.CreateTestRequest;
 import kz.afm.candidate.test.variant.VariantService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -25,14 +27,19 @@ public class TestService {
                         dto.getNameKaz(),
                         Boolean.parseBoolean(dto.getIsLimitless()),
                         dto.getDuration(),
-                        this.areaOfActivityService.getAllSetByNameList(dto.getAreasOfActivities())
+                        new LinkedHashSet<>(this.areaOfActivityService.getAllSetByNames(dto.getAreasOfActivities()))
                 )
         );
         this.variantService.create(test, dto.getVariants());
     }
 
-    public List<TestEntity> getAll() {
-        return this.testRepository.findAll();
+    public List<TestEntity> getAll(int pageNumber, int pageSize) {
+        if (pageSize == -1) return this.testRepository.findAll();
+        return this.testRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent();
+    }
+
+    public long getAllCount() {
+        return this.testRepository.count();
     }
 
 }

@@ -3,10 +3,7 @@ package kz.afm.candidate.candidate.area_of_activity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -26,8 +23,8 @@ public class AreaOfActivityService {
         );
     }
 
-    public Set<AreaOfActivityEntity> getAllSetByNameList(List<String> nameList) throws RuntimeException {
-        Set<AreaOfActivityEntity> areas = new LinkedHashSet<>(this.areaOfActivityRepository.findAllByNameIn(nameList));
+    public List<AreaOfActivityEntity> getAllSetByNames(Collection<String> nameList) throws RuntimeException {
+        List<AreaOfActivityEntity> areas = this.areaOfActivityRepository.findAllByNameIn(nameList);
         if (areas.isEmpty()) throw new RuntimeException("Направления деятельности теста не могут быть пустыми");
         return areas;
     }
