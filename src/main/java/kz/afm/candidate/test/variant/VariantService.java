@@ -23,4 +23,13 @@ public class VariantService {
         });
     }
 
+    public VariantEntity getRandom(long testId) {
+        List<VariantEntity> variants = this.variantRepository.findAllByTest_Id(testId);
+        if (variants.isEmpty()) {
+            throw new NoSuchElementException("Варианты для теста с ID: " + testId + " не найдены");
+        }
+        final int randomIndex = (int) (Math.random() * (variants.size() - 1));
+        return variants.get(randomIndex);
+    }
+
 }

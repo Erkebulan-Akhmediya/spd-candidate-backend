@@ -1,8 +1,8 @@
 package kz.afm.candidate.test.session;
 
 import kz.afm.candidate.candidate.CandidateService;
-import kz.afm.candidate.test.TestService;
 import kz.afm.candidate.test.session.status.TestSessionStatusService;
+import kz.afm.candidate.test.variant.VariantEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +13,11 @@ public class TestSessionService {
     private final TestSessionRepository testSessionRepository;
     private final TestSessionStatusService testSessionStatusService;
     private final CandidateService candidateService;
-    private final TestService testService;
 
-    public TestSessionEntity create(String candidateIin, long testId) {
+    public TestSessionEntity create(String candidateIin, VariantEntity variant) {
         return this.testSessionRepository.save(
                 new TestSessionEntity(
-                        this.testService.getById(testId),
+                        variant,
                         this.candidateService.getById(candidateIin),
                         this.testSessionStatusService.getById(1)
                 )

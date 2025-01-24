@@ -45,4 +45,8 @@ public class QuestionService {
         });
     }
 
+    public long getCountByVariant(VariantEntity variant) {
+        return this.questionRepository.countByVariant(variant);
+    }
+
 }

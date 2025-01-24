@@ -2,8 +2,8 @@ package kz.afm.candidate.test.session;
 
 import jakarta.persistence.*;
 import kz.afm.candidate.candidate.CandidateEntity;
-import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.session.status.TestSessionStatusEntity;
+import kz.afm.candidate.test.variant.VariantEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,8 +24,8 @@ public class TestSessionEntity {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "test_id", nullable = false)
-    private TestEntity test;
+    @JoinColumn(name = "test_variant_id", nullable = false)
+    private VariantEntity variant;
 
     @ManyToOne
     @JoinColumn(name = "candidate_id", nullable = false)
@@ -40,8 +40,8 @@ public class TestSessionEntity {
 
     private Date endDate;
 
-    public TestSessionEntity(TestEntity test, CandidateEntity candidate, TestSessionStatusEntity status) {
-        this.test = test;
+    public TestSessionEntity(VariantEntity variant, CandidateEntity candidate, TestSessionStatusEntity status) {
+        this.variant = variant;
         this.candidate = candidate;
         this.status = status;
         this.startDate = new Date();
