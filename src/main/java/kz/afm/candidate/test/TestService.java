@@ -56,4 +56,10 @@ public class TestService {
         return this.testRepository.count();
     }
 
+    public TestEntity getById(long id) {
+        return this.testRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Не найден тест с ID: " + id)
+        );
+    }
+
 }
