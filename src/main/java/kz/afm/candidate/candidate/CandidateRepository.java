@@ -16,4 +16,6 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, Stri
     long countByStatus_Id(int statusId);
 
     long countByStatus_IdAndTestingRegion_Id(int statusId, int testingRegionId);
+
+    List<CandidateEntity> findByUser_Id(Long userId);
 }

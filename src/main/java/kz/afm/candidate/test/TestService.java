@@ -1,6 +1,7 @@
 package kz.afm.candidate.test;
 
 import jakarta.transaction.Transactional;
+import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
 import kz.afm.candidate.test.dto.CreateTestRequest;
 import kz.afm.candidate.test.variant.VariantService;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -33,9 +36,20 @@ public class TestService {
         this.variantService.create(test, dto.getVariants());
     }
 
-    public List<TestEntity> getAll(int pageNumber, int pageSize) {
-        if (pageSize == -1) return this.testRepository.findAll();
-        return this.testRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent();
+    public List<TestEntity> getAll(int pageNumber, int pageSize, String areaOfActivity) {
+        final Set<AreaOfActivityEntity> areas = new LinkedHashSet<>() {{
+            add(new AreaOfActivityEntity(areaOfActivity));
+        }};
+        final boolean ignoreAreas = Objects.equals(areaOfActivity, "any");
+
+        if (pageSize == -1) {
+            if (ignoreAreas) return this.testRepository.findAll();
+            return this.testRepository.findAllByAreaOfActivitiesContaining(areas);
+        }
+
+        final PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        if (ignoreAreas) return this.testRepository.findAll(pageRequest).getContent();
+        return this.testRepository.findAllByAreaOfActivitiesContaining(areas, pageRequest);
     }
 
     public long getAllCount() {

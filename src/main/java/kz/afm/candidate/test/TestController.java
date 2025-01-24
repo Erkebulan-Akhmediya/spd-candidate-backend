@@ -34,10 +34,11 @@ public class TestController {
     @GetMapping("all")
     public ResponseEntity<GetAllTestsResponse> getAll(
             @RequestParam(required = false, defaultValue = "-1") int pageSize,
-            @RequestParam(required = false, defaultValue = "0") int pageNumber
+            @RequestParam(required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(required = false, defaultValue = "any") String areaOfActivity
     ) {
         try {
-            final List<TestResponse> tests = this.testService.getAll(pageNumber, pageSize)
+            final List<TestResponse> tests = this.testService.getAll(pageNumber, pageSize, areaOfActivity)
                     .stream()
                     .map(
                             (TestEntity test) -> new TestResponse(

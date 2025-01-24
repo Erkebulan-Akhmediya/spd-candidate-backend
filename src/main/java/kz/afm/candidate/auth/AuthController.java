@@ -3,6 +3,8 @@ package kz.afm.candidate.auth;
 import jakarta.validation.Valid;
 import kz.afm.candidate.auth.dto.LoginRequest;
 import kz.afm.candidate.auth.dto.LoginResponse;
+import kz.afm.candidate.candidate.CandidateService;
+import kz.afm.candidate.role.RoleEntity;
 import kz.afm.candidate.user.UserEntity;
 import kz.afm.candidate.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class AuthController {
     private final UserService userService;
     private final JwtService jwtService;
     private final AuthService authService;
+    private final CandidateService candidateService;
 
     @PostMapping("login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
@@ -38,24 +41,31 @@ public class AuthController {
                     this.authService.userToExtraClaims(user),
                     user
             );
-            return ResponseEntity.ok().body(new LoginResponse(null, token));
+
+            String areaOfActivity = null;
+            final boolean isCandidate = user.getRoles()
+                    .stream()
+                    .map(RoleEntity::getCode)
+                    .toList()
+                    .contains("candidate");
+
+            if (isCandidate) {
+                areaOfActivity = this.candidateService.getByUserId(user.getId()).getAreaOfActivity().getName();
+            }
+
+            return ResponseEntity.ok(new LoginResponse(null, token, areaOfActivity));
 
         } catch (AuthenticationException e) {
 
             System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body(new LoginResponse("Ошибка входа", null));
+            return ResponseEntity.badRequest().body(new LoginResponse("Ошибка входа", null, null));
 
         } catch (Exception e) {
 
             System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().body(new LoginResponse("Ошибка на сервере", null));
+            return ResponseEntity.internalServerError().body(new LoginResponse("Ошибка на сервере", null,null));
 
         }
-    }
-
-    @GetMapping("test")
-    public ResponseEntity<Void> test() {
-        return ResponseEntity.ok().build();
     }
 
 }

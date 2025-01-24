@@ -60,6 +60,10 @@ public class CandidateService {
         );
     }
 
+    public CandidateEntity getByUserId(long userId) throws NoSuchElementException {
+        return this.candidateRepository.findByUser_Id(userId).getFirst();
+    }
+
     @Transactional
     public void create(CandidateRequest candidateDto) throws NoSuchElementException {
 
