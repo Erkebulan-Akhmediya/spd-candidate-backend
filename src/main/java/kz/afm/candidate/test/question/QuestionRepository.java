@@ -8,7 +8,5 @@ import java.util.List;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> {
-    long countByVariant(VariantEntity variant);
-
     List<QuestionEntity> findAllByVariant(VariantEntity variant);
 }

@@ -29,7 +29,7 @@ public class QuestionController {
     public ResponseEntity<QuestionResponse> getById(@PathVariable long id) {
         try {
             final QuestionEntity question = this.questionService.getById(id);
-            final String questionFile = question.isWithFile() ? this.fileService.getBase64(question.getFileName()) : null;
+            final String questionFileUrl = question.isWithFile() ? this.fileService.getBase64Url(question.getFileName()) : null;
 
             final Set<OptionResponse> options = this.optionService.getAllByQuestion(question)
                     .stream()
@@ -39,7 +39,7 @@ public class QuestionController {
                                     option.getNameRus(),
                                     option.getNameKaz(),
                                     option.isWithFile(),
-                                    option.isWithFile() ? this.fileService.getBase64(option.getFileName()) : null,
+                                    option.isWithFile() ? this.fileService.getBase64Url(option.getFileName()) : null,
                                     option.getIsCorrect()
                             )
                     )
@@ -51,7 +51,7 @@ public class QuestionController {
                     question.getNameRus(),
                     question.getNameKaz(),
                     question.isWithFile(),
-                    questionFile,
+                    questionFileUrl,
                     question.getType().getId(),
                     options
             );

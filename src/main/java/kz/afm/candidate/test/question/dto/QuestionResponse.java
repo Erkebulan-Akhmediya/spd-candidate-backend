@@ -14,7 +14,7 @@ public class QuestionResponse {
     private String nameRus;
     private String nameKaz;
     private boolean withFile;
-    private String file;
+    private String fileUrl;
     private int type;
     private Set<OptionResponse> options;
 

@@ -2,10 +2,12 @@ package kz.afm.candidate.file;
 
 import io.minio.*;
 import io.minio.errors.*;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class FileService {
 
     private final MinioClient minioClient;
+    private final Tika tika;
 
     public FileService(
             @Value("${MINIO_USER}") String minioUser,
@@ -28,6 +31,7 @@ public class FileService {
                 .endpoint("http://localhost:9000")
                 .credentials(minioUser, minioPassword)
                 .build();
+        this.tika = new Tika();
     }
 
     public void createBucket(String bucketName) throws ServerException, InsufficientDataException,
@@ -69,7 +73,7 @@ public class FileService {
         return fileName;
     }
 
-    public String getBase64(String fileName) throws RuntimeException {
+    public String getBase64Url(String fileName) throws RuntimeException {
         try {
             InputStream stream = minioClient.getObject(
                     GetObjectArgs
@@ -78,7 +82,11 @@ public class FileService {
                             .object(fileName)
                             .build()
             );
-            return Base64.getEncoder().encodeToString(stream.readAllBytes());
+
+            final byte[] bytes = stream.readAllBytes();
+            String base64 = Base64.getEncoder().encodeToString(bytes);
+            String mimeType = tika.detect(new ByteArrayInputStream(bytes));
+            return "data:" + mimeType + ";base64," + base64;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new RuntimeException("Ошибка получения или считывания файла");

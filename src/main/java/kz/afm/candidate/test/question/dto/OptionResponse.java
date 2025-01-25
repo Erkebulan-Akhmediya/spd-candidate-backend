@@ -11,7 +11,7 @@ public class OptionResponse {
     private String nameRus;
     private String nameKaz;
     private boolean withFile;
-    private String file;
+    private String fileUrl;
 
     @JsonProperty("isCorrect")
     private Boolean isCorrect;
