@@ -1,18 +1,17 @@
 package kz.afm.candidate.file;
 
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -68,6 +67,22 @@ public class FileService {
                         .build()
         );
         return fileName;
+    }
+
+    public String getBase64(String fileName) throws RuntimeException {
+        try {
+            InputStream stream = minioClient.getObject(
+                    GetObjectArgs
+                            .builder()
+                            .bucket("files")
+                            .object(fileName)
+                            .build()
+            );
+            return Base64.getEncoder().encodeToString(stream.readAllBytes());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException("Ошибка получения или считывания файла");
+        }
     }
 
 }

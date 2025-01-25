@@ -23,7 +23,7 @@ public class VariantService {
         });
     }
 
-    public VariantEntity getRandom(long testId) {
+    public VariantEntity getRandom(long testId) throws NoSuchElementException {
         List<VariantEntity> variants = this.variantRepository.findAllByTest_Id(testId);
         if (variants.isEmpty()) {
             throw new NoSuchElementException("Варианты для теста с ID: " + testId + " не найдены");

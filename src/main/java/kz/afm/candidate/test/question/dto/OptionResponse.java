@@ -1,0 +1,18 @@
+package kz.afm.candidate.test.question.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public class OptionResponse {
+    private long id;
+    private String nameRus;
+    private String nameKaz;
+    private boolean withFile;
+    private String file;
+
+    @JsonProperty("isCorrect")
+    private Boolean isCorrect;
+}

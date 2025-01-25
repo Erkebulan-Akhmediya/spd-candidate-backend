@@ -45,8 +45,18 @@ public class QuestionService {
         });
     }
 
-    public long getCountByVariant(VariantEntity variant) {
-        return this.questionRepository.countByVariant(variant);
+    public List<QuestionEntity> getByVariant(VariantEntity variant) throws NoSuchElementException {
+        final List<QuestionEntity> questions = this.questionRepository.findAllByVariant(variant);
+        if (questions.isEmpty()) {
+            throw new NoSuchElementException("Вопросы для варината с ID: " + variant.getId() + " не найдены");
+        }
+        return questions;
+    }
+
+    public QuestionEntity getById(Long id) throws NoSuchElementException {
+        return this.questionRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Вопрос с ID: " + id + "не найден")
+        );
     }
 
 }
