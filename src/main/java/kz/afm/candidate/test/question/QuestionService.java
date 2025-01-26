@@ -17,18 +17,16 @@ public class QuestionService {
 
     private final OptionService optionService;
     private final QuestionTypeService questionTypeService;
-    private final FileService fileService;
 
     private final QuestionRepository questionRepository;
 
     public void create(VariantEntity variant, List<CreateQuestionRequest> dtos) throws NoSuchElementException {
         dtos.forEach((CreateQuestionRequest dto) -> {
             try {
-                final String fileName = dto.isWithFile() ? this.fileService.save(dto.getFile()) : null;
                 final QuestionEntity question = this.questionRepository.save(
                         new QuestionEntity(
                                 dto.isWithFile(),
-                                fileName,
+                                dto.getFileName(),
                                 dto.getNameRus(),
                                 dto.getNameKaz(),
                                 this.questionTypeService.getById(dto.getType()),

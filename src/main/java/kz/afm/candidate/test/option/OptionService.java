@@ -14,7 +14,6 @@ import java.util.NoSuchElementException;
 @Service
 public class OptionService {
 
-    private final FileService fileService;
     private final OptionRepository optionRepository;
 
     public void create(QuestionEntity question, List<CreateOptionRequest> dtos) {
@@ -23,11 +22,10 @@ public class OptionService {
 
         dtos.forEach((CreateOptionRequest dto) -> {
             try {
-                final String fileName = dto.isWithFile() ? this.fileService.save(dto.getFile()) : null;
                 options.add(
                         new OptionEntity(
                                 dto.isWithFile(),
-                                fileName,
+                                dto.getFileName(),
                                 dto.getNameRus(),
                                 dto.getNameKaz(),
                                 dto.getIsCorrect(),

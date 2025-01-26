@@ -57,20 +57,19 @@ public class FileService {
         return fileId + "." + fileExtension;
     }
 
-    public String save(MultipartFile file) throws ServerException, InsufficientDataException,
-            ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException,
-            InvalidResponseException, XmlParserException, InternalException {
-
-        final String fileName = this.generateUniqueName(file);
-
-        this.minioClient.putObject(
-                PutObjectArgs.builder()
-                        .bucket("files")
-                        .object(fileName)
-                        .stream(file.getInputStream(), file.getSize(), -1)
-                        .build()
-        );
-        return fileName;
+    public void save(MultipartFile file) throws RuntimeException {
+        try {
+            System.out.println("file name: " + file.getOriginalFilename());
+            this.minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket("files")
+                            .object(file.getOriginalFilename())
+                            .stream(file.getInputStream(), file.getSize(), -1)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getBase64Url(String fileName) throws RuntimeException {

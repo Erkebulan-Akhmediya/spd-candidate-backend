@@ -19,8 +19,8 @@ public class TestController {
 
     private final TestService testService;
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> create(@ModelAttribute CreateTestRequest test) {
+    @PostMapping
+    public ResponseEntity<String> create(@RequestBody CreateTestRequest test) {
         try {
             this.testService.create(test);
             return ResponseEntity.ok("let him cook");
