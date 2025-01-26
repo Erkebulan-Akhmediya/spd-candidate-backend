@@ -1,6 +1,5 @@
 package kz.afm.candidate.test.question;
 
-import kz.afm.candidate.file.FileService;
 import kz.afm.candidate.test.dto.CreateQuestionRequest;
 import kz.afm.candidate.test.option.OptionService;
 import kz.afm.candidate.test.question.type.QuestionTypeService;

@@ -1,6 +1,5 @@
 package kz.afm.candidate.test.option;
 
-import kz.afm.candidate.file.FileService;
 import kz.afm.candidate.test.dto.CreateOptionRequest;
 import kz.afm.candidate.test.question.QuestionEntity;
 import lombok.RequiredArgsConstructor;

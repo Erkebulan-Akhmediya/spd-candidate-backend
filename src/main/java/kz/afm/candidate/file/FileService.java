@@ -50,13 +50,6 @@ public class FileService {
         );
     }
 
-    private String generateUniqueName(MultipartFile file) throws IOException {
-        final String[] splitFileName = Objects.requireNonNull(file.getOriginalFilename()).split("\\.");
-        final String fileExtension = Arrays.stream(splitFileName).toList().getLast();
-        final UUID fileId = UUID.nameUUIDFromBytes(file.getBytes());
-        return fileId + "." + fileExtension;
-    }
-
     public void save(MultipartFile file) throws RuntimeException {
         try {
             System.out.println("file name: " + file.getOriginalFilename());

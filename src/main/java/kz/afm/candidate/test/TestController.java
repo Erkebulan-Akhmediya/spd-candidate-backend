@@ -5,7 +5,6 @@ import kz.afm.candidate.test.dto.CreateTestRequest;
 import kz.afm.candidate.test.dto.GetAllTestsResponse;
 import kz.afm.candidate.test.dto.TestResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
