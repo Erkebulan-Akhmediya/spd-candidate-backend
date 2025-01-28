@@ -21,10 +21,10 @@ public class FileService {
     private final Tika tika;
 
     public FileService(
-            @Value("${MINIO_USER}") final String minioUser,
-            @Value("${MINIO_PASSWORD}") final String minioPassword,
-            @Value("${MINIO_HOST}") final String minioHost,
-            @Value("${MINIO_PORT}") final String minioPort
+            @Value("${minio.user}") final String minioUser,
+            @Value("${minio.password}") final String minioPassword,
+            @Value("${minio.host}") final String minioHost,
+            @Value("${minio.port}") final String minioPort
     ) {
         this.minioClient = MinioClient.builder()
                 .endpoint("http://" + minioHost + ":" + minioPort)

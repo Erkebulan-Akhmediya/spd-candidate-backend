@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 @Service
 public class JwtService {
 
-    @Value("${ACCESS_KEY}")
+    @Value("${auth.access_key}")
     private String accessKey;
 
-    @Value("${ISSUERS}")
+    @Value("${auth.issuers}")
     private String issuers;
 
     private Claims extractAllClaims(String token) {
