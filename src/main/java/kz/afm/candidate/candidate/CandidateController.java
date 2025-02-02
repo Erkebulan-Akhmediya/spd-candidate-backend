@@ -2,10 +2,9 @@ package kz.afm.candidate.candidate;
 
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.dto.*;
-import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusService;
-import kz.afm.candidate.candidate.experience.ExperienceEntity;
 import kz.afm.candidate.candidate.experience.ExperienceService;
+import kz.afm.candidate.dto.ResponseBodyFactory;
 import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
 import kz.afm.candidate.reference.language.LanguageEntity;
 import lombok.RequiredArgsConstructor;
@@ -25,40 +24,34 @@ public class CandidateController {
     private final ExperienceService experienceService;
 
     @GetMapping("status/all")
-    public ResponseEntity<List<CandidateStatusResponse>> getAllCandidateStatus() {
+    public ResponseEntity<ResponseBodyFactory<List<CandidateStatusResponse>>> getAllCandidateStatus() {
         try {
             final List<CandidateStatusResponse> statuses = this.candidateStatusService.getAll()
                     .stream()
-                    .map(
-                            (CandidateStatusEntity status) -> new CandidateStatusResponse(
-                                    status.getId(),
-                                    status.getNameRus(),
-                                    status.getNameKaz()
-                            )
-                    )
+                    .map(CandidateStatusResponse::fromEntity)
                     .toList();
-            return ResponseEntity.ok(statuses);
+            return ResponseEntity.ok(ResponseBodyFactory.success(statuses));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error("Ошибка сервера"));
         }
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody CandidateRequest candidate) {
+    public ResponseEntity<ResponseBodyFactory<Void>> create(@RequestBody CandidateRequest candidate) {
         try {
             this.candidateService.create(candidate);
-            return ResponseEntity.ok(null);
+            return ResponseEntity.ok(ResponseBodyFactory.success());
         } catch (NoSuchElementException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(ResponseBodyFactory.error(e.getMessage()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().body("Ошибка на сервере");
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error("Ошибка на сервере"));
         }
     }
 
     @GetMapping("all")
-    public ResponseEntity<GetAllCandidateResponse> getAll(
+    public ResponseEntity<ResponseBodyFactory<GetAllCandidateResponse>> getAll(
             @RequestParam int statusId,
             @RequestParam int regionId,
             @RequestParam int pageNumber,
@@ -68,26 +61,19 @@ public class CandidateController {
             final List<CandidateListItemResponse> candidates = this.candidateService
                     .getAll(statusId, regionId, pageNumber, pageSize)
                     .stream()
-                    .map(
-                            (CandidateEntity candidate) -> new CandidateListItemResponse(
-                                    candidate.getIdentificationNumber(),
-                                    candidate.getLastName(),
-                                    candidate.getFirstName(),
-                                    candidate.getMiddleName()
-                            )
-                    )
+                    .map(CandidateListItemResponse::fromEntity)
                     .toList();
             final long count = this.candidateService.countAll(statusId, regionId);
-            return ResponseEntity.ok(new GetAllCandidateResponse(null, candidates, count));
+            return ResponseEntity.ok(ResponseBodyFactory.success(new GetAllCandidateResponse(candidates, count)));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(
-                    new GetAllCandidateResponse("Ошибка сервера", null, 0)
+                    ResponseBodyFactory.error("Ошибка сервера")
             );
         }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<CandidateResponse> getById(@PathVariable String id) {
+    public ResponseEntity<ResponseBodyFactory<CandidateResponse>> getById(@PathVariable String id) {
         try {
             final CandidateEntity candidate = this.candidateService.getById(id);
             final List<String> languageCodes = candidate.getLanguages()
@@ -101,14 +87,7 @@ public class CandidateController {
             final List<ExperienceDto> experiences = this.experienceService
                     .getByCandidate(candidate.getIdentificationNumber())
                     .stream()
-                    .map(
-                            (ExperienceEntity experience) -> new ExperienceDto(
-                                    experience.getStartDate(),
-                                    experience.getEndDate(),
-                                    experience.getPosition(),
-                                    experience.getCompanyName()
-                            )
-                    )
+                    .map(ExperienceDto::fromEntity)
                     .toList();
             final CandidateResponse candidateResponse = CandidateResponse.builder()
                     .lastName(candidate.getLastName())
@@ -137,67 +116,67 @@ public class CandidateController {
                 candidateResponse.setAreaOfActivity(areaOfActivity.getName());
             }
 
-            return ResponseEntity.ok(candidateResponse);
+            return ResponseEntity.ok(ResponseBodyFactory.success(candidateResponse));
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(
-                    CandidateResponse.builder().error(e.getMessage()).build()
+                    ResponseBodyFactory.error(e.getMessage())
             );
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(
-                    CandidateResponse.builder().error("Ошибка сервера").build()
+                    ResponseBodyFactory.error("Ошибка сервера")
             );
         }
     }
 
     @PutMapping("reject/{iin}")
-    public ResponseEntity<String> reject(@PathVariable String iin) {
+    public ResponseEntity<ResponseBodyFactory<Void>> reject(@PathVariable String iin) {
         try {
             this.candidateService.reject(iin);
-            return ResponseEntity.ok("we're so back");
+            return ResponseEntity.ok(ResponseBodyFactory.success());
         } catch (NoSuchElementException e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error(e.getMessage()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().body("Ошибка на сервере");
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error("Ошибка на сервере"));
         }
     }
 
     @PutMapping("to/security")
-    public ResponseEntity<String> sendToSecurityCheck(@RequestBody CandidateRequest candidate) {
+    public ResponseEntity<ResponseBodyFactory<Void>> sendToSecurityCheck(@RequestBody CandidateRequest candidate) {
         try {
             this.candidateService.sendToSecurityCheck(candidate);
-            return ResponseEntity.ok("we're so back");
+            return ResponseEntity.ok(ResponseBodyFactory.success());
         } catch (NoSuchElementException e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error(e.getMessage()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().body("Ошибка на сервере");
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error("Ошибка на сервере"));
         }
     }
 
     @PutMapping("to/approval")
-    public ResponseEntity<String> sendToApproval(@RequestBody CandidateRequest candidate) {
+    public ResponseEntity<ResponseBodyFactory<Void>> sendToApproval(@RequestBody CandidateRequest candidate) {
         try {
             this.candidateService.sendToApproval(candidate);
-            return ResponseEntity.ok("we're so back");
+            return ResponseEntity.ok(ResponseBodyFactory.success());
         } catch (NoSuchElementException e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error(e.getMessage()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().body("Ошибка на сервере");
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error("Ошибка на сервере"));
         }
     }
 
     @PutMapping("approve/{iin}")
-    public ResponseEntity<String> approve(@PathVariable String iin, @RequestParam String areaOfActivity) {
+    public ResponseEntity<ResponseBodyFactory<Void>> approve(@PathVariable String iin, @RequestParam String areaOfActivity) {
         try {
             this.candidateService.approve(iin, areaOfActivity);
-            return ResponseEntity.ok("we're so back");
+            return ResponseEntity.ok(ResponseBodyFactory.success());
         } catch (NoSuchElementException e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error(e.getMessage()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().body("Ошибка на сервере");
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error("Ошибка на сервере"));
         }
     }
 

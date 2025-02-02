@@ -1,12 +1,12 @@
 package kz.afm.candidate.candidate.area_of_activity;
 
+import kz.afm.candidate.dto.ResponseBodyFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -18,17 +18,17 @@ public class AreaOfActivityController {
     private final AreaOfActivityService areaOfActivityService;
 
     @GetMapping("all")
-    public ResponseEntity<List<String>> getAll() {
+    public ResponseEntity<ResponseBodyFactory<List<String>>> getAll() {
         try {
             final List<String> areas = this.areaOfActivityService.getAll()
                     .stream()
                     .map(AreaOfActivityEntity::getName)
                     .toList();
-            return ResponseEntity.ok(areas);
+            return ResponseEntity.ok(ResponseBodyFactory.success(areas));
         } catch (NoSuchElementException e) {
-            return ResponseEntity.internalServerError().body(new LinkedList<>(){{ add(e.getMessage()); }});
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error(e.getMessage()));
         }catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new LinkedList<>(){{ add("Ошибка сервера"); }});
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error("Ошибка сервера"));
         }
     }
 

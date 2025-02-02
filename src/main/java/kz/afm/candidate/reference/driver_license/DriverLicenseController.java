@@ -1,6 +1,6 @@
 package kz.afm.candidate.reference.driver_license;
 
-import kz.afm.candidate.reference.driver_license.dto.GetAllDriverLicenseResponse;
+import kz.afm.candidate.dto.ResponseBodyFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,20 +18,20 @@ public class DriverLicenseController {
     private final DriverLicenseService driverLicenseService;
 
     @GetMapping("all")
-    public ResponseEntity<GetAllDriverLicenseResponse> getAll() {
+    public ResponseEntity<ResponseBodyFactory<List<String>>> getAll() {
         try {
             final List<String> driverLicenses = this.driverLicenseService.getAll(true)
                     .stream()
                     .map(DriverLicenseEntity::getCode)
                     .toList();
-            return ResponseEntity.ok(new GetAllDriverLicenseResponse(null, driverLicenses));
+            return ResponseEntity.ok(ResponseBodyFactory.success(driverLicenses));
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(
-                    new GetAllDriverLicenseResponse(e.getMessage(), null)
+                    ResponseBodyFactory.error(e.getMessage())
             );
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(
-                    new GetAllDriverLicenseResponse("Ошибка сервера", null)
+                    ResponseBodyFactory.error("Ошибка сервера")
             );
         }
     }

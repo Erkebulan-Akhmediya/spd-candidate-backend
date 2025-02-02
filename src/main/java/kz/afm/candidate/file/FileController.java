@@ -1,5 +1,6 @@
 package kz.afm.candidate.file;
 
+import kz.afm.candidate.dto.ResponseBodyFactory;
 import kz.afm.candidate.file.dto.FileRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -17,12 +18,12 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> save(@ModelAttribute FileRequest request) {
+    public ResponseEntity<ResponseBodyFactory<Void>> save(@ModelAttribute FileRequest request) {
         try {
             this.fileService.save(request.getFile());
-            return ResponseEntity.ok("nigga");
+            return ResponseEntity.ok(ResponseBodyFactory.success());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Ошибка сервера");
+            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error("Ошибка сервера"));
         }
     }
 

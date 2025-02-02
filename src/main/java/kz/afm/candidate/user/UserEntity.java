@@ -44,6 +44,10 @@ public class UserEntity implements UserDetails {
         this.roles = roles;
     }
 
+    public Set<String> getRoleCodes() {
+        return roles.stream().map(RoleEntity::getCode).collect(Collectors.toSet());
+    }
+
     @Override
     public String getUsername() {
         return this.username;

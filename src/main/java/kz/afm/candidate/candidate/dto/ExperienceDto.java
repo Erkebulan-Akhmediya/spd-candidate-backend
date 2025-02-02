@@ -1,5 +1,6 @@
 package kz.afm.candidate.candidate.dto;
 
+import kz.afm.candidate.candidate.experience.ExperienceEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,13 @@ public class ExperienceDto {
     private Date endDate;
     private String position;
     private String companyName;
+
+    public static ExperienceDto fromEntity(ExperienceEntity experience) {
+        return new ExperienceDto(
+                experience.getStartDate(),
+                experience.getEndDate(),
+                experience.getPosition(),
+                experience.getCompanyName()
+        );
+    }
 }
