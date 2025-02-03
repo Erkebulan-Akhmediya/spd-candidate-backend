@@ -7,8 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class GetAllTestsResponse {
-    private String error;
+public class GetAllTestsResponseBody {
     private List<TestResponse> tests;
     private long count;
 }

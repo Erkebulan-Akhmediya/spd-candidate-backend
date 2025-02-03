@@ -1,6 +1,8 @@
 package kz.afm.candidate.test.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
+import kz.afm.candidate.test.TestEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,5 +17,21 @@ public class TestResponse {
     private List<String> areasOfActivities;
     private int duration;
     @JsonProperty("isLimitless")
-    private boolean isLimitless;
+    private boolean limitless;
+
+    public static TestResponse fromEntity(TestEntity test) {
+        return new TestResponse(
+                test.getId(),
+                test.getNameRus(),
+                test.getNameKaz(),
+                test.getAreaOfActivities().stream().map(AreaOfActivityEntity::getName).toList(),
+                test.getDuration(),
+                test.isLimitless()
+        );
+    }
+
+    public static List<TestResponse> fromEntities(List<TestEntity> tests) {
+        return tests.stream().map(TestResponse::fromEntity).toList();
+    }
+
 }
