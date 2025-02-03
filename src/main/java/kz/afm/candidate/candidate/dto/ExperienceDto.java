@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,4 +27,9 @@ public class ExperienceDto {
                 experience.getCompanyName()
         );
     }
+
+    public static List<ExperienceDto> fromEntities(List<ExperienceEntity> experiences) {
+        return experiences.stream().map(ExperienceDto::fromEntity).toList();
+    }
+
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class GetAllCandidateResponse {
+public class GetAllCandidateResponseBody {
     private List<CandidateListItemResponse> candidates;
     private long count;
 }

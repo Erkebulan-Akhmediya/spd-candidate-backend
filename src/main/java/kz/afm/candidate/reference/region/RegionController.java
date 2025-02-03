@@ -1,5 +1,6 @@
 package kz.afm.candidate.reference.region;
 
+import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.reference.region.dto.RegionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +18,12 @@ public class RegionController {
     private final RegionService regionService;
 
     @GetMapping("all")
-    public ResponseEntity<List<RegionResponse>> getAll() {
+    public ResponseEntity<ResponseBodyWrapper<List<RegionResponse>>> getAll() {
         try {
-            final List<RegionResponse> regions = this.regionService.getAll()
-                    .stream()
-                    .map(
-                            (RegionEntity region) -> new RegionResponse(
-                                    region.getId(),
-                                    region.getNameRus(),
-                                    region.getNameKaz()
-                            )
-                    )
-                    .toList();
-            return ResponseEntity.ok(regions);
+            final List<RegionResponse> regions = RegionResponse.fromEntities(this.regionService.getAll());
+            return ResponseEntity.ok(ResponseBodyWrapper.success(regions));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
     }
 

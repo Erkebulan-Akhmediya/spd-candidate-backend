@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import kz.afm.candidate.auth.dto.LoginRequest;
 import kz.afm.candidate.auth.dto.LoginResponse;
 import kz.afm.candidate.candidate.CandidateService;
-import kz.afm.candidate.dto.ResponseBodyFactory;
+import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.user.UserEntity;
 import kz.afm.candidate.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class AuthController {
     private final CandidateService candidateService;
 
     @PostMapping("login")
-    public ResponseEntity<ResponseBodyFactory<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<ResponseBodyWrapper<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
         try {
 
             this.authManager.authenticate(
@@ -49,17 +49,17 @@ public class AuthController {
                 areaOfActivity = this.candidateService.getByUserId(user.getId()).getAreaOfActivity().getName();
             }
 
-            return ResponseEntity.ok(ResponseBodyFactory.success(new LoginResponse(token, areaOfActivity)));
+            return ResponseEntity.ok(ResponseBodyWrapper.success(new LoginResponse(token, areaOfActivity)));
 
         } catch (AuthenticationException e) {
 
             System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body(ResponseBodyFactory.error("Ошибка входа"));
+            return ResponseEntity.badRequest().body(ResponseBodyWrapper.error("Ошибка входа"));
 
         } catch (Exception e) {
 
             System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error("Ошибка на сервере"));
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка на сервере"));
 
         }
     }

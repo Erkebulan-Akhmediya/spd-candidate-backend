@@ -14,10 +14,6 @@ public class LanguageService {
 
     private final LanguageRepository languageRepository;
 
-    public Set<LanguageEntity> getAllSetByCodes(Set<String> codes) {
-        return new HashSet<>(this.languageRepository.findAllById(codes));
-    }
-
     public Set<LanguageEntity> getAllSetByCodes(Set<String> codes, boolean notEmpty) throws NoSuchElementException {
         if (codes.isEmpty()) return new HashSet<>();
         final Set<LanguageEntity> languages = new HashSet<>(
@@ -35,6 +31,10 @@ public class LanguageService {
 
         if (languages.isEmpty()) throw new NoSuchElementException("Языки не найдены");
         return languages;
+    }
+
+    public List<String> extractCodes(Set<LanguageEntity> languages) {
+        return languages.stream().map(LanguageEntity::getCode).toList();
     }
 
 }

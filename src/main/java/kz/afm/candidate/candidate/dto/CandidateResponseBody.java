@@ -9,9 +9,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class CandidateResponse {
-    private String error;
-
+public class CandidateResponseBody {
     private String lastName;
     private String firstName;
     private String middleName;
@@ -21,17 +19,15 @@ public class CandidateResponse {
     private String identificationNumber;
     private String phoneNumber;
     private int nationalityCode;
-    private List<String> languageCodes;
-    private List<String> driverLicenseCodes;
+    @Setter private List<String> languageCodes;
+    @Setter private List<String> driverLicenseCodes;
     private String education;
     private String sport;
     private int recruitedMethodId;
     private String recruitedMethodComment;
-    private List<ExperienceDto> experiences;
+    @Setter private List<ExperienceDto> experiences;
     private String securityCheckResult;
     private String additionalData;
     private String username;
-
-    @Setter
-    private String areaOfActivity;
+    @Setter private String areaOfActivity;
 }

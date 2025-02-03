@@ -1,6 +1,6 @@
 package kz.afm.candidate.reference.recruited_method;
 
-import kz.afm.candidate.reference.recruited_method.dto.GetAllRecruitedMethodResponse;
+import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.reference.recruited_method.dto.RecruitedMethodResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,26 +19,20 @@ public class RecruitedMethodController {
     private final RecruitedMethodService recruitedMethodService;
 
     @GetMapping("all")
-    public ResponseEntity<GetAllRecruitedMethodResponse> getAll() {
+    public ResponseEntity<ResponseBodyWrapper<List<RecruitedMethodResponse>>> getAll() {
         try {
             final List<RecruitedMethodResponse> recruitedMethods = this.recruitedMethodService.getAll(true)
                     .stream()
-                    .map(
-                            (RecruitedMethodEntity method) -> new RecruitedMethodResponse(
-                                    method.getId(),
-                                    method.getNameRus(),
-                                    method.getNameKaz()
-                            )
-                    )
+                    .map(RecruitedMethodResponse::fromEntity)
                     .toList();
-            return ResponseEntity.ok(new GetAllRecruitedMethodResponse(null, recruitedMethods));
+            return ResponseEntity.ok(ResponseBodyWrapper.success(recruitedMethods));
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(
-                    new GetAllRecruitedMethodResponse(e.getMessage(), null)
+                    ResponseBodyWrapper.error(e.getMessage())
             );
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(
-                    new GetAllRecruitedMethodResponse("Ошибка сервера", null)
+                    ResponseBodyWrapper.error("Ошибка сервера")
             );
         }
     }

@@ -14,10 +14,6 @@ public class DriverLicenseService {
 
     private final DriverLicenseRepository driverLicenseRepository;
 
-    public Set<DriverLicenseEntity> getAllSetByCodes(Set<String> codes) {
-        return new HashSet<>(this.driverLicenseRepository.findAllById(codes));
-    }
-
     public Set<DriverLicenseEntity> getAllSetByCodes(Set<String> codes, boolean notEmpty) throws NoSuchElementException {
         if (codes.isEmpty()) return new HashSet<>();
         final Set<DriverLicenseEntity> driverLicenses = new HashSet<>(
@@ -35,6 +31,10 @@ public class DriverLicenseService {
 
         if (driverLicenses.isEmpty()) throw new NoSuchElementException("Водительские права не найдены");
         return driverLicenses;
+    }
+
+    public List<String> extractCodes(Set<DriverLicenseEntity> driverLicenses) {
+        return driverLicenses.stream().map(DriverLicenseEntity::getCode).toList();
     }
 
 }

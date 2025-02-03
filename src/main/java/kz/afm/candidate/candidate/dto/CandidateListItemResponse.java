@@ -4,6 +4,8 @@ import kz.afm.candidate.candidate.CandidateEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public class CandidateListItemResponse {
@@ -20,4 +22,9 @@ public class CandidateListItemResponse {
                 candidate.getMiddleName()
         );
     }
+
+    public static List<CandidateListItemResponse> fromEntities(List<CandidateEntity> candidates) {
+        return candidates.stream().map(CandidateListItemResponse::fromEntity).toList();
+    }
+
 }

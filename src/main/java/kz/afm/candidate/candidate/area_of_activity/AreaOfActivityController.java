@@ -1,6 +1,6 @@
 package kz.afm.candidate.candidate.area_of_activity;
 
-import kz.afm.candidate.dto.ResponseBodyFactory;
+import kz.afm.candidate.dto.ResponseBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,17 +18,17 @@ public class AreaOfActivityController {
     private final AreaOfActivityService areaOfActivityService;
 
     @GetMapping("all")
-    public ResponseEntity<ResponseBodyFactory<List<String>>> getAll() {
+    public ResponseEntity<ResponseBodyWrapper<List<String>>> getAll() {
         try {
             final List<String> areas = this.areaOfActivityService.getAll()
                     .stream()
                     .map(AreaOfActivityEntity::getName)
                     .toList();
-            return ResponseEntity.ok(ResponseBodyFactory.success(areas));
+            return ResponseEntity.ok(ResponseBodyWrapper.success(areas));
         } catch (NoSuchElementException e) {
-            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error(e.getMessage()));
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
         }catch (Exception e) {
-            return ResponseEntity.internalServerError().body(ResponseBodyFactory.error("Ошибка сервера"));
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
     }
 

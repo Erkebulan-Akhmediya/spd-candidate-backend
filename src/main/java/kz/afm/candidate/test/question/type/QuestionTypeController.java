@@ -1,7 +1,7 @@
 package kz.afm.candidate.test.question.type;
 
-import kz.afm.candidate.test.question.type.dto.GetAllQuestionTypesResponse;
-import kz.afm.candidate.test.question.type.dto.QuestionTypeDto;
+import kz.afm.candidate.dto.ResponseBodyWrapper;
+import kz.afm.candidate.test.question.type.dto.QuestionTypeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,22 +18,13 @@ public class QuestionTypeController {
     private final QuestionTypeService questionTypeService;
 
     @GetMapping("all")
-    public ResponseEntity<GetAllQuestionTypesResponse> getAll() {
+    public ResponseEntity<ResponseBodyWrapper<List<QuestionTypeResponse>>> getAll() {
         try {
-            final List<QuestionTypeDto> types = this.questionTypeService.getAll()
-                    .stream()
-                    .map(
-                            (QuestionTypeEntity type) -> new QuestionTypeDto(
-                                    type.getId(),
-                                    type.getNameRus(),
-                                    type.getNameKaz()
-                            )
-                    )
-                    .toList();
-            return ResponseEntity.ok(new GetAllQuestionTypesResponse(null, types));
+            final List<QuestionTypeResponse> types = QuestionTypeResponse.fromEntities(this.questionTypeService.getAll());
+            return ResponseEntity.ok(ResponseBodyWrapper.success(types));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(
-                    new GetAllQuestionTypesResponse("Ошибка на сервере", null)
+                    ResponseBodyWrapper.error("Ошибка на сервере")
             );
         }
     }

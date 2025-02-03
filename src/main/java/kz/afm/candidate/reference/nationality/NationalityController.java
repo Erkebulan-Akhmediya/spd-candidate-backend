@@ -1,6 +1,6 @@
 package kz.afm.candidate.reference.nationality;
 
-import kz.afm.candidate.reference.nationality.dto.GetAllNationalityResponse;
+import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.reference.nationality.dto.NationalityResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,26 +19,20 @@ public class NationalityController {
     private final NationalityService nationalityService;
 
     @GetMapping("all")
-    public ResponseEntity<GetAllNationalityResponse> getAll() {
+    public ResponseEntity<ResponseBodyWrapper<List<NationalityResponse>>> getAll() {
         try {
             final List<NationalityResponse> nationalities = this.nationalityService.getAll(true)
                     .stream()
-                    .map(
-                            (NationalityEntity nationality) -> new NationalityResponse(
-                                    nationality.getCode(),
-                                    nationality.getNameKaz(),
-                                    nationality.getNameRus()
-                            )
-                    )
+                    .map(NationalityResponse::fromEntity)
                     .toList();
-            return ResponseEntity.ok().body(new GetAllNationalityResponse(null, nationalities));
+            return ResponseEntity.ok().body(ResponseBodyWrapper.success(nationalities));
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(
-                    new GetAllNationalityResponse(e.toString(), null)
+                    ResponseBodyWrapper.error(e.getMessage())
             );
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(
-                    new GetAllNationalityResponse("Ошибка сервера", null)
+                    ResponseBodyWrapper.error("Ошибка сервера")
             );
         }
     }

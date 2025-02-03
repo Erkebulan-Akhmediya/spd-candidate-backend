@@ -1,6 +1,6 @@
 package kz.afm.candidate.reference.language;
 
-import kz.afm.candidate.reference.language.dto.GetAllLanguagesResponse;
+import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.reference.language.dto.LanguageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,26 +19,21 @@ public class LanguageController {
     private final LanguageService languageService;
 
     @GetMapping("all")
-    public ResponseEntity<GetAllLanguagesResponse> getAll() {
+    public ResponseEntity<ResponseBodyWrapper<List<LanguageResponse>>> getAll() {
         try {
             final List<LanguageResponse> languages = this.languageService.getAll(true)
                     .stream()
-                    .map(
-                            (LanguageEntity language) -> new LanguageResponse(
-                                    language.getCode(),
-                                    language.getNameRus(),
-                                    language.getNameKaz()
-                            )
-                    )
+                    .map(LanguageResponse::fromEntity)
                     .toList();
-            return ResponseEntity.ok().body(new GetAllLanguagesResponse(null, languages));
+            return ResponseEntity.ok(ResponseBodyWrapper.success(languages));
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(
-                    new GetAllLanguagesResponse(e.toString(), null)
+                    ResponseBodyWrapper.error(e.getMessage())
             );
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().body(
-                    new GetAllLanguagesResponse("Ошибка на сервере", null)
+                    ResponseBodyWrapper.error("Ошибка на сервере")
             );
         }
     }
