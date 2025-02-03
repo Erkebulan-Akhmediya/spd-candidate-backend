@@ -64,6 +64,10 @@ public class CandidateService {
         return this.candidateRepository.findByUser_Id(userId).getFirst();
     }
 
+    public String getIdentificationNumberByUserId(long userId) throws NoSuchElementException {
+        return this.getByUserId(userId).getIdentificationNumber();
+    }
+
     @Transactional
     public void create(CandidateRequest candidateDto) throws NoSuchElementException {
 

@@ -1,6 +1,7 @@
 package kz.afm.candidate.test.session;
 
 import kz.afm.candidate.candidate.CandidateService;
+import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.test.question.QuestionEntity;
 import kz.afm.candidate.test.question.QuestionService;
 import kz.afm.candidate.test.session.dto.CreateTestSessionResponse;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,45 +29,35 @@ public class TestSessionController {
     private final QuestionService questionService;
 
     @PostMapping
-    public ResponseEntity<CreateTestSessionResponse> create(
+    public ResponseEntity<ResponseBodyWrapper<CreateTestSessionResponse>> create(
             @AuthenticationPrincipal UserEntity requestingUser,
             @RequestParam long testId
     ) {
         try {
             final VariantEntity variant = this.variantService.getRandom(testId);
 
-            final Set<Long> questionIds = this.questionService.getByVariant(variant)
-                    .stream()
-                    .map(QuestionEntity::getId)
-                    .collect(Collectors.toSet());
+            final Set<Long> questionIds = this.questionService.getIdsByVariant(variant);
 
-            final TestSessionEntity testSession = this.testSessionService.create(
-                    this.candidateService.getByUserId(requestingUser.getId()).getIdentificationNumber(),
-                    variant
-            );
+            final long requestingUserId = requestingUser.getId();
+
+            final String candidateIdentificationNumber = this.candidateService
+                    .getIdentificationNumberByUserId(requestingUserId);
+
+            final TestSessionEntity testSession = this.testSessionService
+                    .create(candidateIdentificationNumber, variant);
 
             return ResponseEntity.ok(
-                    new CreateTestSessionResponse(
-                            null,
-                            testSession.getId(),
-                            questionIds
+                    ResponseBodyWrapper.success(
+                            new CreateTestSessionResponse(testSession.getId(), questionIds)
                     )
             );
         } catch (NoSuchElementException e) {
             return ResponseEntity.badRequest().body(
-                    new CreateTestSessionResponse(
-                            e.getMessage(),
-                            -69,
-                            null
-                    )
+                    ResponseBodyWrapper.error(e.getMessage())
             );
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.internalServerError().body(
-                    new CreateTestSessionResponse(
-                            "Ошибка сервера",
-                            -69,
-                            null
-                    )
+                    ResponseBodyWrapper.error("Ошибка сервера")
             );
         }
     }

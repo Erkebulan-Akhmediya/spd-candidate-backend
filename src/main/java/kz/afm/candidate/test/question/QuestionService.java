@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -50,10 +52,19 @@ public class QuestionService {
         return questions;
     }
 
+    public Set<Long> getIdsByVariant(VariantEntity variant) throws NoSuchElementException {
+        final List<QuestionEntity> questions = this.getByVariant(variant);
+        return this.extractIds(questions);
+    }
+
     public QuestionEntity getById(Long id) throws NoSuchElementException {
         return this.questionRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("Вопрос с ID: " + id + "не найден")
         );
+    }
+
+    public Set<Long> extractIds(List<QuestionEntity> questions) {
+        return questions.stream().map(QuestionEntity::getId).collect(Collectors.toSet());
     }
 
 }

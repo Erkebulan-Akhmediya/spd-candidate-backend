@@ -8,7 +8,6 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 public class CreateTestSessionResponse {
-    private String error;
     private long testSessionId;
     private Set<Long> questionIds;
 }
