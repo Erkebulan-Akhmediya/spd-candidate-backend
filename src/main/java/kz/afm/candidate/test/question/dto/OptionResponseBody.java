@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class OptionResponse {
+public class OptionResponseBody {
     private long id;
     private String nameRus;
     private String nameKaz;

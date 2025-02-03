@@ -7,18 +7,12 @@ import java.util.Set;
 
 @Getter
 @AllArgsConstructor
-public class QuestionResponse {
-    private String error;
-
+public class QuestionResponseBody {
     private long id;
     private String nameRus;
     private String nameKaz;
     private boolean withFile;
     private String fileUrl;
     private int type;
-    private Set<OptionResponse> options;
-
-    public QuestionResponse(String error) {
-        this.error = error;
-    }
+    private Set<OptionResponseBody> options;
 }

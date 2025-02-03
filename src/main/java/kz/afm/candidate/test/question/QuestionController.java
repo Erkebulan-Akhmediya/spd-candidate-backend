@@ -1,10 +1,11 @@
 package kz.afm.candidate.test.question;
 
-import kz.afm.candidate.file.FileService;
-import kz.afm.candidate.test.option.OptionEntity;
+import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.test.option.OptionService;
-import kz.afm.candidate.test.question.dto.OptionResponse;
-import kz.afm.candidate.test.question.dto.QuestionResponse;
+import kz.afm.candidate.test.question.dto.OptionResponseBody;
+import kz.afm.candidate.test.question.dto.OptionResponseBodyFactory;
+import kz.afm.candidate.test.question.dto.QuestionResponseBody;
+import kz.afm.candidate.test.question.dto.QuestionResponseBodyFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RequestMapping("test/question")
@@ -22,48 +22,28 @@ import java.util.stream.Collectors;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final FileService fileService;
+    private final QuestionResponseBodyFactory questionResponseBodyFactory;
     private final OptionService optionService;
+    private final OptionResponseBodyFactory optionResponseBodyFactory;
 
     @GetMapping("{id}")
-    public ResponseEntity<QuestionResponse> getById(@PathVariable long id) {
+    public ResponseEntity<ResponseBodyWrapper<QuestionResponseBody>> getById(@PathVariable long id) {
         try {
             final QuestionEntity question = this.questionService.getById(id);
-            final String questionFileUrl = question.isWithFile() ? this.fileService.getBase64Url(question.getFileName()) : null;
 
-            final Set<OptionResponse> options = this.optionService.getAllByQuestion(question)
-                    .stream()
-                    .map(
-                            (OptionEntity option) -> new OptionResponse(
-                                    option.getId(),
-                                    option.getNameRus(),
-                                    option.getNameKaz(),
-                                    option.isWithFile(),
-                                    option.isWithFile() ? this.fileService.getBase64Url(option.getFileName()) : null,
-                                    option.getIsCorrect()
-                            )
-                    )
-                    .collect(Collectors.toSet());
+            final Set<OptionResponseBody> options = this.optionResponseBodyFactory
+                    .createSet(this.optionService.getAllByQuestion(question));
 
-            final QuestionResponse questionResponse = new QuestionResponse(
-                    null,
-                    question.getId(),
-                    question.getNameRus(),
-                    question.getNameKaz(),
-                    question.isWithFile(),
-                    questionFileUrl,
-                    question.getType().getId(),
-                    options
-            );
+            final QuestionResponseBody questionResponseBody = this.questionResponseBodyFactory.create(question, options);
 
-            return ResponseEntity.ok(questionResponse);
+            return ResponseEntity.ok(ResponseBodyWrapper.success(questionResponseBody));
 
         } catch (NoSuchElementException e) {
-            return ResponseEntity.badRequest().body(new QuestionResponse(e.getMessage()));
+            return ResponseEntity.badRequest().body(ResponseBodyWrapper.error(e.getMessage()));
         } catch (RuntimeException e) {
-            return ResponseEntity.internalServerError().body(new QuestionResponse(e.getMessage()));
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(null);
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
     }
 
