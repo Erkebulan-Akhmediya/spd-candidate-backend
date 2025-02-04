@@ -43,4 +43,8 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
+    public boolean userIsCandidate(UserEntity user) {
+        return user.getRoleCodes().contains("candidate");
+    }
+
 }

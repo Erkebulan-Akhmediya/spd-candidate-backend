@@ -166,4 +166,8 @@ public class CandidateService {
         this.candidateRepository.save(candidate);
     }
 
+    public String getCandidatesAreaOfActivityNameByUserId(long userId) {
+        return this.getByUserId(userId).getAreaOfActivity().getName();
+    }
+
 }

@@ -1,30 +1,24 @@
 package kz.afm.candidate.auth;
 
-import kz.afm.candidate.role.RoleEntity;
-import kz.afm.candidate.user.UserEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-
+@RequiredArgsConstructor
 @Service
 public class AuthService {
 
-    public Map<String, Object> userToExtraClaims(UserEntity user) {
-        Map<String, Object> result = new HashMap<>();
+    private final AuthenticationManager authManager;
 
-        result.put("id", user.getId());
-        result.put("username", user.getUsername());
-        result.put("password", user.getPassword());
-        result.put("roles", user.getRoles().stream().map(
-                (RoleEntity role) -> new HashMap<String, Object>() {{
-                    put("code", role.getCode());
-                    put("nameRus", role.getNameRus());
-                    put("nameKaz", role.getNameKaz());
-                }}
-        ).toArray());
-
-        return result;
+    public void authenticateUser(String username, String password) throws AuthenticationException {
+        this.authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        password
+                )
+        );
     }
 
 }

@@ -23,15 +23,6 @@ public class JwtService {
     @Value("${auth.issuers}")
     private String issuers;
 
-    private Claims extractAllClaims(String token) {
-        return Jwts
-                .parser()
-                .verifyWith(getSecretKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }
-
     public UserEntity extractUser(String token) {
         Claims user = extractAllClaims(token);
         List<Map<String, Object>> roles = extractAllClaims(token).get("roles", List.class);
@@ -54,13 +45,44 @@ public class JwtService {
                 .build();
     }
 
-    private String extractIssuer(String token) {
-        return this.extractClaim(token, Claims::getIssuer);
+    private Claims extractAllClaims(String token) {
+        return Jwts
+                .parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+    public String generateTokenFrom(UserEntity user) {
+        return this.generateTokenFrom(this.userToExtraClaims(user), user);
+    }
+
+    public Map<String, Object> userToExtraClaims(UserEntity user) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("id", user.getId());
+        result.put("username", user.getUsername());
+        result.put("password", user.getPassword());
+        result.put("roles", user.getRoles().stream().map(
+                (RoleEntity role) -> new HashMap<String, Object>() {{
+                    put("code", role.getCode());
+                    put("nameRus", role.getNameRus());
+                    put("nameKaz", role.getNameKaz());
+                }}
+        ).toArray());
+
+        return result;
+    }
+
+    public String generateTokenFrom(Map<String, Object> extraClaims, UserDetails userDetails) {
+        return Jwts
+                .builder()
+                .claims(extraClaims)
+                .issuer(this.getRandomIssuer())
+                .subject(userDetails.getUsername())
+                .signWith(this.getSecretKey())
+                .compact();
     }
 
     private SecretKey getSecretKey() {
@@ -75,19 +97,18 @@ public class JwtService {
         return issuers[i];
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts
-                .builder()
-                .claims(extraClaims)
-                .issuer(this.getRandomIssuer())
-                .subject(userDetails.getUsername())
-                .signWith(this.getSecretKey())
-                .compact();
-    }
-
     public boolean isValid(String token) {
         final String issuer = this.extractIssuer(token);
         return Arrays.asList(this.issuers.split(" ")).contains(issuer);
+    }
+
+    private String extractIssuer(String token) {
+        return this.extractClaim(token, Claims::getIssuer);
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
 }

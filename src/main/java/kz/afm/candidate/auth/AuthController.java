@@ -9,8 +9,6 @@ import kz.afm.candidate.user.UserEntity;
 import kz.afm.candidate.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AuthController {
 
-    private final AuthenticationManager authManager;
     private final UserService userService;
     private final JwtService jwtService;
     private final AuthService authService;
@@ -28,27 +25,17 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<ResponseBodyWrapper<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
         try {
-
-            this.authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            request.getPassword()
-                    )
-            );
+            this.authService.authenticateUser(request.getUsername(), request.getPassword());
 
             final UserEntity user = this.userService.getByUsername(request.getUsername());
-            final String token = this.jwtService.generateToken(
-                    this.authService.userToExtraClaims(user),
-                    user
-            );
 
+            final boolean isCandidate = this.userService.userIsCandidate(user);
             String areaOfActivity = null;
-            final boolean isCandidate = user.getRoleCodes().contains("candidate");
-
             if (isCandidate) {
-                areaOfActivity = this.candidateService.getByUserId(user.getId()).getAreaOfActivity().getName();
+                areaOfActivity = this.candidateService.getCandidatesAreaOfActivityNameByUserId(user.getId());
             }
 
+            final String token = this.jwtService.generateTokenFrom(user);
             return ResponseEntity.ok(ResponseBodyWrapper.success(new LoginResponse(token, areaOfActivity)));
 
         } catch (AuthenticationException e) {
