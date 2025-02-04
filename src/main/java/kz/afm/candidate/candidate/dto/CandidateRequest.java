@@ -50,7 +50,7 @@ public class CandidateRequest {
 
     @NotNull(message = "образование обязательно")
     @NotEmpty(message = "образование не должно быть пустым")
-    private String education;
+    private Set<EducationDto> education;
 
     private Set<String> languageCodes;
 

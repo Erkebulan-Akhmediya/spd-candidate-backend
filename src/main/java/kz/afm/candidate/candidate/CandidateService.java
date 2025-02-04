@@ -3,20 +3,10 @@ package kz.afm.candidate.candidate;
 import jakarta.transaction.Transactional;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
 import kz.afm.candidate.candidate.dto.CandidateRequest;
+import kz.afm.candidate.candidate.education.EducationService;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusService;
 import kz.afm.candidate.candidate.experience.ExperienceService;
-import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
-import kz.afm.candidate.reference.driver_license.DriverLicenseService;
-import kz.afm.candidate.reference.language.LanguageEntity;
-import kz.afm.candidate.reference.language.LanguageService;
-import kz.afm.candidate.reference.nationality.NationalityEntity;
-import kz.afm.candidate.reference.nationality.NationalityService;
-import kz.afm.candidate.reference.recruited_method.RecruitedMethodEntity;
-import kz.afm.candidate.reference.recruited_method.RecruitedMethodService;
-import kz.afm.candidate.reference.region.RegionEntity;
-import kz.afm.candidate.reference.region.RegionService;
-import kz.afm.candidate.user.UserEntity;
 import kz.afm.candidate.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -25,21 +15,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
 public class CandidateService {
 
-    private final NationalityService nationalityService;
-    private final LanguageService languageService;
-    private final DriverLicenseService driverLicenseService;
-    private final RecruitedMethodService recruitedMethodService;
     private final ExperienceService experienceService;
     private final UserService userService;
     private final CandidateStatusService candidateStatusService;
-    private final RegionService regionService;
     private final AreaOfActivityService areaOfActivityService;
+    private final EducationService educationService;
+    private final CandidateEntityFactory candidateEntityFactory;
 
     private final CandidateRepository candidateRepository;
 
@@ -70,40 +56,16 @@ public class CandidateService {
 
     @Transactional
     public void create(CandidateRequest candidateDto) throws NoSuchElementException {
+        final CandidateEntity candidate = this.candidateEntityFactory.createFrom(candidateDto);
 
-        final NationalityEntity nationality = this.nationalityService.getById(candidateDto.getNationalityCode());
-        final Set<LanguageEntity> languages = this.languageService.getAllSetByCodes(candidateDto.getLanguageCodes(), true);
-        final Set<DriverLicenseEntity> driverLicenses = this.driverLicenseService.getAllSetByCodes(candidateDto.getDriverLicenseCodes(), true);
-        final RecruitedMethodEntity recruitedMethod = this.recruitedMethodService.getById(candidateDto.getRecruitedMethodId());
-        final UserEntity user = this.userService.createForCandidate(candidateDto.getUsername(), candidateDto.getPassword());
-        final CandidateStatusEntity status = this.candidateStatusService.getById(1);
-        final RegionEntity testingRegion = this.regionService.getById(candidateDto.getTestingRegionId());
-
-        final CandidateEntity candidate = CandidateEntity.builder()
-                .identificationNumber(candidateDto.getIdentificationNumber())
-                .lastName(candidateDto.getLastName())
-                .firstName(candidateDto.getFirstName())
-                .middleName(candidateDto.getMiddleName())
-                .birthDate(candidateDto.getBirthDate())
-                .birthPlace(candidateDto.getBirthPlace())
-                .testingRegion(testingRegion)
-                .phoneNumber(candidateDto.getPhoneNumber())
-                .nationality(nationality)
-                .education(candidateDto.getEducation())
-                .languages(languages)
-                .driverLicenses(driverLicenses)
-                .sport(candidateDto.getSport())
-                .additionalData(candidateDto.getAdditionalData())
-                .recruitedMethod(recruitedMethod)
-                .recruitedMethodComment(candidateDto.getRecruitedMethodComment())
-                .securityCheckResult(candidateDto.getSecurityCheckResult())
-                .user(user)
-                .status(status)
-                .build();
+        final int newCandidateStatusId = 1;
+        CandidateStatusEntity status = this.candidateStatusService.getById(newCandidateStatusId);
+        candidate.setStatus(status);
 
         final CandidateEntity savedCandidate = this.candidateRepository.save(candidate);
 
         this.experienceService.createAll(savedCandidate, candidateDto.getExperiences());
+        this.educationService.createAll(savedCandidate, candidateDto.getEducation());
     }
 
     public void reject(String iin) {
@@ -116,36 +78,18 @@ public class CandidateService {
 
     @Transactional
     public void sendToSecurityCheck(CandidateRequest candidateDto) throws NoSuchElementException {
-        final NationalityEntity nationality = this.nationalityService.getById(candidateDto.getNationalityCode());
-        final Set<LanguageEntity> languages = this.languageService.getAllSetByCodes(candidateDto.getLanguageCodes(), true);
-        final Set<DriverLicenseEntity> driverLicenses = this.driverLicenseService.getAllSetByCodes(candidateDto.getDriverLicenseCodes(), true);
-        final RecruitedMethodEntity recruitedMethod = this.recruitedMethodService.getById(candidateDto.getRecruitedMethodId());
-        final CandidateStatusEntity status = this.candidateStatusService.getById(2);
-        final RegionEntity testingRegion = this.regionService.getById(candidateDto.getTestingRegionId());
+        CandidateEntity candidate = this.getById(candidateDto.getIdentificationNumber());
+        candidate = this.candidateEntityFactory.updateEntityUsingRequestDtoValues(candidate, candidateDto);
 
-        final CandidateEntity candidate = this.candidateRepository.findById(candidateDto.getIdentificationNumber())
-                .orElseThrow(() -> new NoSuchElementException("Кандидат не найден"));
-        candidate.setLastName(candidateDto.getLastName());
-        candidate.setFirstName(candidateDto.getFirstName());
-        candidate.setMiddleName(candidateDto.getMiddleName());
-        candidate.setBirthDate(candidateDto.getBirthDate());
-        candidate.setBirthPlace(candidateDto.getBirthPlace());
-        candidate.setTestingRegion(testingRegion);
-        candidate.setPhoneNumber(candidateDto.getPhoneNumber());
-        candidate.setNationality(nationality);
-        candidate.setEducation(candidateDto.getEducation());
-        candidate.setLanguages(languages);
-        candidate.setDriverLicenses(driverLicenses);
-        candidate.setSport(candidateDto.getSport());
-        candidate.setAdditionalData(candidateDto.getAdditionalData());
-        candidate.setRecruitedMethod(recruitedMethod);
-        candidate.setRecruitedMethodComment(candidateDto.getRecruitedMethodComment());
-        candidate.setSecurityCheckResult(candidateDto.getSecurityCheckResult());
-        this.userService.updateUsername(candidateDto.getUsername(), candidate.getUser());
+        final int onSecurityCheckStatusId = 2;
+        CandidateStatusEntity status = this.candidateStatusService.getById(onSecurityCheckStatusId);
         candidate.setStatus(status);
+
         this.candidateRepository.save(candidate);
 
+        this.userService.updateUsername(candidateDto.getUsername(), candidate.getUser());
         this.experienceService.updateAll(candidate, candidateDto.getExperiences());
+        this.educationService.updateAll(candidate, candidateDto.getEducation());
     }
 
     public void sendToApproval(CandidateRequest candidateDto) throws NoSuchElementException {

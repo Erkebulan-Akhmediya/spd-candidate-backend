@@ -1,4 +1,4 @@
-package kz.afm.candidate.candidate.dto;
+package kz.afm.candidate.candidate.dto.get_all;
 
 import kz.afm.candidate.candidate.CandidateEntity;
 import lombok.AllArgsConstructor;

@@ -48,8 +48,6 @@ public class CandidateEntity {
     @JoinColumn(name = "nationality_code", referencedColumnName = "code")
     private NationalityEntity nationality;
 
-    private String education;
-
     @ManyToMany
     @JoinTable(
             name = "candidate_language_rel",

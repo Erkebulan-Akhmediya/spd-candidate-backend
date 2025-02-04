@@ -1,7 +1,11 @@
-package kz.afm.candidate.candidate.dto;
+package kz.afm.candidate.candidate.dto.get_by_id;
 
 import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
+import kz.afm.candidate.candidate.dto.EducationDto;
+import kz.afm.candidate.candidate.dto.ExperienceDto;
+import kz.afm.candidate.candidate.education.EducationEntity;
+import kz.afm.candidate.candidate.education.EducationService;
 import kz.afm.candidate.candidate.experience.ExperienceEntity;
 import kz.afm.candidate.candidate.experience.ExperienceService;
 import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
@@ -20,6 +24,7 @@ public class CandidateResponseBodyFactory {
     private final LanguageService languageService;
     private final DriverLicenseService driverLicenseService;
     private final ExperienceService experienceService;
+    private final EducationService educationService;
 
     public CandidateResponseBody createFrom(CandidateEntity candidate) {
 
@@ -27,6 +32,7 @@ public class CandidateResponseBodyFactory {
         final List<String> driverLicenseCodes = getDriverLicenseCodes(candidate);
         final List<ExperienceDto> experiences = this.getExperiences(candidate);
         final String areaOfActivityName = this.getAreaOfActivityName(candidate);
+        final List<EducationDto> education = this.getEducation(candidate);
 
         final CandidateResponseBody response = this.build(candidate);
 
@@ -34,6 +40,7 @@ public class CandidateResponseBodyFactory {
         response.setDriverLicenseCodes(driverLicenseCodes);
         response.setExperiences(experiences);
         response.setAreaOfActivity(areaOfActivityName);
+        response.setEducation(education);
 
         return response;
     }
@@ -63,6 +70,11 @@ public class CandidateResponseBodyFactory {
         return null;
     }
 
+    private List<EducationDto> getEducation(CandidateEntity candidate) {
+        final List<EducationEntity> education = this.educationService.getAllByCandidate(candidate);
+        return EducationDto.fromEntities(education);
+    }
+
     private CandidateResponseBody build(CandidateEntity candidate) {
         return CandidateResponseBody.builder()
                 .lastName(candidate.getLastName())
@@ -74,7 +86,6 @@ public class CandidateResponseBodyFactory {
                 .identificationNumber(candidate.getIdentificationNumber())
                 .phoneNumber(candidate.getPhoneNumber())
                 .nationalityCode(candidate.getNationality().getCode())
-                .education(candidate.getEducation())
                 .sport(candidate.getSport())
                 .recruitedMethodId(candidate.getRecruitedMethod().getId())
                 .recruitedMethodComment(candidate.getRecruitedMethodComment())

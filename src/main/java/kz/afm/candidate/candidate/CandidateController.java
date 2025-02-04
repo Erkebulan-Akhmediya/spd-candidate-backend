@@ -1,6 +1,10 @@
 package kz.afm.candidate.candidate;
 
 import kz.afm.candidate.candidate.dto.*;
+import kz.afm.candidate.candidate.dto.get_all.CandidateListItemResponse;
+import kz.afm.candidate.candidate.dto.get_all.GetAllCandidateResponseBody;
+import kz.afm.candidate.candidate.dto.get_by_id.CandidateResponseBody;
+import kz.afm.candidate.candidate.dto.get_by_id.CandidateResponseBodyFactory;
 import kz.afm.candidate.dto.ResponseBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

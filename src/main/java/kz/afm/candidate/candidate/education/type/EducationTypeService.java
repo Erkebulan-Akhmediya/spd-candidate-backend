@@ -18,4 +18,10 @@ public class EducationTypeService {
         return types;
     }
 
+    public EducationTypeEntity getById(int id) throws NoSuchElementException {
+        return this.educationTypeRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Тип образования с ID: " + id + " не найден")
+        );
+    }
+
 }

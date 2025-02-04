@@ -1,5 +1,7 @@
-package kz.afm.candidate.candidate.dto;
+package kz.afm.candidate.candidate.dto.get_by_id;
 
+import kz.afm.candidate.candidate.dto.EducationDto;
+import kz.afm.candidate.candidate.dto.ExperienceDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +23,7 @@ public class CandidateResponseBody {
     private int nationalityCode;
     @Setter private List<String> languageCodes;
     @Setter private List<String> driverLicenseCodes;
-    private String education;
+    @Setter private List<EducationDto> education;
     private String sport;
     private int recruitedMethodId;
     private String recruitedMethodComment;

@@ -3,9 +3,8 @@ package kz.afm.candidate.candidate;
 import kz.afm.candidate.TestUtils;
 import kz.afm.candidate.auth.AuthFilter;
 import kz.afm.candidate.candidate.dto.CandidateRequest;
-import kz.afm.candidate.candidate.dto.CandidateResponseBody;
-import kz.afm.candidate.candidate.dto.CandidateResponseBodyFactory;
-import kz.afm.candidate.candidate.status.CandidateStatusService;
+import kz.afm.candidate.candidate.dto.get_by_id.CandidateResponseBody;
+import kz.afm.candidate.candidate.dto.get_by_id.CandidateResponseBodyFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,9 +32,6 @@ public class CandidateControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockitoBean
-    private CandidateStatusService candidateStatusService;
 
     @MockitoBean
     private CandidateService candidateService;
@@ -71,7 +67,7 @@ public class CandidateControllerTests {
                         -1,
                         "phoneNumber",
                         -1,
-                        "education",
+                        new HashSet<>(),
                         new HashSet<>(),
                         new HashSet<>(),
                         "sport",

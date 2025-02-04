@@ -1,6 +1,7 @@
 package kz.afm.candidate.candidate.education;
 
 import jakarta.persistence.*;
+import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.education.type.EducationTypeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import java.util.Date;
 public class EducationEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToOne
@@ -31,5 +33,25 @@ public class EducationEntity {
     private String organization;
 
     private String major;
+
+    @ManyToOne
+    @JoinColumn(name = "candidate_id", nullable = false)
+    private CandidateEntity candidate;
+
+    public EducationEntity(
+            EducationTypeEntity type,
+            Date startDate,
+            Date endDate,
+            String organization,
+            String major,
+            CandidateEntity candidate
+    ) {
+        this.educationType = type;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.organization = organization;
+        this.major = major;
+        this.candidate = candidate;
+    }
 
 }
