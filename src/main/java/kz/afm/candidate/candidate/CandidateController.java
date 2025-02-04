@@ -20,7 +20,7 @@ public class CandidateController {
     private final CandidateResponseBodyFactory candidateResponseBodyFactory;
 
     @GetMapping("status/all")
-    public ResponseEntity<ResponseBodyWrapper<List<CandidateStatusResponseBody>>> getAllCandidateStatus() {
+    public ResponseEntity<ResponseBodyWrapper<List<CandidateStatusResponseBody>>> getAllStatuses() {
         try {
             final List<CandidateStatusResponseBody> statuses = CandidateStatusResponseBody
                     .fromEntities(this.candidateStatusService.getAll());

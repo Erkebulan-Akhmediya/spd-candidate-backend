@@ -1,6 +1,6 @@
 package kz.afm.candidate.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import kz.afm.candidate.TestUtils;
 import kz.afm.candidate.auth.dto.LoginRequest;
 import kz.afm.candidate.candidate.CandidateService;
 import kz.afm.candidate.user.UserEntity;
@@ -42,14 +42,6 @@ public class AuthControllerTest {
     @MockitoBean
     private AuthFilter authFilter;
 
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
     public void login_shouldReturnToken() throws Exception {
         this.mockLoginServices();
@@ -58,7 +50,7 @@ public class AuthControllerTest {
                         post("/auth/login")
                                 .header("Origin", "http://localhost")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(asJsonString(new LoginRequest("admin", "admin")))
+                                .content(TestUtils.toJsonString(new LoginRequest("admin", "admin")))
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.token").exists());
