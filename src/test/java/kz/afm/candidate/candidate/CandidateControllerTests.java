@@ -48,12 +48,12 @@ public class CandidateControllerTests {
 
     @Test
     public void getAllStatuses_shouldReturnAllStatuses() throws Exception {
-        this.mock_getAllStatuses_Dependencies();
+        this.mock_getAllStatuses_Methods();
         final ResultActions result = this.perform_getAllStatuses();
         this.check_getAllStatuses_Result(result);
     }
 
-    private void mock_getAllStatuses_Dependencies() {
+    private void mock_getAllStatuses_Methods() {
         when(this.candidateStatusService.getAll()).thenReturn(new LinkedList<>());
     }
 
@@ -70,14 +70,14 @@ public class CandidateControllerTests {
 
     @Test
     public void create_shouldCreate() throws Exception {
-        this.mock_create_Dependencies();
+        this.mock_create_Methods();
 
         final String mockData = this.mock_CandidateRequest();
         final ResultActions result = this.perform_create(mockData);
         this.check_create_Result(result);
     }
 
-    private void mock_create_Dependencies() {
+    private void mock_create_Methods() {
         doNothing().when(this.candidateService).create(any(CandidateRequest.class));
     }
 
@@ -124,12 +124,12 @@ public class CandidateControllerTests {
 
     @Test
     public void getAll_shouldReturnAll() throws Exception {
-        this.mock_getAll_Dependencies();
+        this.mock_getAll_Methods();
         final ResultActions result = this.perform_getAll();
         this.check_getAll_Result(result);
     }
 
-    public void mock_getAll_Dependencies() {
+    public void mock_getAll_Methods() {
         when(
                 this.candidateService.getAll(
                         any(Integer.class),
@@ -164,12 +164,12 @@ public class CandidateControllerTests {
 
     @Test
     public void getById_shouldReturnCandidate() throws Exception {
-        this.mock_getById_Dependencies();
+        this.mock_getById_Methods();
         final ResultActions result = this.perform_getById();
         this.check_getById_Result(result);
     }
 
-    private void mock_getById_Dependencies() {
+    private void mock_getById_Methods() {
         final CandidateEntity mockCandidateEntity = new CandidateEntity();
         when(this.candidateService.getById(any(String.class))).thenReturn(mockCandidateEntity);
 
@@ -190,12 +190,12 @@ public class CandidateControllerTests {
 
     @Test
     public void reject_shouldBeOk() throws Exception {
-        this.mock_reject_Dependencies();
+        this.mock_reject_Methods();
         final ResultActions result = this.perform_reject();
         this.checkIfOk(result);
     }
 
-    private void mock_reject_Dependencies() {
+    private void mock_reject_Methods() {
         doNothing().when(this.candidateService).reject(any(String.class));
     }
 
@@ -205,13 +205,13 @@ public class CandidateControllerTests {
 
     @Test
     public void sendToSecurityCheck_shouldBeOk() throws Exception {
-        this.mock_sendToSecurityCheck_Dependencies();
+        this.mock_sendToSecurityCheck_Methods();
         final String mockCandidateRequest = this.mock_CandidateRequest();
         final ResultActions result = this.perform_sendToSecurityCheck(mockCandidateRequest);
         this.checkIfOk(result);
     }
 
-    private void mock_sendToSecurityCheck_Dependencies() {
+    private void mock_sendToSecurityCheck_Methods() {
         doNothing().when(this.candidateService).sendToSecurityCheck(any(CandidateRequest.class));
     }
 
@@ -225,13 +225,13 @@ public class CandidateControllerTests {
 
     @Test
     public void sendToApproval_shouldBeOk() throws Exception {
-        this.mock_sendToApproval_Dependencies();
+        this.mock_sendToApproval_Methods();
         final String mockCandidateRequest = this.mock_CandidateRequest();
         final ResultActions result = this.perform_sendToApproval(mockCandidateRequest);
         this.checkIfOk(result);
     }
 
-    private void mock_sendToApproval_Dependencies() {
+    private void mock_sendToApproval_Methods() {
         doNothing().when(this.candidateService).sendToApproval(any(CandidateRequest.class));
     }
 
@@ -245,12 +245,12 @@ public class CandidateControllerTests {
 
     @Test
     public void approve_shouldBeOk() throws Exception {
-        this.mock_approve_Dependencies();
+        this.mock_approve_Methods();
         final ResultActions result = this.perform_approve();
         this.checkIfOk(result);
     }
 
-    private void mock_approve_Dependencies() {
+    private void mock_approve_Methods() {
         doNothing().when(this.candidateService).approve(any(String.class), any(String.class));
     }
 

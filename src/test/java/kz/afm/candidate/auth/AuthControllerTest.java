@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -44,23 +45,30 @@ public class AuthControllerTest {
 
     @Test
     public void login_shouldReturnToken() throws Exception {
-        this.mockLoginServices();
-
-        this.mockMvc.perform(
-                        post("/auth/login")
-                                .header("Origin", "http://localhost")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(TestUtils.toJsonString(new LoginRequest("admin", "admin")))
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.token").exists());
+        this.mock_login_Methods();
+        final ResultActions result = this.perform_login();
+        this.check_login_Result(result);
     }
 
-    private void mockLoginServices() {
+    private void mock_login_Methods() {
         doNothing().when(this.authService).authenticateUser(any(String.class), any(String.class));
         when(this.userService.getByUsername(any(String.class))).thenReturn(new UserEntity());
         when(this.userService.userIsCandidate(any(UserEntity.class))).thenReturn(false);
         when(this.jwtService.generateTokenFrom(any(UserEntity.class))).thenReturn("test token");
+    }
+
+    private ResultActions perform_login() throws Exception {
+        return this.mockMvc.perform(
+                post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.toJsonString(new LoginRequest("admin", "admin")))
+        );
+    }
+
+    private void check_login_Result(ResultActions result) throws Exception {
+        result
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.token").exists());
     }
 
 }
