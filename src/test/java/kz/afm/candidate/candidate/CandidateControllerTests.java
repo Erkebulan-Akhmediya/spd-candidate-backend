@@ -192,7 +192,7 @@ public class CandidateControllerTests {
     public void reject_shouldBeOk() throws Exception {
         this.mock_reject_Methods();
         final ResultActions result = this.perform_reject();
-        this.checkIfOk(result);
+        TestUtils.checkIfOk(result);
     }
 
     private void mock_reject_Methods() {
@@ -208,7 +208,7 @@ public class CandidateControllerTests {
         this.mock_sendToSecurityCheck_Methods();
         final String mockCandidateRequest = this.mock_CandidateRequest();
         final ResultActions result = this.perform_sendToSecurityCheck(mockCandidateRequest);
-        this.checkIfOk(result);
+        TestUtils.checkIfOk(result);
     }
 
     private void mock_sendToSecurityCheck_Methods() {
@@ -228,7 +228,7 @@ public class CandidateControllerTests {
         this.mock_sendToApproval_Methods();
         final String mockCandidateRequest = this.mock_CandidateRequest();
         final ResultActions result = this.perform_sendToApproval(mockCandidateRequest);
-        this.checkIfOk(result);
+        TestUtils.checkIfOk(result);
     }
 
     private void mock_sendToApproval_Methods() {
@@ -247,7 +247,7 @@ public class CandidateControllerTests {
     public void approve_shouldBeOk() throws Exception {
         this.mock_approve_Methods();
         final ResultActions result = this.perform_approve();
-        this.checkIfOk(result);
+        TestUtils.checkIfOk(result);
     }
 
     private void mock_approve_Methods() {
@@ -259,12 +259,6 @@ public class CandidateControllerTests {
                 put("/candidate/approve/identificationNumber")
                         .param("areaOfActivity", "test")
         );
-    }
-
-    private void checkIfOk(ResultActions result) throws Exception {
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Success"));
     }
 
 }
