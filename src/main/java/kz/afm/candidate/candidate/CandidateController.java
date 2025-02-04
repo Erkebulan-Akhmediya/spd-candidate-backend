@@ -1,7 +1,6 @@
 package kz.afm.candidate.candidate;
 
 import kz.afm.candidate.candidate.dto.*;
-import kz.afm.candidate.candidate.status.CandidateStatusService;
 import kz.afm.candidate.dto.ResponseBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,21 +14,8 @@ import java.util.NoSuchElementException;
 @RestController
 public class CandidateController {
 
-    private final CandidateStatusService candidateStatusService;
     private final CandidateService candidateService;
     private final CandidateResponseBodyFactory candidateResponseBodyFactory;
-
-    @GetMapping("status/all")
-    public ResponseEntity<ResponseBodyWrapper<List<CandidateStatusResponseBody>>> getAllStatuses() {
-        try {
-            final List<CandidateStatusResponseBody> statuses = CandidateStatusResponseBody
-                    .fromEntities(this.candidateStatusService.getAll());
-            return ResponseEntity.ok(ResponseBodyWrapper.success(statuses));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
-        }
-    }
 
     @PostMapping
     public ResponseEntity<ResponseBodyWrapper<Void>> create(@RequestBody CandidateRequest candidate) {

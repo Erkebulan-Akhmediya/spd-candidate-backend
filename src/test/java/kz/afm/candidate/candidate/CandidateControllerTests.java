@@ -47,28 +47,6 @@ public class CandidateControllerTests {
     private AuthFilter authFilter;
 
     @Test
-    public void getAllStatuses_shouldReturnAllStatuses() throws Exception {
-        this.mock_getAllStatuses_Methods();
-        final ResultActions result = this.perform_getAllStatuses();
-        this.check_getAllStatuses_Result(result);
-    }
-
-    private void mock_getAllStatuses_Methods() {
-        when(this.candidateStatusService.getAll()).thenReturn(new LinkedList<>());
-    }
-
-    private ResultActions perform_getAllStatuses() throws Exception {
-        return this.mockMvc.perform(get("/candidate/status/all"));
-    }
-
-    private void check_getAllStatuses_Result(ResultActions result) throws Exception {
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Success"))
-                .andExpect(jsonPath("$.data").isArray());
-    }
-
-    @Test
     public void create_shouldCreate() throws Exception {
         this.mock_create_Methods();
 
