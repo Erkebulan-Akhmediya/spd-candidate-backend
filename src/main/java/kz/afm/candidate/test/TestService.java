@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
 import kz.afm.candidate.test.dto.CreateTestRequest;
+import kz.afm.candidate.test.test_type.TestTypeEntity;
+import kz.afm.candidate.test.test_type.TestTypeService;
 import kz.afm.candidate.test.variant.VariantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -19,18 +21,22 @@ import java.util.Set;
 public class TestService {
 
     private final VariantService variantService;
-    private final TestRepository testRepository;
     private final AreaOfActivityService areaOfActivityService;
+    private final TestTypeService testTypeService;
+
+    private final TestRepository testRepository;
 
     @Transactional
     public void create(CreateTestRequest dto) throws RuntimeException {
+        final TestTypeEntity type = this.testTypeService.getById(dto.getType());
         final TestEntity test = this.testRepository.save(
                 new TestEntity(
                         dto.getNameRus(),
                         dto.getNameKaz(),
                         Boolean.parseBoolean(dto.getIsLimitless()),
                         dto.getDuration(),
-                        new LinkedHashSet<>(this.areaOfActivityService.getAllSetByNames(dto.getAreasOfActivities()))
+                        this.areaOfActivityService.getAllSetByNames(dto.getAreasOfActivities()),
+                        type
                 )
         );
         this.variantService.create(test, dto.getVariants());
@@ -40,9 +46,11 @@ public class TestService {
         final Set<AreaOfActivityEntity> areas = new LinkedHashSet<>() {{
             add(new AreaOfActivityEntity(areaOfActivity));
         }};
-        final boolean ignoreAreas = Objects.equals(areaOfActivity, "any");
 
-        if (pageSize == -1) {
+        final boolean ignoreAreas = Objects.equals(areaOfActivity, "any");
+        final boolean ignorePagination= pageSize == -1;
+
+        if (ignorePagination) {
             if (ignoreAreas) return this.testRepository.findAll();
             return this.testRepository.findAllByAreaOfActivitiesContaining(areas);
         }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -13,6 +14,12 @@ public class TestTypeService {
 
     public List<TestTypeEntity> getAll() {
         return this.testTypeRepository.findAll();
+    }
+
+    public TestTypeEntity getById(int id) throws NoSuchElementException {
+        return this.testTypeRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Тип теста с ID: " + id + " не найден")
+        );
     }
 
 }

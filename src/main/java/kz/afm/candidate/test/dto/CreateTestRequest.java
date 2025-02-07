@@ -18,4 +18,5 @@ public class CreateTestRequest {
     private int duration;
     private List<CreateVariantRequest> variants;
     private List<String> areasOfActivities;
+    private int type;
 }

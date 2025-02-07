@@ -3,6 +3,7 @@ package kz.afm.candidate.test;
 import jakarta.persistence.*;
 
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
+import kz.afm.candidate.test.test_type.TestTypeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,12 +42,24 @@ public class TestEntity {
     )
     Set<AreaOfActivityEntity> areaOfActivities;
 
-    public TestEntity(String nameRus, String nameKaz, boolean isLimitless, int duration, Set<AreaOfActivityEntity> areaOfActivities) {
+    @ManyToOne
+    @JoinColumn(name = "type_id", nullable = false)
+    private TestTypeEntity type;
+
+    public TestEntity(
+            String nameRus,
+            String nameKaz,
+            boolean isLimitless,
+            int duration,
+            Set<AreaOfActivityEntity> areaOfActivities,
+            TestTypeEntity type
+    ) {
         this.nameRus = nameRus;
         this.nameKaz = nameKaz;
         this.isLimitless = isLimitless;
         this.duration = duration;
         this.areaOfActivities = areaOfActivities;
+        this.type = type;
     }
 
 }
