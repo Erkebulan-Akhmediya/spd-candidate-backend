@@ -1,8 +1,7 @@
 package kz.afm.candidate.test.session;
 
-import kz.afm.candidate.candidate.CandidateService;
 import kz.afm.candidate.dto.ResponseBodyWrapper;
-import kz.afm.candidate.test.question.QuestionEntity;
+import kz.afm.candidate.test.TestService;
 import kz.afm.candidate.test.question.QuestionService;
 import kz.afm.candidate.test.session.dto.CreateTestSessionResponse;
 import kz.afm.candidate.test.variant.VariantEntity;
@@ -13,10 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RequestMapping("test/session")
@@ -24,7 +21,7 @@ import java.util.stream.Collectors;
 public class TestSessionController {
 
     private final TestSessionService testSessionService;
-    private final CandidateService candidateService;
+    private final TestService testService;
     private final VariantService variantService;
     private final QuestionService questionService;
 
@@ -34,21 +31,14 @@ public class TestSessionController {
             @RequestParam long testId
     ) {
         try {
+            final int testTypeId = this.testService.getTypeIdByTestId(testId);
             final VariantEntity variant = this.variantService.getRandom(testId);
-
             final Set<Long> questionIds = this.questionService.getIdsByVariant(variant);
-
-            final long requestingUserId = requestingUser.getId();
-
-            final String candidateIdentificationNumber = this.candidateService
-                    .getIdentificationNumberByUserId(requestingUserId);
-
-            final TestSessionEntity testSession = this.testSessionService
-                    .create(candidateIdentificationNumber, variant);
+            final long testSessionId = this.testSessionService.create(requestingUser, variant);
 
             return ResponseEntity.ok(
                     ResponseBodyWrapper.success(
-                            new CreateTestSessionResponse(testSession.getId(), questionIds)
+                            new CreateTestSessionResponse(testSessionId, questionIds, testTypeId)
                     )
             );
         } catch (NoSuchElementException e) {

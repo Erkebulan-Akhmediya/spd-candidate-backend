@@ -38,8 +38,8 @@ public class TestController {
     ) {
         try {
             final List<TestEntity> entities = this.testService.getAll(pageNumber, pageSize, areaOfActivity);
-            final List<TestResponse> tests = TestResponse.fromEntities(entities);
             final long allTestCount = this.testService.getAllCount();
+            final List<TestResponse> tests = TestResponse.fromEntities(entities);
             final GetAllTestsResponseBody responseBody = new GetAllTestsResponseBody(tests, allTestCount);
             return ResponseEntity.ok(ResponseBodyWrapper.success(responseBody));
         } catch (Exception e) {

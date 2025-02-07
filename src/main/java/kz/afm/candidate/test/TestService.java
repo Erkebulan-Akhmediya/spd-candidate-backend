@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -66,8 +63,12 @@ public class TestService {
 
     public TestEntity getById(long id) {
         return this.testRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Не найден тест с ID: " + id)
+                () -> new NoSuchElementException("Не найден тест с ID: " + id)
         );
+    }
+
+    public int getTypeIdByTestId(long testId) throws NoSuchElementException {
+        return this.getById(testId).getType().getId();
     }
 
 }
