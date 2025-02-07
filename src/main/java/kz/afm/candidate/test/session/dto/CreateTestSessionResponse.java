@@ -10,5 +10,5 @@ import java.util.Set;
 public class CreateTestSessionResponse {
     private long testSessionId;
     private Set<Long> questionIds;
-    private int testType;
+    private int testTypeId;
 }
