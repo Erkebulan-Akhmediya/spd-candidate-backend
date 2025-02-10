@@ -19,4 +19,5 @@ public class CreateTestRequest {
     private List<CreateVariantRequest> variants;
     private List<String> areasOfActivities;
     private int type;
+    private int maxPointsPerQuestion;
 }

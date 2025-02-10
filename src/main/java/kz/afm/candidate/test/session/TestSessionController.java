@@ -4,6 +4,7 @@ import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.test.TestService;
 import kz.afm.candidate.test.question.QuestionService;
 import kz.afm.candidate.test.session.dto.CreateTestSessionResponse;
+import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.test.variant.VariantService;
 import kz.afm.candidate.user.UserEntity;
@@ -24,6 +25,7 @@ public class TestSessionController {
     private final TestService testService;
     private final VariantService variantService;
     private final QuestionService questionService;
+    private final PointDistributionTestService pointDistributionTestService;
 
     @PostMapping
     public ResponseEntity<ResponseBodyWrapper<CreateTestSessionResponse>> create(
@@ -36,9 +38,15 @@ public class TestSessionController {
             final Set<Long> questionIds = this.questionService.getIdsByVariant(variant);
             final long testSessionId = this.testSessionService.create(requestingUser, variant);
 
+            int maxPointsPerQuestion = 0;
+            final int POINT_DISTRIBUTION_TEST_TYPE_ID = 5;
+            if (testTypeId == POINT_DISTRIBUTION_TEST_TYPE_ID) {
+                maxPointsPerQuestion = this.pointDistributionTestService.getMaxPointsPerQuestionByTestId(testId);
+            }
+
             return ResponseEntity.ok(
                     ResponseBodyWrapper.success(
-                            new CreateTestSessionResponse(testSessionId, questionIds, testTypeId)
+                            new CreateTestSessionResponse(testSessionId, questionIds, testTypeId,maxPointsPerQuestion)
                     )
             );
         } catch (NoSuchElementException e) {

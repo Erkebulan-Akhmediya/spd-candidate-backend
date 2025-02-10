@@ -6,6 +6,7 @@ import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
 import kz.afm.candidate.test.dto.CreateTestRequest;
 import kz.afm.candidate.test.test_type.TestTypeEntity;
 import kz.afm.candidate.test.test_type.TestTypeService;
+import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
 import kz.afm.candidate.test.variant.VariantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ public class TestService {
     private final VariantService variantService;
     private final AreaOfActivityService areaOfActivityService;
     private final TestTypeService testTypeService;
+    private final PointDistributionTestService pointDistributionTestService;
 
     private final TestRepository testRepository;
 
@@ -36,6 +38,7 @@ public class TestService {
                         type
                 )
         );
+        this.pointDistributionTestService.create(test, dto.getMaxPointsPerQuestion());
         this.variantService.create(test, dto.getVariants());
     }
 

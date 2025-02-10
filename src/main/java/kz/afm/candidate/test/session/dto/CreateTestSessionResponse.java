@@ -11,4 +11,5 @@ public class CreateTestSessionResponse {
     private long testSessionId;
     private Set<Long> questionIds;
     private int testTypeId;
+    private int maxPointsPerQuestion;
 }
