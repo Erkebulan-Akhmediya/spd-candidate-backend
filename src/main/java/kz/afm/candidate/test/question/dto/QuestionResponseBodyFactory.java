@@ -5,7 +5,7 @@ import kz.afm.candidate.test.question.QuestionEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -13,7 +13,7 @@ public class QuestionResponseBodyFactory {
 
     private final FileService fileService;
 
-    public QuestionResponseBody create(QuestionEntity question, Set<OptionResponseBody> options) {
+    public QuestionResponseBody create(QuestionEntity question, List<OptionResponseBody> options) {
         return new QuestionResponseBody(
                 question.getId(),
                 question.getNameRus(),

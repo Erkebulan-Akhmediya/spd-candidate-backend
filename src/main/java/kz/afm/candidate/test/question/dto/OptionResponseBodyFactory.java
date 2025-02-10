@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
@@ -26,8 +24,8 @@ public class OptionResponseBodyFactory {
         );
     }
 
-    public Set<OptionResponseBody> createSet(List<OptionEntity> options) {
-        return options.stream().map(this::create).collect(Collectors.toSet());
+    public List<OptionResponseBody> createList(List<OptionEntity> options) {
+        return options.stream().map(this::create).toList();
     }
 
 }

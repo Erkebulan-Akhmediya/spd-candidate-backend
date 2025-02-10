@@ -5,6 +5,7 @@ import kz.afm.candidate.test.option.OptionService;
 import kz.afm.candidate.test.question.type.QuestionTypeService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class QuestionService {
     }
 
     public List<QuestionEntity> getByVariant(VariantEntity variant) throws NoSuchElementException {
-        final List<QuestionEntity> questions = this.questionRepository.findAllByVariant(variant);
+        final List<QuestionEntity> questions = this.questionRepository.findAllByVariant(variant, Sort.by("id"));
         if (questions.isEmpty()) {
             throw new NoSuchElementException("Вопросы для варината с ID: " + variant.getId() + " не найдены");
         }

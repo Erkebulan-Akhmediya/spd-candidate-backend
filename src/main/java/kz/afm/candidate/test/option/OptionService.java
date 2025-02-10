@@ -3,6 +3,7 @@ package kz.afm.candidate.test.option;
 import kz.afm.candidate.test.dto.CreateOptionRequest;
 import kz.afm.candidate.test.question.QuestionEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -40,7 +41,7 @@ public class OptionService {
     }
 
     public List<OptionEntity> getAllByQuestion(QuestionEntity question) {
-        final List<OptionEntity> options = this.optionRepository.findAllByQuestion(question);
+        final List<OptionEntity> options = this.optionRepository.findAllByQuestion(question, Sort.by("id"));
 
         final boolean isMcq = question.getType().getId() == 3 ||
                 question.getType().getId() == 4 ||

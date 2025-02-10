@@ -3,7 +3,7 @@ package kz.afm.candidate.test.question.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -14,5 +14,5 @@ public class QuestionResponseBody {
     private boolean withFile;
     private String fileUrl;
     private int type;
-    private Set<OptionResponseBody> options;
+    private List<OptionResponseBody> options;
 }

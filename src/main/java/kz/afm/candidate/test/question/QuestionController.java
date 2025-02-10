@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @RequestMapping("test/question")
@@ -31,8 +31,8 @@ public class QuestionController {
         try {
             final QuestionEntity question = this.questionService.getById(id);
 
-            final Set<OptionResponseBody> options = this.optionResponseBodyFactory
-                    .createSet(this.optionService.getAllByQuestion(question));
+            final List<OptionResponseBody> options = this.optionResponseBodyFactory
+                    .createList(this.optionService.getAllByQuestion(question));
 
             final QuestionResponseBody questionResponseBody = this.questionResponseBodyFactory.create(question, options);
 
