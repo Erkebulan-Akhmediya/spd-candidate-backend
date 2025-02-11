@@ -1,7 +1,6 @@
 package kz.afm.candidate.test.question;
 
 import jakarta.persistence.*;
-import kz.afm.candidate.test.question.type.QuestionTypeEntity;
 import kz.afm.candidate.test.variant.VariantEntity;
 import lombok.*;
 
@@ -28,10 +27,6 @@ public class QuestionEntity {
     @Column(nullable = false)
     private String nameKaz;
 
-    @ManyToOne
-    @JoinColumn(name = "type_id", nullable = false)
-    private QuestionTypeEntity type;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "variant_id", nullable = false)
     private VariantEntity variant;
@@ -41,14 +36,12 @@ public class QuestionEntity {
             String fileName,
             String nameRus,
             String nameKaz,
-            QuestionTypeEntity type,
             VariantEntity variant
     ) {
         this.withFile = withFile;
         this.fileName = fileName;
         this.nameRus = nameRus;
         this.nameKaz = nameKaz;
-        this.type = type;
         this.variant = variant;
     }
 

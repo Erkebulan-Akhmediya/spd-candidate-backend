@@ -2,7 +2,6 @@ package kz.afm.candidate.test.question;
 
 import kz.afm.candidate.test.dto.CreateQuestionRequest;
 import kz.afm.candidate.test.option.OptionService;
-import kz.afm.candidate.test.question.type.QuestionTypeService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 public class QuestionService {
 
     private final OptionService optionService;
-    private final QuestionTypeService questionTypeService;
 
     private final QuestionRepository questionRepository;
 
@@ -31,7 +29,6 @@ public class QuestionService {
                                 dto.getFileName(),
                                 dto.getNameRus(),
                                 dto.getNameKaz(),
-                                this.questionTypeService.getById(dto.getType()),
                                 variant
                         )
                 );
@@ -45,17 +42,17 @@ public class QuestionService {
         });
     }
 
+    public Set<Long> getIdsByVariant(VariantEntity variant) throws NoSuchElementException {
+        final List<QuestionEntity> questions = this.getByVariant(variant);
+        return this.extractIds(questions);
+    }
+
     public List<QuestionEntity> getByVariant(VariantEntity variant) throws NoSuchElementException {
         final List<QuestionEntity> questions = this.questionRepository.findAllByVariant(variant, Sort.by("id"));
         if (questions.isEmpty()) {
             throw new NoSuchElementException("Вопросы для варината с ID: " + variant.getId() + " не найдены");
         }
         return questions;
-    }
-
-    public Set<Long> getIdsByVariant(VariantEntity variant) throws NoSuchElementException {
-        final List<QuestionEntity> questions = this.getByVariant(variant);
-        return this.extractIds(questions);
     }
 
     public QuestionEntity getById(Long id) throws NoSuchElementException {

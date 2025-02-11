@@ -1,6 +1,7 @@
 package kz.afm.candidate.test.question;
 
 import kz.afm.candidate.dto.ResponseBodyWrapper;
+import kz.afm.candidate.test.option.OptionEntity;
 import kz.afm.candidate.test.option.OptionService;
 import kz.afm.candidate.test.question.dto.OptionResponseBody;
 import kz.afm.candidate.test.question.dto.OptionResponseBodyFactory;
@@ -27,17 +28,9 @@ public class QuestionController {
     private final OptionResponseBodyFactory optionResponseBodyFactory;
 
     @GetMapping("{id}")
-    public ResponseEntity<ResponseBodyWrapper<QuestionResponseBody>> getById(@PathVariable long id) {
+    public ResponseEntity<ResponseBodyWrapper<QuestionResponseBody>> getByIdAndSend(@PathVariable long id) {
         try {
-            final QuestionEntity question = this.questionService.getById(id);
-
-            final List<OptionResponseBody> options = this.optionResponseBodyFactory
-                    .createList(this.optionService.getAllByQuestion(question));
-
-            final QuestionResponseBody questionResponseBody = this.questionResponseBodyFactory.create(question, options);
-
-            return ResponseEntity.ok(ResponseBodyWrapper.success(questionResponseBody));
-
+            return ResponseEntity.ok(this.getById(id));
         } catch (NoSuchElementException e) {
             return ResponseEntity.badRequest().body(ResponseBodyWrapper.error(e.getMessage()));
         } catch (RuntimeException e) {
@@ -45,6 +38,14 @@ public class QuestionController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
+    }
+
+    private ResponseBodyWrapper<QuestionResponseBody> getById(long id) {
+        final QuestionEntity question = this.questionService.getById(id);
+        final List<OptionEntity> options = this.optionService.getAllByQuestion(question);
+        final List<OptionResponseBody> optionsResponseBody = this.optionResponseBodyFactory.createList(options);
+        final QuestionResponseBody questionResponseBody = this.questionResponseBodyFactory.create(question, optionsResponseBody);
+        return ResponseBodyWrapper.success(questionResponseBody);
     }
 
 }

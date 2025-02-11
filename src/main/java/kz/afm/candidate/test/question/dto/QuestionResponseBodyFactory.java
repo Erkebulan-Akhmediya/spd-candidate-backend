@@ -20,7 +20,6 @@ public class QuestionResponseBodyFactory {
                 question.getNameKaz(),
                 question.isWithFile(),
                 question.isWithFile() ? this.fileService.getBase64Url(question.getFileName()) : null,
-                question.getType().getId(),
                 options
         );
     }

@@ -13,6 +13,5 @@ public class QuestionResponseBody {
     private String nameKaz;
     private boolean withFile;
     private String fileUrl;
-    private int type;
     private List<OptionResponseBody> options;
 }

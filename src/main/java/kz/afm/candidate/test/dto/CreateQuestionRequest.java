@@ -16,6 +16,5 @@ public class CreateQuestionRequest {
     private String fileName;
     private String nameRus;
     private String nameKaz;
-    private int type;
     private List<CreateOptionRequest> options;
 }
