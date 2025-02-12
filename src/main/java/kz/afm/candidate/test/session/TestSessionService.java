@@ -2,11 +2,14 @@ package kz.afm.candidate.test.session;
 
 import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.CandidateService;
+import kz.afm.candidate.test.session.status.TestSessionStatusEntity;
 import kz.afm.candidate.test.session.status.TestSessionStatusService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -16,22 +19,29 @@ public class TestSessionService {
     private final TestSessionStatusService testSessionStatusService;
     private final CandidateService candidateService;
 
-    public TestSessionEntity create(CandidateEntity candidate, VariantEntity variant) {
-        return this.testSessionRepository.save(
-                new TestSessionEntity(
-                        variant,
-                        candidate,
-                        this.testSessionStatusService.getById(1)
-                )
-        );
+    public long createFromUserAndVariant(UserEntity user, VariantEntity variant) {
+        final long requestingUserId = user.getId();
+        final CandidateEntity candidate = this.candidateService.getByUserId(requestingUserId);
+        return this.createFromCandidateAndVariant(candidate, variant).getId();
     }
 
-    public long create(UserEntity user, VariantEntity variant) {
-        final long requestingUserId = user.getId();
+    public TestSessionEntity createFromCandidateAndVariant(CandidateEntity candidate, VariantEntity variant) {
+        final TestSessionStatusEntity startStatus = this.testSessionStatusService.getStartStatus();
+        final TestSessionEntity newTestSession = new TestSessionEntity(variant, candidate, startStatus);
+        return this.testSessionRepository.save(newTestSession);
+    }
 
-        final CandidateEntity candidate = this.candidateService.getByUserId(requestingUserId);
+    public void end(long testSessionId) throws NoSuchElementException {
+        final TestSessionEntity testSession = this.getById(testSessionId);
+        final TestSessionStatusEntity endStatus = this.testSessionStatusService.getEndStatus();
+        testSession.setStatus(endStatus);
+        this.testSessionRepository.save(testSession);
+    }
 
-        return this.create(candidate, variant).getId();
+    public TestSessionEntity getById(long testSessionId) throws NoSuchElementException {
+        return this.testSessionRepository.findById(testSessionId).orElseThrow(
+                () -> new NoSuchElementException("Нет сессии теста с ID: " + testSessionId)
+        );
     }
 
 }

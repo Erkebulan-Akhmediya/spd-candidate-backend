@@ -45,7 +45,7 @@ public class TestSessionController {
         final int testTypeId = this.testService.getTypeIdByTestId(testId);
         final VariantEntity variant = this.variantService.getRandom(testId);
         final Set<Long> questionIds = this.questionService.getIdsByVariant(variant);
-        final long testSessionId = this.testSessionService.create(requestingUser, variant);
+        final long testSessionId = this.testSessionService.createFromUserAndVariant(requestingUser, variant);
         final int maxPointsPerQuestion = this.pointDistributionTestService.getMaxPointsPerQuestionByTestIdAndTestTypeId(testId, testTypeId);
 
         return ResponseBodyWrapper.success(
@@ -59,12 +59,15 @@ public class TestSessionController {
     ) {
         try {
             return ResponseEntity.ok(this.end(testSessionId));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
     }
 
     private ResponseBodyWrapper<Void> end(long testSessionId) {
+        this.testSessionService.end(testSessionId);
         return ResponseBodyWrapper.success();
     }
 
