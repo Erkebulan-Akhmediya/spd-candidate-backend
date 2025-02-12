@@ -17,8 +17,8 @@ public class OptionIncrementService {
 
     public void create(OptionEntity option, CreateOptionIncrementRequest incrementDto) {
         final TestEntity optionTest = option.getQuestion().getVariant().getTest();
-        final int zeroIndexedIndex = incrementDto.getIndex() - 1;
-        final ScaleEntity optionScale = this.scaleService.getByTestAndIndex(optionTest, zeroIndexedIndex);
+        final int zeroBasedScaleIndex = incrementDto.getScaleIndex() - 1;
+        final ScaleEntity optionScale = this.scaleService.getByTestAndIndex(optionTest, zeroBasedScaleIndex);
         final OptionIncrementEntity newIncrement = new OptionIncrementEntity(
                 option,
                 optionScale,
