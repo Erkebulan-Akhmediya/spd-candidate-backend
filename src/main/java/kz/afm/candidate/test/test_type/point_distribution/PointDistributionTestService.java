@@ -17,7 +17,9 @@ public class PointDistributionTestService {
         this.pointDistributionTestRepository.save(pointDistributionTest);
     }
 
-    public int getMaxPointsPerQuestionByTestId(long testId) throws NoSuchElementException {
+    public int getMaxPointsPerQuestionByTestIdAndTestTypeId(long testId, int testTypeId) throws NoSuchElementException {
+        final int POINT_DISTRIBUTION_TEST_TYPE_ID = 5;
+        if (testTypeId != POINT_DISTRIBUTION_TEST_TYPE_ID) return 0;
         return this.getPointDistributionTestById(testId).getMaxPointsPerQuestion();
     }
 

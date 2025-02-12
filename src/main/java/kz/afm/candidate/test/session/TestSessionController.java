@@ -28,36 +28,44 @@ public class TestSessionController {
     private final PointDistributionTestService pointDistributionTestService;
 
     @PostMapping
-    public ResponseEntity<ResponseBodyWrapper<CreateTestSessionResponse>> create(
+    public ResponseEntity<ResponseBodyWrapper<CreateTestSessionResponse>> createAndSend(
             @AuthenticationPrincipal UserEntity requestingUser,
             @RequestParam long testId
     ) {
         try {
-            final int testTypeId = this.testService.getTypeIdByTestId(testId);
-            final VariantEntity variant = this.variantService.getRandom(testId);
-            final Set<Long> questionIds = this.questionService.getIdsByVariant(variant);
-            final long testSessionId = this.testSessionService.create(requestingUser, variant);
-
-            int maxPointsPerQuestion = 0;
-            final int POINT_DISTRIBUTION_TEST_TYPE_ID = 5;
-            if (testTypeId == POINT_DISTRIBUTION_TEST_TYPE_ID) {
-                maxPointsPerQuestion = this.pointDistributionTestService.getMaxPointsPerQuestionByTestId(testId);
-            }
-
-            return ResponseEntity.ok(
-                    ResponseBodyWrapper.success(
-                            new CreateTestSessionResponse(testSessionId, questionIds, testTypeId,maxPointsPerQuestion)
-                    )
-            );
+            return ResponseEntity.ok(this.create(requestingUser, testId));
         } catch (NoSuchElementException e) {
-            return ResponseEntity.badRequest().body(
-                    ResponseBodyWrapper.error(e.getMessage())
-            );
+            return ResponseEntity.badRequest().body(ResponseBodyWrapper.error(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(
-                    ResponseBodyWrapper.error("Ошибка сервера")
-            );
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
+    }
+
+    private ResponseBodyWrapper<CreateTestSessionResponse> create(UserEntity requestingUser, long testId) {
+        final int testTypeId = this.testService.getTypeIdByTestId(testId);
+        final VariantEntity variant = this.variantService.getRandom(testId);
+        final Set<Long> questionIds = this.questionService.getIdsByVariant(variant);
+        final long testSessionId = this.testSessionService.create(requestingUser, variant);
+        final int maxPointsPerQuestion = this.pointDistributionTestService.getMaxPointsPerQuestionByTestIdAndTestTypeId(testId, testTypeId);
+
+        return ResponseBodyWrapper.success(
+                new CreateTestSessionResponse(testSessionId, questionIds, testTypeId, maxPointsPerQuestion)
+        );
+    }
+
+    @PutMapping("{test_session_id}")
+    public ResponseEntity<ResponseBodyWrapper<Void>> endAndRespond(
+            @PathVariable(name = "test_session_id") long testSessionId
+    ) {
+        try {
+            return ResponseEntity.ok(this.end(testSessionId));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
+        }
+    }
+
+    private ResponseBodyWrapper<Void> end(long testSessionId) {
+        return ResponseBodyWrapper.success();
     }
 
 }
