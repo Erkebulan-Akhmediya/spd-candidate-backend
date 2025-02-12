@@ -33,4 +33,18 @@ public class SectionEntity {
     @JoinColumn(name = "scale_id", nullable = false)
     private ScaleEntity scale;
 
+    public SectionEntity(
+            String descriptionRus,
+            String descriptionKaz,
+            int lowerBound,
+            int upperBound,
+            ScaleEntity scale
+    ) {
+        this.descriptionRus = descriptionRus;
+        this.descriptionKaz = descriptionKaz;
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+        this.scale = scale;
+    }
+
 }

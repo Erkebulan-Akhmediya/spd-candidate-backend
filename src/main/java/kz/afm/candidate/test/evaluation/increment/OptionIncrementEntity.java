@@ -1,4 +1,4 @@
-package kz.afm.candidate.test.evaluation.point;
+package kz.afm.candidate.test.evaluation.increment;
 
 import jakarta.persistence.*;
 import kz.afm.candidate.test.evaluation.scale.ScaleEntity;

@@ -1,42 +1,38 @@
 package kz.afm.candidate.test.option;
 
 import kz.afm.candidate.test.dto.CreateOptionRequest;
+import kz.afm.candidate.test.evaluation.increment.OptionIncrementService;
 import kz.afm.candidate.test.question.QuestionEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class OptionService {
 
+    private final OptionIncrementService optionIncrementService;
     private final OptionRepository optionRepository;
 
-    public void create(QuestionEntity question, List<CreateOptionRequest> dtos) {
-        List<OptionEntity> options = new LinkedList<>();
-        if (dtos == null || dtos.isEmpty()) return;
+    public void create(QuestionEntity question, List<CreateOptionRequest> optionDtoList) {
 
-        dtos.forEach((CreateOptionRequest dto) -> {
-            try {
-                options.add(
-                        new OptionEntity(
-                                dto.isWithFile(),
-                                dto.getFileName(),
-                                dto.getNameRus(),
-                                dto.getNameKaz(),
-                                dto.getIsCorrect(),
-                                question
-                        )
-                );
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                throw new RuntimeException("Ошибка сохранения файла");
-            }
+        if (optionDtoList == null || optionDtoList.isEmpty()) return;
+
+        optionDtoList.forEach((CreateOptionRequest optionDto) -> {
+            final OptionEntity newOption = new OptionEntity(
+                    optionDto.isWithFile(),
+                    optionDto.getFileName(),
+                    optionDto.getNameRus(),
+                    optionDto.getNameKaz(),
+                    optionDto.getIsCorrect(),
+                    question
+            );
+            final OptionEntity savedOption = this.optionRepository.save(newOption);
+            this.optionIncrementService.create(savedOption, optionDto.getIncrement());
         });
-        this.optionRepository.saveAll(options);
+
     }
 
     public List<OptionEntity> getAllByQuestion(QuestionEntity question) {

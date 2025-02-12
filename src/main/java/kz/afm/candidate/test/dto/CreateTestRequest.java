@@ -1,5 +1,6 @@
 package kz.afm.candidate.test.dto;
 
+import kz.afm.candidate.test.dto.evaluation.CreateScaleRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,5 @@ public class CreateTestRequest {
     private List<String> areasOfActivities;
     private int type;
     private int maxPointsPerQuestion;
+    private List<CreateScaleRequest> scales;
 }

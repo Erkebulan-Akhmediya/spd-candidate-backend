@@ -1,5 +1,6 @@
 package kz.afm.candidate.test.dto;
 
+import kz.afm.candidate.test.dto.evaluation.CreateOptionIncrementRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,5 @@ public class CreateOptionRequest {
     private String nameRus;
     private String nameKaz;
     private Boolean isCorrect;
+    private CreateOptionIncrementRequest increment;
 }

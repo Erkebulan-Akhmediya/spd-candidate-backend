@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
 import kz.afm.candidate.test.dto.CreateTestRequest;
+import kz.afm.candidate.test.evaluation.scale.ScaleService;
 import kz.afm.candidate.test.test_type.TestTypeEntity;
 import kz.afm.candidate.test.test_type.TestTypeService;
 import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
@@ -22,24 +23,35 @@ public class TestService {
     private final AreaOfActivityService areaOfActivityService;
     private final TestTypeService testTypeService;
     private final PointDistributionTestService pointDistributionTestService;
+    private final ScaleService scaleService;
 
     private final TestRepository testRepository;
 
     @Transactional
-    public void create(CreateTestRequest dto) throws RuntimeException {
-        final TestTypeEntity type = this.testTypeService.getById(dto.getType());
-        final TestEntity test = this.testRepository.save(
+    public void create(CreateTestRequest testDto) throws RuntimeException {
+        final TestEntity test = this.save(testDto);
+
+        this.scaleService.create(test, testDto.getScales());
+        this.variantService.create(test, testDto.getVariants());
+
+        final int pointDistributionTestType = 5;
+        if (testDto.getType() == pointDistributionTestType) {
+            this.pointDistributionTestService.create(test, testDto.getMaxPointsPerQuestion());
+        }
+    }
+
+    private TestEntity save(CreateTestRequest testDto) throws RuntimeException {
+        final TestTypeEntity type = this.testTypeService.getById(testDto.getType());
+        return this.testRepository.save(
                 new TestEntity(
-                        dto.getNameRus(),
-                        dto.getNameKaz(),
-                        Boolean.parseBoolean(dto.getIsLimitless()),
-                        dto.getDuration(),
-                        this.areaOfActivityService.getAllSetByNames(dto.getAreasOfActivities()),
+                        testDto.getNameRus(),
+                        testDto.getNameKaz(),
+                        Boolean.parseBoolean(testDto.getIsLimitless()),
+                        testDto.getDuration(),
+                        this.areaOfActivityService.getAllSetByNames(testDto.getAreasOfActivities()),
                         type
                 )
         );
-        this.pointDistributionTestService.create(test, dto.getMaxPointsPerQuestion());
-        this.variantService.create(test, dto.getVariants());
     }
 
     public List<TestEntity> getAll(int pageNumber, int pageSize, String areaOfActivity) {

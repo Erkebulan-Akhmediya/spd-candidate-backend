@@ -16,7 +16,7 @@ import lombok.Setter;
 public class ScaleEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     @Column(nullable = false)
@@ -28,5 +28,11 @@ public class ScaleEntity {
     @ManyToOne
     @JoinColumn(name = "test_id", nullable = false)
     private TestEntity test;
+
+    public ScaleEntity(String nameRus, String nameKaz, TestEntity test) {
+        this.nameRus = nameRus;
+        this.nameKaz = nameKaz;
+        this.test = test;
+    }
 
 }
