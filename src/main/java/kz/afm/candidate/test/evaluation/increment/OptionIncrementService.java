@@ -8,6 +8,8 @@ import kz.afm.candidate.test.option.OptionEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @RequiredArgsConstructor
 @Service
 public class OptionIncrementService {
@@ -25,6 +27,12 @@ public class OptionIncrementService {
                 incrementDto.getScore()
         );
         this.optionIncrementRepository.save(newIncrement);
+    }
+
+    public OptionIncrementEntity getByOption(OptionEntity option) {
+        return this.optionIncrementRepository.findByOption(option).orElseThrow(
+                () -> new NoSuchElementException("Не найден инкремент для варианта ответа с ID: " + option.getId())
+        );
     }
 
 }

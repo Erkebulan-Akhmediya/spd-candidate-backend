@@ -30,4 +30,10 @@ public class ResultEntity {
 
     private int score;
 
+    public ResultEntity(TestSessionEntity testSession, ScaleEntity scale) {
+        this.testSession = testSession;
+        this.scale = scale;
+        this.score = 0;
+    }
+
 }

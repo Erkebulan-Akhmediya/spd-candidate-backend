@@ -3,6 +3,7 @@ package kz.afm.candidate.test.evaluation.scale;
 import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.dto.evaluation.CreateScaleRequest;
 import kz.afm.candidate.test.evaluation.section.SectionService;
+import kz.afm.candidate.test.session.TestSessionEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,16 @@ public class ScaleService {
     }
 
     public ScaleEntity getByTestAndIndex(TestEntity test, int index) {
-        List<ScaleEntity> scales = this.scaleRepository.findAllByTest(test, Sort.by("id"));
+        List<ScaleEntity> scales = this.getAllByTest(test);
         return scales.get(index);
+    }
+
+    public List<ScaleEntity> getAllByTestSession(TestSessionEntity testSession) {
+        return this.getAllByTest(testSession.getVariant().getTest());
+    }
+
+    public List<ScaleEntity> getAllByTest(TestEntity test) {
+        return this.scaleRepository.findAllByTest(test, Sort.by("id"));
     }
 
 }
