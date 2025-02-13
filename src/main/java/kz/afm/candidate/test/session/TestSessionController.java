@@ -4,6 +4,7 @@ import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.test.TestService;
 import kz.afm.candidate.test.question.QuestionService;
 import kz.afm.candidate.test.session.dto.CreateTestSessionResponse;
+import kz.afm.candidate.test.session.dto.TestSessionAnswerRequest;
 import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.test.variant.VariantService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -55,20 +57,17 @@ public class TestSessionController {
 
     @PutMapping("{test_session_id}")
     public ResponseEntity<ResponseBodyWrapper<Void>> endAndRespond(
-            @PathVariable(name = "test_session_id") long testSessionId
+            @PathVariable(name = "test_session_id") long testSessionId,
+            @RequestBody List<TestSessionAnswerRequest> answers
     ) {
         try {
-            return ResponseEntity.ok(this.end(testSessionId));
+            this.testSessionService.end(testSessionId, answers);
+            return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
-    }
-
-    private ResponseBodyWrapper<Void> end(long testSessionId) {
-        this.testSessionService.end(testSessionId);
-        return ResponseBodyWrapper.success();
     }
 
 }

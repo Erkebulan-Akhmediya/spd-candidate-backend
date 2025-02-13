@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -37,6 +38,12 @@ public class OptionService {
 
     public List<OptionEntity> getAllByQuestion(QuestionEntity question) {
         return this.optionRepository.findAllByQuestion(question, Sort.by("id"));
+    }
+
+    public OptionEntity getById(Long id) {
+        return this.optionRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Вариант ответа с id " + id + " не найден")
+        );
     }
 
 }

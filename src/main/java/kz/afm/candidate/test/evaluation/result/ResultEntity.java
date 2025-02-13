@@ -25,7 +25,7 @@ public class ResultEntity {
     private TestSessionEntity testSession;
 
     @ManyToOne
-    @JoinColumn(name = "scale_id",nullable = false)
+    @JoinColumn(name = "scale_id", nullable = false)
     private ScaleEntity scale;
 
     private int score;

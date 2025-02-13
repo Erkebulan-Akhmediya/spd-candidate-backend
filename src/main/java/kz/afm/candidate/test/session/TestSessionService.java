@@ -2,6 +2,8 @@ package kz.afm.candidate.test.session;
 
 import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.CandidateService;
+import kz.afm.candidate.test.session.answer.TestSessionAnswerService;
+import kz.afm.candidate.test.session.dto.TestSessionAnswerRequest;
 import kz.afm.candidate.test.session.status.TestSessionStatusEntity;
 import kz.afm.candidate.test.session.status.TestSessionStatusService;
 import kz.afm.candidate.test.variant.VariantEntity;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ public class TestSessionService {
 
     private final TestSessionRepository testSessionRepository;
     private final TestSessionStatusService testSessionStatusService;
+    private final TestSessionAnswerService testSessionAnswerService;
     private final CandidateService candidateService;
 
     public long createFromUserAndVariant(UserEntity user, VariantEntity variant) {
@@ -32,8 +36,13 @@ public class TestSessionService {
         return this.testSessionRepository.save(newTestSession);
     }
 
-    public void end(long testSessionId) throws NoSuchElementException {
+    public void end(long testSessionId, List<TestSessionAnswerRequest> answers) throws NoSuchElementException {
         final TestSessionEntity testSession = this.getById(testSessionId);
+        this.testSessionAnswerService.save(testSession, answers);
+        this.end(testSession);
+    }
+
+    private void end(TestSessionEntity testSession) {
         final TestSessionStatusEntity endStatus = this.testSessionStatusService.getEndStatus();
         testSession.setStatus(endStatus);
         testSession.setEndDate(new Date());
