@@ -24,7 +24,7 @@ public class PointDistributionTestService {
     }
 
     private PointDistributionTestEntity getPointDistributionTestById(long testId) throws NoSuchElementException {
-        return this.pointDistributionTestRepository.findById(testId).orElseThrow(
+        return this.pointDistributionTestRepository.findByTest_Id(testId).orElseThrow(
                 () -> new NoSuchElementException("Нет данных для теста по распределению баллов с TestID: " + testId)
         );
     }
