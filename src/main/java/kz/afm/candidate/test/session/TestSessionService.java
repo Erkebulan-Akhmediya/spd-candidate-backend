@@ -9,6 +9,7 @@ import kz.afm.candidate.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class TestSessionService {
         final TestSessionEntity testSession = this.getById(testSessionId);
         final TestSessionStatusEntity endStatus = this.testSessionStatusService.getEndStatus();
         testSession.setStatus(endStatus);
+        testSession.setEndDate(new Date());
         this.testSessionRepository.save(testSession);
     }
 
