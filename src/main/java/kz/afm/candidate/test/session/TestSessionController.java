@@ -74,10 +74,10 @@ public class TestSessionController {
 
     @GetMapping("all/assessment")
     public ResponseEntity<ResponseBodyWrapper<TestSessionListForAssessmentResponse>> getAllForAssessment(
-            @RequestParam(name = "page_number", required = false, defaultValue = "0") int pageNumber,
-            @RequestParam(name = "page_size", required = false, defaultValue = "-1") int pageSize,
-            @RequestParam(name = "checked") boolean checked,
-            @RequestParam(name = "region_id", required = false, defaultValue = "-1") int regionId
+            @RequestParam(required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(required = false, defaultValue = "-1") int pageSize,
+            @RequestParam boolean checked,
+            @RequestParam(required = false, defaultValue = "-1") int regionId
     ) {
         try {
             final List<TestSessionForAssessmentResponse> testSessionsForAssessment = this.testSessionService
