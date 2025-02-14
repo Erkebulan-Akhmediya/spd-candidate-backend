@@ -6,6 +6,7 @@ import kz.afm.candidate.test.session.TestSessionEntity;
 import kz.afm.candidate.test.session.status.TestSessionStatusEntity;
 
 public class TestSessionForAssessmentResponse {
+    public long id;
     public String candidateFullName;
     public String testNameRus;
     public String testNameKaz;
@@ -14,6 +15,8 @@ public class TestSessionForAssessmentResponse {
     public String statusNameKaz;
 
     public TestSessionForAssessmentResponse(TestSessionEntity testSession) {
+        this.id = testSession.getId();
+
         CandidateEntity candidate = testSession.getCandidate();
         String candidateFirstName = candidate.getFirstName();
         String candidateLastName = candidate.getLastName();
