@@ -9,6 +9,7 @@ import kz.afm.candidate.test.session.status.TestSessionStatusService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.user.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -53,6 +54,50 @@ public class TestSessionService {
         return this.testSessionRepository.findById(testSessionId).orElseThrow(
                 () -> new NoSuchElementException("Нет сессии теста с ID: " + testSessionId)
         );
+    }
+
+    public long countAllForAssessment(int regionId, boolean checked) {
+        TestSessionStatusEntity status;
+        if (checked) {
+            status = this.testSessionStatusService.getCheckedStatus();
+        } else {
+            status = this.testSessionStatusService.getEndStatus();
+        }
+
+        if (regionId != -1) {
+            return this.testSessionRepository.countAllByStatusAndCandidate_TestingRegion_Id(status, regionId);
+        } else {
+            return this.testSessionRepository.countAllByStatus(status);
+        }
+    }
+
+    public List<TestSessionEntity> getAllForAssessment(int regionId, boolean checked, int pageNumber, int pageSize) {
+        TestSessionStatusEntity status;
+        if (checked) {
+            status = this.testSessionStatusService.getCheckedStatus();
+        } else {
+            status = this.testSessionStatusService.getEndStatus();
+        }
+
+
+        if (pageSize == -1) {
+            return this.getAllForAssessmentWithoutPagination(status, regionId);
+        }
+
+        final PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        if (regionId != -1) {
+            return this.testSessionRepository.findAllByStatusAndCandidate_TestingRegion_Id(status, regionId, pageRequest);
+        } else {
+            return this.testSessionRepository.findAllByStatus(status, pageRequest);
+        }
+    }
+
+    private List<TestSessionEntity> getAllForAssessmentWithoutPagination(TestSessionStatusEntity status, int regionId) {
+        if (regionId != -1) {
+            return this.testSessionRepository.findAllByStatusAndCandidate_TestingRegion_Id(status, regionId);
+        } else {
+            return this.testSessionRepository.findAllByStatus(status);
+        }
     }
 
 }

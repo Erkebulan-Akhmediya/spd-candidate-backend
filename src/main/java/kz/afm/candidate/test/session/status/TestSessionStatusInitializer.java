@@ -18,6 +18,7 @@ public class TestSessionStatusInitializer implements CommandLineRunner {
         List<TestSessionStatusEntity> statuses = new LinkedList<>(){{
             add(new TestSessionStatusEntity(1, "Начат", "Басталған"));
             add(new TestSessionStatusEntity(2, "Завершен", "Аяқталған"));
+            add(new TestSessionStatusEntity(3, "Проверено", "Тексерілді"));
         }};
         this.sessionStatusRepository.saveAll(statuses);
     }

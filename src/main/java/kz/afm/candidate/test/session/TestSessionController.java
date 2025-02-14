@@ -5,6 +5,8 @@ import kz.afm.candidate.test.TestService;
 import kz.afm.candidate.test.question.QuestionService;
 import kz.afm.candidate.test.session.dto.CreateTestSessionResponse;
 import kz.afm.candidate.test.session.dto.TestSessionAnswerRequest;
+import kz.afm.candidate.test.session.dto.TestSessionForAssessmentResponse;
+import kz.afm.candidate.test.session.dto.TestSessionListForAssessmentResponse;
 import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.test.variant.VariantService;
@@ -56,7 +58,7 @@ public class TestSessionController {
     }
 
     @PutMapping("{test_session_id}")
-    public ResponseEntity<ResponseBodyWrapper<Void>> endAndRespond(
+    public ResponseEntity<ResponseBodyWrapper<Void>> end(
             @PathVariable(name = "test_session_id") long testSessionId,
             @RequestBody List<TestSessionAnswerRequest> answers
     ) {
@@ -65,6 +67,31 @@ public class TestSessionController {
             return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
+        }
+    }
+
+    @GetMapping("all/assessment")
+    public ResponseEntity<ResponseBodyWrapper<TestSessionListForAssessmentResponse>> getAllForAssessment(
+            @RequestParam(name = "page_number", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(name = "page_size", required = false, defaultValue = "-1") int pageSize,
+            @RequestParam(name = "checked") boolean checked,
+            @RequestParam(name = "region_id", required = false, defaultValue = "-1") int regionId
+    ) {
+        try {
+            final List<TestSessionForAssessmentResponse> testSessionsForAssessment = this.testSessionService
+                    .getAllForAssessment(regionId, checked, pageNumber, pageSize)
+                    .stream()
+                    .map(TestSessionForAssessmentResponse::new)
+                    .toList();
+
+            final long count = this.testSessionService.countAllForAssessment(regionId, checked);
+
+            final TestSessionListForAssessmentResponse testSessionListForAssessment =
+                    new TestSessionListForAssessmentResponse(count, testSessionsForAssessment);
+
+            return ResponseEntity.ok(ResponseBodyWrapper.success(testSessionListForAssessment));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }

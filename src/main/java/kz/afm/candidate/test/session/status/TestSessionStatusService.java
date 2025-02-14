@@ -21,6 +21,11 @@ public class TestSessionStatusService {
         return this.getById(endedTestSessionStatusId);
     }
 
+    public TestSessionStatusEntity getCheckedStatus() {
+        final int checkedTestSessionStatusId = 3;
+        return this.getById(checkedTestSessionStatusId);
+    }
+
     public TestSessionStatusEntity getById(int id) {
         return testSessionStatusRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("Статус сессии теста с ID " + id + " не найден")
