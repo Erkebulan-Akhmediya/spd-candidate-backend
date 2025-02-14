@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -38,19 +37,7 @@ public class ResultService {
     }
 
     private boolean automaticallyEvaluated(TestSessionEntity testSession) {
-        final int noCorrectTestTypeId = 2;
-        final int oneCorrectTestTypeId = 3;
-        final int multipleCorrectTestTypeId = 4;
-        final int pointDistributionTestTypeId = 5;
-        final Set<Integer> automaticallyEvaluatedTestTypeIds = Set.of(
-                noCorrectTestTypeId,
-                oneCorrectTestTypeId,
-                multipleCorrectTestTypeId,
-                pointDistributionTestTypeId
-        );
-
-        final int testTypeId = testSession.getVariant().getTest().getType().getId();
-        return automaticallyEvaluatedTestTypeIds.contains(testTypeId);
+        return testSession.getVariant().getTest().getType().isAutomaticallyEvaluated();
     }
 
     public void evaluate(TestSessionEntity testSession) {

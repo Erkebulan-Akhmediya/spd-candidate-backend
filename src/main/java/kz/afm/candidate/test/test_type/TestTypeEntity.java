@@ -26,4 +26,6 @@ public class TestTypeEntity {
     @Column(length = 50, nullable = false)
     private String nameKaz;
 
+    private boolean automaticallyEvaluated;
+
 }
