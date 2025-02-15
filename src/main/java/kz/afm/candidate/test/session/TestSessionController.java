@@ -76,17 +76,16 @@ public class TestSessionController {
     public ResponseEntity<ResponseBodyWrapper<TestSessionListForAssessment>> getAllForAssessment(
             @RequestParam(required = false, defaultValue = "0") int pageNumber,
             @RequestParam(required = false, defaultValue = "-1") int pageSize,
-            @RequestParam boolean checked,
             @RequestParam(required = false, defaultValue = "-1") int regionId
     ) {
         try {
             final List<TestSessionForAssessment> testSessionsForAssessment = this.testSessionService
-                    .getAllForAssessment(regionId, checked, pageNumber, pageSize)
+                    .getAllForAssessment(regionId, pageNumber, pageSize)
                     .stream()
                     .map(TestSessionForAssessment::new)
                     .toList();
 
-            final long count = this.testSessionService.countAllForAssessment(regionId, checked);
+            final long count = this.testSessionService.countAllForAssessment(regionId);
 
             final TestSessionListForAssessment testSessionListForAssessment =
                     new TestSessionListForAssessment(count, testSessionsForAssessment);

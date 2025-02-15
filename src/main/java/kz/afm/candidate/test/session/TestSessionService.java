@@ -67,13 +67,8 @@ public class TestSessionService {
         );
     }
 
-    public long countAllForAssessment(int regionId, boolean checked) {
-        TestSessionStatusEntity status;
-        if (checked) {
-            status = this.testSessionStatusService.getCheckedStatus();
-        } else {
-            status = this.testSessionStatusService.getEndStatus();
-        }
+    public long countAllForAssessment(int regionId) {
+        TestSessionStatusEntity status = this.testSessionStatusService.getEndStatus();
 
         if (regionId != -1) {
             return this.testSessionRepository.countAllByStatusAndCandidate_TestingRegion_Id(status, regionId);
@@ -82,14 +77,8 @@ public class TestSessionService {
         }
     }
 
-    public List<TestSessionEntity> getAllForAssessment(int regionId, boolean checked, int pageNumber, int pageSize) {
-        TestSessionStatusEntity status;
-        if (checked) {
-            status = this.testSessionStatusService.getCheckedStatus();
-        } else {
-            status = this.testSessionStatusService.getEndStatus();
-        }
-
+    public List<TestSessionEntity> getAllForAssessment(int regionId, int pageNumber, int pageSize) {
+        TestSessionStatusEntity status = this.testSessionStatusService.getEndStatus();
 
         if (pageSize == -1) {
             return this.getAllForAssessmentWithoutPagination(status, regionId);
