@@ -1,6 +1,8 @@
 package kz.afm.candidate.test.session.answer;
 
 import jakarta.transaction.Transactional;
+import kz.afm.candidate.test.question.QuestionEntity;
+import kz.afm.candidate.test.question.QuestionService;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import kz.afm.candidate.test.session.dto.TestSessionAnswerRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.List;
 public class TestSessionAnswerService {
 
     private final TestSessionAnswerFactoryService testSessionAnswerFactoryService;
+    private final QuestionService questionService;
     private final TestSessionAnswerRepository testSessionAnswerRepository;
 
     @Transactional
@@ -21,14 +24,19 @@ public class TestSessionAnswerService {
         List<TestSessionAnswerEntity> answers = new LinkedList<>();
 
         answerDtoList.forEach((TestSessionAnswerRequest answerDto) -> {
-            final List<TestSessionAnswerEntity> answersFromDto = this.testSessionAnswerFactoryService.create(testSession, answerDto);
+            final QuestionEntity question = this.questionService.getById(answerDto.getQuestionId());
+            final List<TestSessionAnswerEntity> answersFromDto = this.testSessionAnswerFactoryService.create(
+                    testSession,
+                    question,
+                    answerDto
+            );
             answers.addAll(answersFromDto);
         });
 
         this.testSessionAnswerRepository.saveAll(answers);
     }
 
-    public List<TestSessionAnswerEntity> getAllByTestSessionId(TestSessionEntity testSession) {
+    public List<TestSessionAnswerEntity> getAllByTestSession(TestSessionEntity testSession) {
         return this.testSessionAnswerRepository.findAllByTestSession(testSession);
     }
 

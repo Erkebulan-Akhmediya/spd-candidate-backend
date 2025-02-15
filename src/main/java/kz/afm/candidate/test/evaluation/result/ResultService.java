@@ -41,7 +41,7 @@ public class ResultService {
     }
 
     public void evaluate(TestSessionEntity testSession) {
-        List<TestSessionAnswerEntity> answers = this.testSessionAnswerService.getAllByTestSessionId(testSession);
+        List<TestSessionAnswerEntity> answers = this.testSessionAnswerService.getAllByTestSession(testSession);
         if (this.answersWithNoOptions(answers)) return;
         final Map<Long, ResultEntity> results = this.createResultMapFor(testSession);
         this.updateResults(results, answers);

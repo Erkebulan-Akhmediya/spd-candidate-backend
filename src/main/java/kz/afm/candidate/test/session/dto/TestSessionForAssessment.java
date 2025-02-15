@@ -3,9 +3,13 @@ package kz.afm.candidate.test.session.dto;
 import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.session.TestSessionEntity;
+import kz.afm.candidate.test.session.answer.TestSessionAnswerEntity;
 import kz.afm.candidate.test.session.status.TestSessionStatusEntity;
 
-public class TestSessionForAssessmentResponse {
+import java.util.LinkedList;
+import java.util.List;
+
+public class TestSessionForAssessment {
     public long id;
     public String candidateFullName;
     public String testNameRus;
@@ -13,8 +17,13 @@ public class TestSessionForAssessmentResponse {
     public int statusId;
     public String statusNameRus;
     public String statusNameKaz;
+    public List<TestSessionAnswerForAssessment> answers;
 
-    public TestSessionForAssessmentResponse(TestSessionEntity testSession) {
+    public TestSessionForAssessment(TestSessionEntity testSession) {
+        this(testSession, new LinkedList<>());
+    }
+
+    public TestSessionForAssessment(TestSessionEntity testSession, List<TestSessionAnswerEntity> answers) {
         this.id = testSession.getId();
 
         CandidateEntity candidate = testSession.getCandidate();
@@ -32,5 +41,10 @@ public class TestSessionForAssessmentResponse {
         this.statusId = status.getId();
         this.statusNameRus = this.statusId == checkedTestSessionStatusId ? status.getNameRus() : "Не проверено";
         this.statusNameKaz = this.statusId == checkedTestSessionStatusId ? status.getNameKaz() : "Тексерілмеген";
+
+        this.answers = answers.stream()
+                .map(TestSessionAnswerForAssessment::new)
+                .toList();
     }
+
 }

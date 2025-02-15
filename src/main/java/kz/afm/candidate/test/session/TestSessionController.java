@@ -3,10 +3,9 @@ package kz.afm.candidate.test.session;
 import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.test.TestService;
 import kz.afm.candidate.test.question.QuestionService;
-import kz.afm.candidate.test.session.dto.CreateTestSessionResponse;
-import kz.afm.candidate.test.session.dto.TestSessionAnswerRequest;
-import kz.afm.candidate.test.session.dto.TestSessionForAssessmentResponse;
-import kz.afm.candidate.test.session.dto.TestSessionListForAssessmentResponse;
+import kz.afm.candidate.test.session.answer.TestSessionAnswerEntity;
+import kz.afm.candidate.test.session.answer.TestSessionAnswerService;
+import kz.afm.candidate.test.session.dto.*;
 import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.test.variant.VariantService;
@@ -30,6 +29,7 @@ public class TestSessionController {
     private final VariantService variantService;
     private final QuestionService questionService;
     private final PointDistributionTestService pointDistributionTestService;
+    private final TestSessionAnswerService testSessionAnswerService;
 
     @PostMapping
     public ResponseEntity<ResponseBodyWrapper<CreateTestSessionResponse>> createAndSend(
@@ -80,10 +80,10 @@ public class TestSessionController {
             @RequestParam(required = false, defaultValue = "-1") int regionId
     ) {
         try {
-            final List<TestSessionForAssessmentResponse> testSessionsForAssessment = this.testSessionService
+            final List<TestSessionForAssessment> testSessionsForAssessment = this.testSessionService
                     .getAllForAssessment(regionId, checked, pageNumber, pageSize)
                     .stream()
-                    .map(TestSessionForAssessmentResponse::new)
+                    .map(TestSessionForAssessment::new)
                     .toList();
 
             final long count = this.testSessionService.countAllForAssessment(regionId, checked);
@@ -92,6 +92,20 @@ public class TestSessionController {
                     new TestSessionListForAssessmentResponse(count, testSessionsForAssessment);
 
             return ResponseEntity.ok(ResponseBodyWrapper.success(testSessionListForAssessment));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
+        }
+    }
+
+    @GetMapping("{test_session_id}/assessment")
+    public ResponseEntity<ResponseBodyWrapper<TestSessionForAssessment>> getByIdForAssessment(
+            @PathVariable(name = "test_session_id") long testSessionId
+    ) {
+        try {
+            final TestSessionEntity testSession = this.testSessionService.getById(testSessionId);
+            final List<TestSessionAnswerEntity> answers = this.testSessionAnswerService.getAllByTestSession(testSession);
+            final TestSessionForAssessment testSessionDto = new TestSessionForAssessment(testSession, answers);
+            return ResponseEntity.ok(ResponseBodyWrapper.success(testSessionDto));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
