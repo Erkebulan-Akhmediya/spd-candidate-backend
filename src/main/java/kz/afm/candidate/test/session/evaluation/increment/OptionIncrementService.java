@@ -1,9 +1,9 @@
-package kz.afm.candidate.test.evaluation.increment;
+package kz.afm.candidate.test.session.evaluation.increment;
 
 import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.dto.evaluation.CreateOptionIncrementRequest;
-import kz.afm.candidate.test.evaluation.scale.ScaleEntity;
-import kz.afm.candidate.test.evaluation.scale.ScaleService;
+import kz.afm.candidate.test.session.evaluation.scale.ScaleEntity;
+import kz.afm.candidate.test.session.evaluation.scale.ScaleService;
 import kz.afm.candidate.test.option.OptionEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

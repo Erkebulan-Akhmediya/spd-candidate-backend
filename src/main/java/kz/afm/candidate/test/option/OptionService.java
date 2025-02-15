@@ -1,7 +1,7 @@
 package kz.afm.candidate.test.option;
 
 import kz.afm.candidate.test.dto.CreateOptionRequest;
-import kz.afm.candidate.test.evaluation.increment.OptionIncrementService;
+import kz.afm.candidate.test.session.evaluation.increment.OptionIncrementService;
 import kz.afm.candidate.test.question.QuestionEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;

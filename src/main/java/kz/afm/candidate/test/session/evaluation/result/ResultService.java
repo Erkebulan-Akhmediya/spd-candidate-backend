@@ -1,9 +1,9 @@
-package kz.afm.candidate.test.evaluation.result;
+package kz.afm.candidate.test.session.evaluation.result;
 
-import kz.afm.candidate.test.evaluation.increment.OptionIncrementEntity;
-import kz.afm.candidate.test.evaluation.increment.OptionIncrementService;
-import kz.afm.candidate.test.evaluation.scale.ScaleEntity;
-import kz.afm.candidate.test.evaluation.scale.ScaleService;
+import kz.afm.candidate.test.session.evaluation.increment.OptionIncrementEntity;
+import kz.afm.candidate.test.session.evaluation.increment.OptionIncrementService;
+import kz.afm.candidate.test.session.evaluation.scale.ScaleEntity;
+import kz.afm.candidate.test.session.evaluation.scale.ScaleService;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import kz.afm.candidate.test.session.TestSessionService;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerEntity;

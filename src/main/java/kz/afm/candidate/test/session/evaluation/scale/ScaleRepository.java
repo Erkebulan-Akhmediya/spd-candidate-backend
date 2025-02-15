@@ -1,4 +1,4 @@
-package kz.afm.candidate.test.evaluation.scale;
+package kz.afm.candidate.test.session.evaluation.scale;
 
 import kz.afm.candidate.test.TestEntity;
 import org.springframework.data.domain.Sort;

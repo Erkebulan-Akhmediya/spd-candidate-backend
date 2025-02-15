@@ -1,4 +1,4 @@
-package kz.afm.candidate.test.evaluation.result;
+package kz.afm.candidate.test.session.evaluation.result;
 
 import kz.afm.candidate.dto.ResponseBodyWrapper;
 import lombok.RequiredArgsConstructor;

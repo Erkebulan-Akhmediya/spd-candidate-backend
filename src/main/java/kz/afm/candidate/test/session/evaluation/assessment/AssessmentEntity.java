@@ -1,4 +1,4 @@
-package kz.afm.candidate.test.evaluation.assessment;
+package kz.afm.candidate.test.session.evaluation.assessment;
 
 import jakarta.persistence.*;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerEntity;

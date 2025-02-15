@@ -1,8 +1,8 @@
-package kz.afm.candidate.test.evaluation.scale;
+package kz.afm.candidate.test.session.evaluation.scale;
 
 import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.dto.evaluation.CreateScaleRequest;
-import kz.afm.candidate.test.evaluation.section.SectionService;
+import kz.afm.candidate.test.session.evaluation.section.SectionService;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;

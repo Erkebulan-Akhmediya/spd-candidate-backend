@@ -1,4 +1,4 @@
-package kz.afm.candidate.test.evaluation.section;
+package kz.afm.candidate.test.session.evaluation.section;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

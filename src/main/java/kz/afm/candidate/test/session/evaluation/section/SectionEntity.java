@@ -1,7 +1,7 @@
-package kz.afm.candidate.test.evaluation.section;
+package kz.afm.candidate.test.session.evaluation.section;
 
 import jakarta.persistence.*;
-import kz.afm.candidate.test.evaluation.scale.ScaleEntity;
+import kz.afm.candidate.test.session.evaluation.scale.ScaleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

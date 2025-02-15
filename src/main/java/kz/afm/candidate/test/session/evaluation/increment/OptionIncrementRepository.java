@@ -1,4 +1,4 @@
-package kz.afm.candidate.test.evaluation.increment;
+package kz.afm.candidate.test.session.evaluation.increment;
 
 import kz.afm.candidate.test.option.OptionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

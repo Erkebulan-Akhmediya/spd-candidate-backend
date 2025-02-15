@@ -1,7 +1,7 @@
-package kz.afm.candidate.test.evaluation.section;
+package kz.afm.candidate.test.session.evaluation.section;
 
 import kz.afm.candidate.test.dto.evaluation.CreateScaleSectionRequest;
-import kz.afm.candidate.test.evaluation.scale.ScaleEntity;
+import kz.afm.candidate.test.session.evaluation.scale.ScaleEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

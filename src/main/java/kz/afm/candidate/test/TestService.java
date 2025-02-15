@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
 import kz.afm.candidate.test.dto.CreateTestRequest;
-import kz.afm.candidate.test.evaluation.scale.ScaleService;
+import kz.afm.candidate.test.session.evaluation.scale.ScaleService;
 import kz.afm.candidate.test.test_type.TestTypeEntity;
 import kz.afm.candidate.test.test_type.TestTypeService;
 import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
