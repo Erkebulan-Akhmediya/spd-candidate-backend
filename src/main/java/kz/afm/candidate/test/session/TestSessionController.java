@@ -73,7 +73,7 @@ public class TestSessionController {
     }
 
     @GetMapping("all/assessment")
-    public ResponseEntity<ResponseBodyWrapper<TestSessionListForAssessmentResponse>> getAllForAssessment(
+    public ResponseEntity<ResponseBodyWrapper<TestSessionListForAssessment>> getAllForAssessment(
             @RequestParam(required = false, defaultValue = "0") int pageNumber,
             @RequestParam(required = false, defaultValue = "-1") int pageSize,
             @RequestParam boolean checked,
@@ -88,8 +88,8 @@ public class TestSessionController {
 
             final long count = this.testSessionService.countAllForAssessment(regionId, checked);
 
-            final TestSessionListForAssessmentResponse testSessionListForAssessment =
-                    new TestSessionListForAssessmentResponse(count, testSessionsForAssessment);
+            final TestSessionListForAssessment testSessionListForAssessment =
+                    new TestSessionListForAssessment(count, testSessionsForAssessment);
 
             return ResponseEntity.ok(ResponseBodyWrapper.success(testSessionListForAssessment));
         } catch (Exception e) {
@@ -106,6 +106,18 @@ public class TestSessionController {
             final List<TestSessionAnswerEntity> answers = this.testSessionAnswerService.getAllByTestSession(testSession);
             final TestSessionForAssessment testSessionDto = new TestSessionForAssessment(testSession, answers);
             return ResponseEntity.ok(ResponseBodyWrapper.success(testSessionDto));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
+        }
+    }
+
+    @PostMapping("assessment")
+    public ResponseEntity<ResponseBodyWrapper<Void>> saveTestSessionAssessment(
+            @RequestBody TestSessionForAssessment testSession
+    ) {
+        try {
+            this.testSessionService.assess(testSession.id, testSession.answers);
+            return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }

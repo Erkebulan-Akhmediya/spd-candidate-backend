@@ -25,4 +25,9 @@ public class AssessmentEntity {
 
     private String result;
 
+    public AssessmentEntity(TestSessionAnswerEntity answer, String result) {
+        this.testSessionAnswer = answer;
+        this.result = result;
+    }
+
 }

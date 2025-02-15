@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 @AllArgsConstructor
-public class TestSessionListForAssessmentResponse {
+public class TestSessionListForAssessment {
     public long count;
     public List<TestSessionForAssessment> testSessions;
 }

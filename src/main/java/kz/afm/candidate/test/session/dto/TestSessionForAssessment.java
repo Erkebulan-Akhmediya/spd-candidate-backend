@@ -5,10 +5,14 @@ import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerEntity;
 import kz.afm.candidate.test.session.status.TestSessionStatusEntity;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class TestSessionForAssessment {
     public long id;
     public String candidateFullName;

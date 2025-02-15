@@ -3,7 +3,9 @@ package kz.afm.candidate.test.session;
 import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.CandidateService;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerService;
+import kz.afm.candidate.test.session.dto.TestSessionAnswerForAssessment;
 import kz.afm.candidate.test.session.dto.TestSessionAnswerRequest;
+import kz.afm.candidate.test.session.evaluation.assessment.AssessmentService;
 import kz.afm.candidate.test.session.status.TestSessionStatusEntity;
 import kz.afm.candidate.test.session.status.TestSessionStatusService;
 import kz.afm.candidate.test.variant.VariantEntity;
@@ -24,6 +26,7 @@ public class TestSessionService {
     private final TestSessionStatusService testSessionStatusService;
     private final TestSessionAnswerService testSessionAnswerService;
     private final CandidateService candidateService;
+    private final AssessmentService assessmentService;
 
     public long createFromUserAndVariant(UserEntity user, VariantEntity variant) {
         final long requestingUserId = user.getId();
@@ -47,6 +50,14 @@ public class TestSessionService {
         final TestSessionStatusEntity endStatus = this.testSessionStatusService.getEndStatus();
         testSession.setStatus(endStatus);
         testSession.setEndDate(new Date());
+        this.testSessionRepository.save(testSession);
+    }
+
+    public void assess(long testSessionId, List<TestSessionAnswerForAssessment> answers) throws NoSuchElementException {
+        final TestSessionEntity testSession = this.getById(testSessionId);
+        this.assessmentService.save(testSession, answers);
+        final TestSessionStatusEntity checkedStatus = this.testSessionStatusService.getCheckedStatus();
+        testSession.setStatus(checkedStatus);
         this.testSessionRepository.save(testSession);
     }
 

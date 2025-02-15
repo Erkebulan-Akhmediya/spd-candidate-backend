@@ -8,8 +8,10 @@ import kz.afm.candidate.test.session.dto.TestSessionAnswerRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -38,6 +40,13 @@ public class TestSessionAnswerService {
 
     public List<TestSessionAnswerEntity> getAllByTestSession(TestSessionEntity testSession) {
         return this.testSessionAnswerRepository.findAllByTestSession(testSession);
+    }
+
+    public Map<Long, TestSessionAnswerEntity> getMapOfAllByTestSession(TestSessionEntity testSession) {
+        final List<TestSessionAnswerEntity> answers = this.getAllByTestSession(testSession);
+        final Map<Long, TestSessionAnswerEntity> answerMap = new HashMap<>();
+        answers.forEach((TestSessionAnswerEntity answer) -> answerMap.put(answer.getId(), answer));
+        return answerMap;
     }
 
 }
