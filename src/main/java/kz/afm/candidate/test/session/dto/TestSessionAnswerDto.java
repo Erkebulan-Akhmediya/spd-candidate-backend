@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class TestSessionAnswerForAssessment {
+public class TestSessionAnswerDto {
     public long id;
     public String questionNameRus;
     public String questionNameKaz;
     public String answer;
     public String assessment;
 
-    public TestSessionAnswerForAssessment(TestSessionAnswerEntity answer) {
+    public TestSessionAnswerDto(TestSessionAnswerEntity answer) {
         this.id = answer.getId();
 
         QuestionEntity question = answer.getQuestion();

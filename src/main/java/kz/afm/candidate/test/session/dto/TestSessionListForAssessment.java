@@ -7,5 +7,5 @@ import java.util.List;
 @AllArgsConstructor
 public class TestSessionListForAssessment {
     public long count;
-    public List<TestSessionForAssessment> testSessions;
+    public List<TestSessionDto> testSessions;
 }

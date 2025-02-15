@@ -4,7 +4,6 @@ import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerEntity;
-import kz.afm.candidate.test.session.status.TestSessionStatusEntity;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -13,21 +12,18 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class TestSessionForAssessment {
+public class TestSessionDto {
     public long id;
     public String candidateFullName;
     public String testNameRus;
     public String testNameKaz;
-    public int statusId;
-    public String statusNameRus;
-    public String statusNameKaz;
-    public List<TestSessionAnswerForAssessment> answers;
+    public List<TestSessionAnswerDto> answers;
 
-    public TestSessionForAssessment(TestSessionEntity testSession) {
+    public TestSessionDto(TestSessionEntity testSession) {
         this(testSession, new LinkedList<>());
     }
 
-    public TestSessionForAssessment(TestSessionEntity testSession, List<TestSessionAnswerEntity> answers) {
+    public TestSessionDto(TestSessionEntity testSession, List<TestSessionAnswerEntity> answers) {
         this.id = testSession.getId();
 
         CandidateEntity candidate = testSession.getCandidate();
@@ -40,14 +36,8 @@ public class TestSessionForAssessment {
         this.testNameRus = test.getNameRus();
         this.testNameKaz = test.getNameKaz();
 
-        final int checkedTestSessionStatusId = 3;
-        TestSessionStatusEntity status = testSession.getStatus();
-        this.statusId = status.getId();
-        this.statusNameRus = this.statusId == checkedTestSessionStatusId ? status.getNameRus() : "Не проверено";
-        this.statusNameKaz = this.statusId == checkedTestSessionStatusId ? status.getNameKaz() : "Тексерілмеген";
-
         this.answers = answers.stream()
-                .map(TestSessionAnswerForAssessment::new)
+                .map(TestSessionAnswerDto::new)
                 .toList();
     }
 

@@ -72,38 +72,41 @@ public class TestSessionController {
         }
     }
 
-    @GetMapping("all/assessment")
+    @GetMapping("all/{purpose:[a-zA-Z]+}")
     public ResponseEntity<ResponseBodyWrapper<TestSessionListForAssessment>> getAllForAssessment(
+            @PathVariable String purpose,
             @RequestParam(required = false, defaultValue = "0") int pageNumber,
             @RequestParam(required = false, defaultValue = "-1") int pageSize,
             @RequestParam(required = false, defaultValue = "-1") int regionId
     ) {
         try {
-            final List<TestSessionForAssessment> testSessionsForAssessment = this.testSessionService
-                    .getAllForAssessment(regionId, pageNumber, pageSize)
+            final List<TestSessionDto> testSessionDtoList = this.testSessionService
+                    .getAllByPurpose(purpose, regionId, pageNumber, pageSize)
                     .stream()
-                    .map(TestSessionForAssessment::new)
+                    .map(TestSessionDto::new)
                     .toList();
 
-            final long count = this.testSessionService.countAllForAssessment(regionId);
+            final long count = this.testSessionService.countAllByRegionId(regionId);
 
             final TestSessionListForAssessment testSessionListForAssessment =
-                    new TestSessionListForAssessment(count, testSessionsForAssessment);
+                    new TestSessionListForAssessment(count, testSessionDtoList);
 
             return ResponseEntity.ok(ResponseBodyWrapper.success(testSessionListForAssessment));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
     }
 
-    @GetMapping("{test_session_id}/assessment")
-    public ResponseEntity<ResponseBodyWrapper<TestSessionForAssessment>> getByIdForAssessment(
+    @GetMapping("{test_session_id:\\d+}/assessment")
+    public ResponseEntity<ResponseBodyWrapper<TestSessionDto>> getByIdForAssessment(
             @PathVariable(name = "test_session_id") long testSessionId
     ) {
         try {
             final TestSessionEntity testSession = this.testSessionService.getById(testSessionId);
             final List<TestSessionAnswerEntity> answers = this.testSessionAnswerService.getAllByTestSession(testSession);
-            final TestSessionForAssessment testSessionDto = new TestSessionForAssessment(testSession, answers);
+            final TestSessionDto testSessionDto = new TestSessionDto(testSession, answers);
             return ResponseEntity.ok(ResponseBodyWrapper.success(testSessionDto));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
@@ -112,7 +115,7 @@ public class TestSessionController {
 
     @PostMapping("assessment")
     public ResponseEntity<ResponseBodyWrapper<Void>> saveTestSessionAssessment(
-            @RequestBody TestSessionForAssessment testSession
+            @RequestBody TestSessionDto testSession
     ) {
         try {
             this.testSessionService.assess(testSession.id, testSession.answers);
