@@ -1,5 +1,6 @@
 package kz.afm.candidate.test.session.status;
 
+import kz.afm.candidate.test.TestEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,11 @@ public class TestSessionStatusService {
     public TestSessionStatusEntity getCheckedStatus() {
         final int checkedTestSessionStatusId = 3;
         return this.getById(checkedTestSessionStatusId);
+    }
+
+    public boolean isPointDistribution(TestEntity test) {
+        final int pointDistributionTestSessionStatusId = 5;
+        return test.getType().getId() == pointDistributionTestSessionStatusId;
     }
 
     public TestSessionStatusEntity getById(int id) {

@@ -1,6 +1,7 @@
 package kz.afm.candidate.test.session.answer;
 
 import jakarta.transaction.Transactional;
+import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.question.QuestionEntity;
 import kz.afm.candidate.test.question.QuestionService;
 import kz.afm.candidate.test.session.TestSessionEntity;
@@ -47,6 +48,10 @@ public class TestSessionAnswerService {
         final Map<Long, TestSessionAnswerEntity> answerMap = new HashMap<>();
         answers.forEach((TestSessionAnswerEntity answer) -> answerMap.put(answer.getId(), answer));
         return answerMap;
+    }
+
+    public TestEntity getTestFrom(TestSessionAnswerEntity answer) {
+        return answer.getTestSession().getVariant().getTest();
     }
 
 }

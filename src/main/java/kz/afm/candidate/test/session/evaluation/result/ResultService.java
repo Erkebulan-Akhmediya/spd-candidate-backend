@@ -8,6 +8,7 @@ import kz.afm.candidate.test.session.evaluation.scale.ScaleService;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerEntity;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerService;
+import kz.afm.candidate.test.session.status.TestSessionStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class ResultService {
     private final ScaleService scaleService;
     private final OptionIncrementService optionIncrementService;
     private final ResultRepository resultRepository;
+    private final TestSessionStatusService testSessionStatusService;
 
     public List<ResultEntity> getByTestSession(TestSessionEntity testSession) {
         return this.resultRepository.findAllByTestSession(testSession);
@@ -56,11 +58,21 @@ public class ResultService {
 
             final long incrementScaleId = increment.getScale().getId();
             ResultEntity result = results.get(incrementScaleId);
-            result.setScore(result.getScore() + increment.getIncrement());
+            final int pointsToAdd = this.pointsToAdd(answer, increment);
+            result.setScore(result.getScore() + pointsToAdd);
             results.replace(incrementScaleId, result);
         });
 
         this.resultRepository.saveAll(results.values());
+    }
+
+    private int pointsToAdd(TestSessionAnswerEntity answer, OptionIncrementEntity optionIncrement) {
+        final TestEntity answerTest = this.testSessionAnswerService.getTestFrom(answer);
+        if (this.testSessionStatusService.isPointDistribution(answerTest)) {
+            return Integer.parseInt(answer.getAnswer());
+        } else {
+            return optionIncrement.getIncrement();
+        }
     }
 
     public String getType(TestEntity test) {
