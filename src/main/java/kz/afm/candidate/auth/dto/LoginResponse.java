@@ -8,4 +8,5 @@ import java.util.Set;
 public class LoginResponse {
     public String token;
     public Set<String> roles;
+    public Integer regionId;
 }
