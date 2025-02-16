@@ -148,4 +148,8 @@ public class TestSessionService {
         }
     }
 
+    public List<TestSessionEntity> getAllByCandidate(CandidateEntity candidate) {
+        return this.testSessionRepository.findAllByCandidate(candidate);
+    }
+
 }

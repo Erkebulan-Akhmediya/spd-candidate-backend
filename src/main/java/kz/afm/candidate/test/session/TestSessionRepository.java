@@ -1,5 +1,6 @@
 package kz.afm.candidate.test.session;
 
+import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.test.session.status.TestSessionStatusEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,6 @@ public interface TestSessionRepository extends JpaRepository<TestSessionEntity, 
     long countAllByStatus(TestSessionStatusEntity status);
 
     long countAllByStatusAndCandidate_TestingRegion_Id(TestSessionStatusEntity status, int candidateTestingRegionId);
+
+    List<TestSessionEntity> findAllByCandidate(CandidateEntity candidate);
 }

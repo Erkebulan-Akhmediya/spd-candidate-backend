@@ -7,6 +7,7 @@ import kz.afm.candidate.candidate.education.EducationService;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusService;
 import kz.afm.candidate.candidate.experience.ExperienceService;
+import kz.afm.candidate.user.UserEntity;
 import kz.afm.candidate.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -50,8 +51,8 @@ public class CandidateService {
         return this.candidateRepository.findByUser_Id(userId).getFirst();
     }
 
-    public String getIdentificationNumberByUserId(long userId) throws NoSuchElementException {
-        return this.getByUserId(userId).getIdentificationNumber();
+    public CandidateEntity getByUserOrNull(UserEntity user) {
+        return this.candidateRepository.findByUser(user).orElse(null);
     }
 
     @Transactional
@@ -108,10 +109,6 @@ public class CandidateService {
         candidate.setStatus(status);
         candidate.setAreaOfActivity(this.areaOfActivityService.getByName(areaOfActivity));
         this.candidateRepository.save(candidate);
-    }
-
-    public String getCandidatesAreaOfActivityNameByUserId(long userId) {
-        return this.getByUserId(userId).getAreaOfActivity().getName();
     }
 
 }
