@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @RequiredArgsConstructor
 @RequestMapping("auth")
 @RestController
@@ -25,8 +27,9 @@ public class AuthController {
         try {
             this.authService.authenticateUser(request.getUsername(), request.getPassword());
             final UserEntity user = this.userService.getByUsername(request.getUsername());
+            final Set<String> roles = user.getRoleCodes();
             final String token = this.jwtService.generateTokenFrom(user);
-            return ResponseEntity.ok(ResponseBodyWrapper.success(new LoginResponse(token)));
+            return ResponseEntity.ok(ResponseBodyWrapper.success(new LoginResponse(token, roles)));
         } catch (AuthenticationException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(ResponseBodyWrapper.error("Ошибка входа"));
