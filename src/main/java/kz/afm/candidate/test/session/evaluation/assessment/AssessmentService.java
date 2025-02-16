@@ -30,4 +30,8 @@ public class AssessmentService {
         this.assessmentRepository.saveAll(assessments);
     }
 
+    public List<AssessmentEntity> getByTestSession(TestSessionEntity testSession) {
+        return this.assessmentRepository.findAllByTestSessionAnswer_TestSession(testSession);
+    }
+
 }

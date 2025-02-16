@@ -1,11 +1,18 @@
 package kz.afm.candidate.test.session;
 
 import kz.afm.candidate.dto.ResponseBodyWrapper;
+import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.TestService;
 import kz.afm.candidate.test.question.QuestionService;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerEntity;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerService;
 import kz.afm.candidate.test.session.dto.*;
+import kz.afm.candidate.test.session.evaluation.assessment.AssessmentEntity;
+import kz.afm.candidate.test.session.evaluation.assessment.AssessmentService;
+import kz.afm.candidate.test.session.evaluation.result.ResultEntity;
+import kz.afm.candidate.test.session.evaluation.result.ResultService;
+import kz.afm.candidate.test.session.evaluation.section.SectionEntity;
+import kz.afm.candidate.test.session.evaluation.section.SectionService;
 import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.test.variant.VariantService;
@@ -30,6 +37,9 @@ public class TestSessionController {
     private final QuestionService questionService;
     private final PointDistributionTestService pointDistributionTestService;
     private final TestSessionAnswerService testSessionAnswerService;
+    private final ResultService resultService;
+    private final AssessmentService assessmentService;
+    private final SectionService sectionService;
 
     @PostMapping
     public ResponseEntity<ResponseBodyWrapper<CreateTestSessionResponse>> createAndSend(
@@ -120,6 +130,42 @@ public class TestSessionController {
         try {
             this.testSessionService.assess(testSession.id, testSession.answers);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
+        }
+    }
+
+    @GetMapping("{test_session_id:\\d+}/result")
+    public ResponseEntity<ResponseBodyWrapper<TestSessionResultDtoList>> getByIdForResult(
+            @PathVariable(name = "test_session_id") long testSessionId
+    ) {
+        try {
+            final TestSessionEntity testSession = this.testSessionService.getById(testSessionId);
+
+            final TestEntity test = testSession.getVariant().getTest();
+            final String resultType = this.resultService.getType(test);
+
+            final List<TestSessionResultDto> resultDtos;
+            if (test.getType().isAutomaticallyEvaluated()) {
+                final List<ResultEntity> results = this.resultService.getByTestSession(testSession);
+                resultDtos = results.stream()
+                        .map(
+                                (ResultEntity result) -> {
+                                    final SectionEntity section = this.sectionService.getByResult(result);
+                                    return new TestSessionResultDto(result, section);
+                                }
+                        )
+                        .toList();
+            } else {
+                final List<AssessmentEntity> assessments = this.assessmentService.getByTestSession(testSession);
+                resultDtos = assessments.stream()
+                        .map(TestSessionResultDto::new)
+                        .toList();
+            }
+
+            final TestSessionResultDtoList resultDtoList = new TestSessionResultDtoList(resultType, resultDtos);
+
+            return ResponseEntity.ok(ResponseBodyWrapper.success(resultDtoList));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }

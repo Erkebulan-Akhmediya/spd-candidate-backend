@@ -1,6 +1,7 @@
 package kz.afm.candidate.test.session.evaluation.section;
 
 import kz.afm.candidate.test.dto.evaluation.CreateScaleSectionRequest;
+import kz.afm.candidate.test.session.evaluation.result.ResultEntity;
 import kz.afm.candidate.test.session.evaluation.scale.ScaleEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,16 @@ public class SectionService {
                 )
                 .toList();
         this.sectionRepository.saveAll(sections);
+    }
+
+    public SectionEntity getByResult(ResultEntity result) {
+        return this.sectionRepository
+                .findAllByScaleAndLowerBoundLessThanEqualAndUpperBoundGreaterThanEqual(
+                        result.getScale(),
+                        result.getScore(),
+                        result.getScore()
+                )
+                .orElse(null);
     }
 
 }

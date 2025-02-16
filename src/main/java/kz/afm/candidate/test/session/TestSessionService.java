@@ -6,12 +6,14 @@ import kz.afm.candidate.test.session.answer.TestSessionAnswerService;
 import kz.afm.candidate.test.session.dto.TestSessionAnswerDto;
 import kz.afm.candidate.test.session.dto.TestSessionAnswerRequest;
 import kz.afm.candidate.test.session.evaluation.assessment.AssessmentService;
+import kz.afm.candidate.test.session.evaluation.result.ResultService;
 import kz.afm.candidate.test.session.status.TestSessionStatusEntity;
 import kz.afm.candidate.test.session.status.TestSessionStatusService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -28,6 +30,7 @@ public class TestSessionService {
     private final TestSessionAnswerService testSessionAnswerService;
     private final CandidateService candidateService;
     private final AssessmentService assessmentService;
+    private final ResultService resultService;
 
     public long createFromUserAndVariant(UserEntity user, VariantEntity variant) {
         final long requestingUserId = user.getId();
@@ -45,6 +48,7 @@ public class TestSessionService {
         final TestSessionEntity testSession = this.getById(testSessionId);
         this.testSessionAnswerService.save(testSession, answers);
         this.end(testSession);
+        this.evaluateAfterResponse(testSession);
     }
 
     private void end(TestSessionEntity testSession) {
@@ -52,6 +56,18 @@ public class TestSessionService {
         testSession.setStatus(endStatus);
         testSession.setEndDate(new Date());
         this.testSessionRepository.save(testSession);
+    }
+
+    @Async
+    protected void evaluateAfterResponse(TestSessionEntity testSession) {
+        try {
+            this.resultService.evaluate(testSession);
+            final TestSessionStatusEntity checkedStatus = this.testSessionStatusService.getCheckedStatus();
+            testSession.setStatus(checkedStatus);
+            this.testSessionRepository.save(testSession);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void assess(long testSessionId, List<TestSessionAnswerDto> answers) throws NoSuchElementException {
