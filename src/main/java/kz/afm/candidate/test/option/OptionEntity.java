@@ -19,12 +19,13 @@ public class OptionEntity {
     @Column(nullable = false)
     private boolean withFile;
 
+    @Column(length = 1000)
     private String fileName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String nameRus;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String nameKaz;
 
     private Boolean isCorrect;

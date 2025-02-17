@@ -27,7 +27,7 @@ public class UserEntity implements UserDetails {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

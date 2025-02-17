@@ -19,12 +19,13 @@ public class QuestionEntity {
     @Column(nullable = false)
     private boolean withFile;
 
+    @Column(length = 1000)
     private String fileName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10000)
     private String nameRus;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10000)
     private String nameKaz;
 
     @ManyToOne(fetch = FetchType.LAZY)

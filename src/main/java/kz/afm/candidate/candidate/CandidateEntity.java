@@ -74,6 +74,7 @@ public class CandidateEntity {
 
     private String recruitedMethodComment;
 
+    @Column(length = 10000)
     private String securityCheckResult;
 
     @OneToOne

@@ -33,6 +33,7 @@ public class TestSessionAnswerEntity {
     @JoinColumn(name = "option_id")
     private OptionEntity option;
 
+    @Column(length = 50000)
     private String answer;
 
     public TestSessionAnswerEntity(TestSessionEntity testSession, QuestionEntity question, String answer) {

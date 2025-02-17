@@ -19,10 +19,10 @@ public class SectionEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50000)
     private String descriptionRus;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50000)
     private String descriptionKaz;
 
     private int lowerBound;

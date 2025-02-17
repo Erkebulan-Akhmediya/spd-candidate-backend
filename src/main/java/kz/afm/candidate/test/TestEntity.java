@@ -23,10 +23,10 @@ public class TestEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String nameRus;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String nameKaz;
 
     @Column(nullable = false)

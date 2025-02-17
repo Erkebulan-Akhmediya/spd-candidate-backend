@@ -19,10 +19,10 @@ public class ScaleEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String nameRus;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String nameKaz;
 
     @ManyToOne
