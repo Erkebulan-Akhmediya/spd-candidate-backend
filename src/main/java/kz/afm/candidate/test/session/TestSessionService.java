@@ -44,22 +44,22 @@ public class TestSessionService {
         return this.testSessionRepository.save(newTestSession);
     }
 
-    public void end(long testSessionId, List<TestSessionAnswerRequest> answers) throws NoSuchElementException {
+    public TestSessionEntity end(long testSessionId, List<TestSessionAnswerRequest> answers) throws NoSuchElementException {
         final TestSessionEntity testSession = this.getById(testSessionId);
         this.testSessionAnswerService.save(testSession, answers);
-        this.end(testSession);
-        this.evaluateAfterResponse(testSession);
+        return this.end(testSession);
     }
 
-    private void end(TestSessionEntity testSession) {
+    private TestSessionEntity end(TestSessionEntity testSession) {
         final TestSessionStatusEntity endStatus = this.testSessionStatusService.getEndStatus();
         testSession.setStatus(endStatus);
         testSession.setEndDate(new Date());
-        this.testSessionRepository.save(testSession);
+        return this.testSessionRepository.save(testSession);
     }
 
     @Async
-    protected void evaluateAfterResponse(TestSessionEntity testSession) {
+    public void evaluateAfterResponse(TestSessionEntity testSession) {
+        if (!testSession.getVariant().getTest().getType().isAutomaticallyEvaluated()) return;
         try {
             this.resultService.evaluate(testSession);
             final TestSessionStatusEntity checkedStatus = this.testSessionStatusService.getCheckedStatus();
