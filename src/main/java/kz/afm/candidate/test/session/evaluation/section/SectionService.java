@@ -18,10 +18,10 @@ public class SectionService {
         final List<SectionEntity> sections = sectionDtoList.stream()
                 .map(
                         (CreateScaleSectionRequest sectionDto) -> new SectionEntity(
-                                sectionDto.getDescriptionRus(),
-                                sectionDto.getDescriptionKaz(),
-                                sectionDto.getLowerBound(),
-                                sectionDto.getUpperBound(),
+                                sectionDto.descriptionRus,
+                                sectionDto.descriptionKaz,
+                                sectionDto.lowerBound,
+                                sectionDto.upperBound,
                                 scale
                         )
                 )

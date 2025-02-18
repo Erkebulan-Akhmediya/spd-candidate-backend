@@ -16,10 +16,10 @@ public class VariantService {
     private final QuestionService questionService;
     private final VariantRepository variantRepository;
 
-    public void create(TestEntity test, List<CreateVariantRequest> dtos) throws NoSuchElementException {
-        dtos.forEach((CreateVariantRequest dto) -> {
+    public void create(TestEntity test, List<CreateVariantRequest> variantDtoList) throws NoSuchElementException {
+        variantDtoList.forEach((CreateVariantRequest variantDto) -> {
             final VariantEntity variant = this.variantRepository.save(new VariantEntity(test));
-            this.questionService.create(variant, dto.getQuestions());
+            this.questionService.create(variant, variantDto.questions);
         });
     }
 

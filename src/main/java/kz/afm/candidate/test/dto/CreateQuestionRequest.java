@@ -1,20 +1,16 @@
 package kz.afm.candidate.test.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateQuestionRequest {
-    private boolean withFile;
-    private String fileName;
-    private String nameRus;
-    private String nameKaz;
-    private List<CreateOptionRequest> options;
+    public boolean withFile;
+    public String fileName;
+    public String nameRus;
+    public String nameKaz;
+    public List<CreateOptionRequest> options;
 }

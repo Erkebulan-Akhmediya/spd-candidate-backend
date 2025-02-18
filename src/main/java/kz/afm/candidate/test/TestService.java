@@ -39,24 +39,24 @@ public class TestService {
     public void create(CreateTestRequest testDto) throws RuntimeException {
         final TestEntity test = this.save(testDto);
 
-        this.scaleService.create(test, testDto.getScales());
-        this.variantService.create(test, testDto.getVariants());
+        this.scaleService.create(test, testDto.scales);
+        this.variantService.create(test, testDto.variants);
 
         final int pointDistributionTestType = 5;
-        if (testDto.getType() == pointDistributionTestType) {
-            this.pointDistributionTestService.create(test, testDto.getMaxPointsPerQuestion());
+        if (testDto.type == pointDistributionTestType) {
+            this.pointDistributionTestService.create(test, testDto.maxPointsPerQuestion);
         }
     }
 
     private TestEntity save(CreateTestRequest testDto) throws RuntimeException {
-        final TestTypeEntity type = this.testTypeService.getById(testDto.getType());
+        final TestTypeEntity type = this.testTypeService.getById(testDto.type);
         return this.testRepository.save(
                 new TestEntity(
-                        testDto.getNameRus(),
-                        testDto.getNameKaz(),
-                        Boolean.parseBoolean(testDto.getIsLimitless()),
-                        testDto.getDuration(),
-                        this.areaOfActivityService.getAllSetByNames(testDto.getAreasOfActivities()),
+                        testDto.nameRus,
+                        testDto.nameKaz,
+                        Boolean.parseBoolean(testDto.isLimitless),
+                        testDto.duration,
+                        this.areaOfActivityService.getAllSetByNames(testDto.areasOfActivities),
                         type
                 )
         );

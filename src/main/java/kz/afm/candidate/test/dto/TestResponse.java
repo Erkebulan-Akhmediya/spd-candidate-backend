@@ -11,27 +11,25 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class TestResponse {
-    private long id;
-    private String nameRus;
-    private String nameKaz;
-    private List<String> areasOfActivities;
-    private int duration;
+    public long id;
+    public String nameRus;
+    public String nameKaz;
+    public List<String> areasOfActivities;
+    public int duration;
     @JsonProperty("isLimitless")
-    private boolean limitless;
+    public boolean limitless;
 
-    public static TestResponse fromEntity(TestEntity test) {
-        return new TestResponse(
-                test.getId(),
-                test.getNameRus(),
-                test.getNameKaz(),
-                test.getAreaOfActivities().stream().map(AreaOfActivityEntity::getName).toList(),
-                test.getDuration(),
-                test.isLimitless()
-        );
+    public TestResponse(TestEntity test) {
+        this.id = test.getId();
+        this.nameRus = test.getNameRus();
+        this.nameKaz = test.getNameKaz();
+        this.areasOfActivities = test.getAreaOfActivities().stream().map(AreaOfActivityEntity::getName).toList();
+        this.duration = test.getDuration();
+        this.limitless = test.isLimitless();
     }
 
     public static List<TestResponse> fromEntities(List<TestEntity> tests) {
-        return tests.stream().map(TestResponse::fromEntity).toList();
+        return tests.stream().map(TestResponse::new).toList();
     }
 
 }

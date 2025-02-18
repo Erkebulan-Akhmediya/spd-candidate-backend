@@ -20,12 +20,12 @@ public class ScaleService {
     public void create(TestEntity test, List<CreateScaleRequest> scaleDtoList) {
         scaleDtoList.forEach((CreateScaleRequest scaleDto) -> {
             final ScaleEntity newScale = new ScaleEntity(
-                    scaleDto.getNameRus(),
-                    scaleDto.getNameKaz(),
+                    scaleDto.nameRus,
+                    scaleDto.nameKaz,
                     test
             );
             final ScaleEntity savedScale = this.scaleRepository.save(newScale);
-            this.sectionService.create(savedScale, scaleDto.getSections());
+            this.sectionService.create(savedScale, scaleDto.sections);
         });
     }
 

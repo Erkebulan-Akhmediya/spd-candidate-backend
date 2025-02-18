@@ -19,12 +19,12 @@ public class OptionIncrementService {
 
     public void create(OptionEntity option, CreateOptionIncrementRequest incrementDto) {
         final TestEntity optionTest = option.getQuestion().getVariant().getTest();
-        final int zeroBasedScaleIndex = incrementDto.getScaleIndex() - 1;
+        final int zeroBasedScaleIndex = incrementDto.scaleIndex - 1;
         final ScaleEntity optionScale = this.scaleService.getByTestAndIndex(optionTest, zeroBasedScaleIndex);
         final OptionIncrementEntity newIncrement = new OptionIncrementEntity(
                 option,
                 optionScale,
-                incrementDto.getScore()
+                incrementDto.score
         );
         this.optionIncrementRepository.save(newIncrement);
     }

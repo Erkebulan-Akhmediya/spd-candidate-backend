@@ -23,16 +23,15 @@ public class QuestionService {
     public void create(VariantEntity variant, List<CreateQuestionRequest> dtos) throws NoSuchElementException {
         dtos.forEach((CreateQuestionRequest dto) -> {
             try {
-                final QuestionEntity question = this.questionRepository.save(
-                        new QuestionEntity(
-                                dto.isWithFile(),
-                                dto.getFileName(),
-                                dto.getNameRus(),
-                                dto.getNameKaz(),
-                                variant
-                        )
+                final QuestionEntity newQuestion = new QuestionEntity(
+                        dto.withFile,
+                        dto.fileName,
+                        dto.nameRus,
+                        dto.nameKaz,
+                        variant
                 );
-                this.optionService.create(question, dto.getOptions());
+                final QuestionEntity savedQuestion = this.questionRepository.save(newQuestion);
+                this.optionService.create(savedQuestion, dto.options);
             } catch (NoSuchElementException e) {
                 throw e;
             } catch (Exception e) {

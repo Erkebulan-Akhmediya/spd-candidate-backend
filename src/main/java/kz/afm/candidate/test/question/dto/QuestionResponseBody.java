@@ -1,17 +1,17 @@
 package kz.afm.candidate.test.question.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class QuestionResponseBody {
-    private long id;
-    private String nameRus;
-    private String nameKaz;
-    private boolean withFile;
-    private String fileUrl;
-    private List<OptionResponseBody> options;
+    public long id;
+    public String nameRus;
+    public String nameKaz;
+    public boolean withFile;
+    public String fileUrl;
+    public List<OptionResponseBody> options;
 }

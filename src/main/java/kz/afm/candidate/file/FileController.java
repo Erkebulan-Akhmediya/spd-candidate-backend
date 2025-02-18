@@ -18,9 +18,9 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ResponseBodyWrapper<Void>> save(@ModelAttribute FileRequest request) {
+    public ResponseEntity<ResponseBodyWrapper<Void>> save(@ModelAttribute FileRequest fileDto) {
         try {
-            this.fileService.save(request.getFile());
+            this.fileService.save(fileDto.file);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));

@@ -23,15 +23,15 @@ public class OptionService {
 
         optionDtoList.forEach((CreateOptionRequest optionDto) -> {
             final OptionEntity newOption = new OptionEntity(
-                    optionDto.isWithFile(),
-                    optionDto.getFileName(),
-                    optionDto.getNameRus(),
-                    optionDto.getNameKaz(),
-                    optionDto.getIsCorrect(),
+                    optionDto.withFile,
+                    optionDto.fileName,
+                    optionDto.nameRus,
+                    optionDto.nameKaz,
+                    optionDto.isCorrect,
                     question
             );
             final OptionEntity savedOption = this.optionRepository.save(newOption);
-            this.optionIncrementService.create(savedOption, optionDto.getIncrement());
+            this.optionIncrementService.create(savedOption, optionDto.increment);
         });
 
     }
