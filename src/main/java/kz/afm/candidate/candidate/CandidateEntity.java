@@ -64,14 +64,17 @@ public class CandidateEntity {
     )
     private Set<DriverLicenseEntity> driverLicenses;
 
+    @Column(length = 1000)
     private String sport;
 
+    @Column(length = 10000)
     private String additionalData;
 
     @ManyToOne
     @JoinColumn(name = "recruited_method_id", nullable = false)
     private RecruitedMethodEntity recruitedMethod;
 
+    @Column(length = 1000)
     private String recruitedMethodComment;
 
     @Column(length = 10000)
