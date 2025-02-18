@@ -14,15 +14,20 @@ public class ExperienceService {
 
     private final ExperienceRepository experienceRepository;
 
+    public void updateAll(CandidateEntity candidate, Set<ExperienceDto> experienceRequests) {
+        this.experienceRepository.deleteAllByCandidate_IdentificationNumber(candidate.getIdentificationNumber());
+        this.createAll(candidate, experienceRequests);
+    }
+
     public void createAll(CandidateEntity candidate, Set<ExperienceDto> experienceRequests) {
         final List<ExperienceEntity> experiences = experienceRequests
                 .stream()
                 .map(
                         (ExperienceDto experience) -> ExperienceEntity.builder()
-                                .startDate(experience.getStartDate())
-                                .endDate(experience.getEndDate())
-                                .companyName(experience.getCompanyName())
-                                .position(experience.getPosition())
+                                .startDate(experience.startDate)
+                                .endDate(experience.endDate)
+                                .companyName(experience.companyName)
+                                .position(experience.position)
                                 .candidate(candidate)
                                 .build()
                 )
@@ -30,12 +35,8 @@ public class ExperienceService {
         experienceRepository.saveAll(experiences);
     }
 
-    public void updateAll(CandidateEntity candidate, Set<ExperienceDto> experienceRequests) {
-        this.experienceRepository.deleteAllByCandidate_IdentificationNumber(candidate.getIdentificationNumber());
-        this.createAll(candidate, experienceRequests);
-    }
-
-    public List<ExperienceEntity> getByCandidate(String identificationNumber) {
+    public List<ExperienceEntity> getByCandidate(CandidateEntity candidate) {
+        final String identificationNumber = candidate.getIdentificationNumber();
         return this.experienceRepository.findByCandidate_IdentificationNumber(identificationNumber);
     }
 

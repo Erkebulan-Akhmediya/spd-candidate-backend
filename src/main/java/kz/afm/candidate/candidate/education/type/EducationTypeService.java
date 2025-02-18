@@ -3,7 +3,9 @@ package kz.afm.candidate.candidate.education.type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -22,6 +24,15 @@ public class EducationTypeService {
         return this.educationTypeRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("Тип образования с ID: " + id + " не найден")
         );
+    }
+
+    public Map<Integer, EducationTypeEntity> getAllMap() {
+        final List<EducationTypeEntity> types = this.educationTypeRepository.findAll();
+        final Map<Integer, EducationTypeEntity> map = new HashMap<>();
+        for (EducationTypeEntity type : types) {
+            map.putIfAbsent(type.getId(), type);
+        }
+        return map;
     }
 
 }

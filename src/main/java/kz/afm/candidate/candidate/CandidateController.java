@@ -3,8 +3,11 @@ package kz.afm.candidate.candidate;
 import kz.afm.candidate.candidate.dto.*;
 import kz.afm.candidate.candidate.dto.get_all.CandidateListItemResponse;
 import kz.afm.candidate.candidate.dto.get_all.GetAllCandidateResponseBody;
-import kz.afm.candidate.candidate.dto.get_by_id.CandidateResponseBody;
-import kz.afm.candidate.candidate.dto.get_by_id.CandidateResponseBodyFactory;
+import kz.afm.candidate.candidate.dto.CandidateResponseBody;
+import kz.afm.candidate.candidate.education.EducationEntity;
+import kz.afm.candidate.candidate.education.EducationService;
+import kz.afm.candidate.candidate.experience.ExperienceEntity;
+import kz.afm.candidate.candidate.experience.ExperienceService;
 import kz.afm.candidate.dto.ResponseBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +22,15 @@ import java.util.NoSuchElementException;
 public class CandidateController {
 
     private final CandidateService candidateService;
-    private final CandidateResponseBodyFactory candidateResponseBodyFactory;
+    private final ExperienceService experienceService;
+    private final EducationService educationService;
 
     @PostMapping
     public ResponseEntity<ResponseBodyWrapper<Void>> create(@RequestBody CandidateRequest candidate) {
         try {
             this.candidateService.create(candidate);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException | NullPointerException e) {
             return ResponseEntity.badRequest().body(ResponseBodyWrapper.error(e.getMessage()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -45,7 +49,10 @@ public class CandidateController {
             final List<CandidateEntity> candidateEntities = this.candidateService
                     .getAll(statusId, regionId, pageNumber, pageSize);
 
-            final List<CandidateListItemResponse> candidates = CandidateListItemResponse.fromEntities(candidateEntities);
+            final List<CandidateListItemResponse> candidates = candidateEntities
+                    .stream()
+                    .map(CandidateListItemResponse::new)
+                    .toList();
 
             final long count = this.candidateService.countAll(statusId, regionId);
 
@@ -61,16 +68,14 @@ public class CandidateController {
     public ResponseEntity<ResponseBodyWrapper<CandidateResponseBody>> getById(@PathVariable String id) {
         try {
             final CandidateEntity candidate = this.candidateService.getById(id);
-            final CandidateResponseBody responseBody = this.candidateResponseBodyFactory.createFrom(candidate);
-            return ResponseEntity.ok(ResponseBodyWrapper.success(responseBody));
+            final List<ExperienceEntity> experiences = this.experienceService.getByCandidate(candidate);
+            final List<EducationEntity> education = this.educationService.getAllByCandidate(candidate);
+            final CandidateResponseBody candidateDto = new CandidateResponseBody(candidate, experiences, education);
+            return ResponseEntity.ok(ResponseBodyWrapper.success(candidateDto));
         } catch (NoSuchElementException e) {
-            return ResponseEntity.internalServerError().body(
-                    ResponseBodyWrapper.error(e.getMessage())
-            );
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(
-                    ResponseBodyWrapper.error("Ошибка сервера")
-            );
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
     }
 

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -17,28 +18,29 @@ public class EducationService {
     private final EducationRepository educationRepository;
     private final EducationTypeService educationTypeService;
 
+    public void updateAll(CandidateEntity candidate, Set<EducationDto> educations) {
+        this.educationRepository.deleteAllByCandidate(candidate);
+        this.createAll(candidate, educations);
+    }
+
     public void createAll(CandidateEntity candidate, Set<EducationDto> educations) {
+        final Map<Integer, EducationTypeEntity> typesMap = this.educationTypeService.getAllMap();
         final List<EducationEntity> entities = educations
                 .stream()
                 .map(
                         (EducationDto education) -> {
-                            final EducationTypeEntity type = this.educationTypeService.getById(education.getType());
+                            final EducationTypeEntity type = typesMap.get(education.getType());
                             return new EducationEntity(
                                     type,
-                                    education.getStartDate(),
-                                    education.getEndDate(),
-                                    education.getOrganization(),
-                                    education.getMajor(),
+                                    education.startDate,
+                                    education.endDate,
+                                    education.organization,
+                                    education.major,
                                     candidate
                             );
                         }
                 ).toList();
         this.educationRepository.saveAll(entities);
-    }
-
-    public void updateAll(CandidateEntity candidate, Set<EducationDto> educations) {
-        this.educationRepository.deleteAllByCandidate(candidate);
-        this.createAll(candidate, educations);
     }
 
     public List<EducationEntity> getAllByCandidate(CandidateEntity candidate) {

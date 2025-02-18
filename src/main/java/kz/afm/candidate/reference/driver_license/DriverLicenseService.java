@@ -33,8 +33,4 @@ public class DriverLicenseService {
         return driverLicenses;
     }
 
-    public List<String> extractCodes(Set<DriverLicenseEntity> driverLicenses) {
-        return driverLicenses.stream().map(DriverLicenseEntity::getCode).toList();
-    }
-
 }

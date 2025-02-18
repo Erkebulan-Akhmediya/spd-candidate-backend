@@ -1,13 +1,13 @@
 package kz.afm.candidate.candidate.dto.get_all;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class GetAllCandidateResponseBody {
-    private List<CandidateListItemResponse> candidates;
-    private long count;
+    public List<CandidateListItemResponse> candidates;
+    public long count;
 }

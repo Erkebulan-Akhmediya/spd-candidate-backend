@@ -3,8 +3,8 @@ package kz.afm.candidate.candidate;
 import kz.afm.candidate.TestUtils;
 import kz.afm.candidate.auth.AuthFilter;
 import kz.afm.candidate.candidate.dto.CandidateRequest;
-import kz.afm.candidate.candidate.dto.get_by_id.CandidateResponseBody;
-import kz.afm.candidate.candidate.dto.get_by_id.CandidateResponseBodyFactory;
+import kz.afm.candidate.candidate.education.EducationService;
+import kz.afm.candidate.candidate.experience.ExperienceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,7 +37,10 @@ public class CandidateControllerTests {
     private CandidateService candidateService;
 
     @MockitoBean
-    private CandidateResponseBodyFactory candidateResponseBodyFactory;
+    private ExperienceService experienceService;
+
+    @MockitoBean
+    private EducationService educationService;
 
     @MockitoBean
     private AuthFilter authFilter;
@@ -146,9 +149,9 @@ public class CandidateControllerTests {
     private void mock_getById_Methods() {
         final CandidateEntity mockCandidateEntity = new CandidateEntity();
         when(this.candidateService.getById(any(String.class))).thenReturn(mockCandidateEntity);
-
-        final CandidateResponseBody mockResponseBody = CandidateResponseBody.builder().build();
-        when(this.candidateResponseBodyFactory.createFrom(any(CandidateEntity.class))).thenReturn(mockResponseBody);
+        when(this.experienceService.getByCandidate(any(CandidateEntity.class))).thenReturn(new LinkedList<>());
+        when(this.educationService.getAllByCandidate(any(CandidateEntity.class))).thenReturn(new LinkedList<>());
+        // TODO: finish later
     }
 
     private ResultActions perform_getById() throws Exception {

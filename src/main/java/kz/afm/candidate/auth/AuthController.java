@@ -27,8 +27,8 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<ResponseBodyWrapper<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
         try {
-            this.authService.authenticateUser(request.getUsername(), request.getPassword());
-            final UserEntity user = this.userService.getByUsername(request.getUsername());
+            this.authService.authenticateUser(request.username, request.password);
+            final UserEntity user = this.userService.getByUsername(request.username);
 
             final Set<String> roles = user.getRoleCodes();
             Integer regionId = null;

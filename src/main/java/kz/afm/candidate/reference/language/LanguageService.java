@@ -33,8 +33,4 @@ public class LanguageService {
         return languages;
     }
 
-    public List<String> extractCodes(Set<LanguageEntity> languages) {
-        return languages.stream().map(LanguageEntity::getCode).toList();
-    }
-
 }

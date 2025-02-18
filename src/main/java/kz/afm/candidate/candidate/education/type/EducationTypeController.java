@@ -20,9 +20,9 @@ public class EducationTypeController {
     @GetMapping("all")
     public ResponseEntity<ResponseBodyWrapper<List<EducationTypeResponseBody>>> getAll() {
         try {
-            final List<EducationTypeEntity> entities = this.educationTypeService.getAll();
-            final List<EducationTypeResponseBody> types = EducationTypeResponseBody.fromEntities(entities);
-            return ResponseEntity.ok(ResponseBodyWrapper.success(types));
+            final List<EducationTypeEntity> types = this.educationTypeService.getAll();
+            final List<EducationTypeResponseBody> typeDtos = types.stream().map(EducationTypeResponseBody::new).toList();
+            return ResponseEntity.ok(ResponseBodyWrapper.success(typeDtos));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
