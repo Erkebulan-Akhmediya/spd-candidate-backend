@@ -21,7 +21,8 @@ public class TestTypeController {
     public ResponseEntity<ResponseBodyWrapper<List<TestTypeResponseBody>>> getAll() {
         try {
             final List<TestTypeEntity> types = this.testTypeService.getAll();
-            return ResponseEntity.ok(ResponseBodyWrapper.success(TestTypeResponseBody.fromEntities(types)));
+            final List<TestTypeResponseBody> typeDtoList = types.stream().map(TestTypeResponseBody::new).toList();
+            return ResponseEntity.ok(ResponseBodyWrapper.success(typeDtoList));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }

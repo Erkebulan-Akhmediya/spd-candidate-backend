@@ -58,6 +58,14 @@ public class TestTypeInitializer implements CommandLineRunner {
         );
         types.add(type);
 
+        type = new TestTypeEntity(
+                6,
+                "Файл",
+                "Файл",
+                !automaticallyEvaluated
+        );
+        types.add(type);
+
         this.testTypeRepository.saveAll(types);
     }
 
