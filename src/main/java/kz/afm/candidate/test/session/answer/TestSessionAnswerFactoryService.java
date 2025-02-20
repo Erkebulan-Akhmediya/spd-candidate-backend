@@ -26,7 +26,7 @@ public class TestSessionAnswerFactoryService {
         final Object answer = answerDto.getAnswer();
 
         if (this.answerNonExistent(answer)) return new LinkedList<>();
-        if (this.answerForOpenQuestion(answer)) {
+        if (this.answerIsString(answer)) {
             TestSessionAnswerEntity openAnswer = this.createAnswerForOpenQuestion(testSession, question, answer);
             return new LinkedList<>() {{
                 add(openAnswer);
@@ -52,7 +52,7 @@ public class TestSessionAnswerFactoryService {
         return answer == null || (answer instanceof List<?> && ((List<?>) answer).isEmpty());
     }
 
-    private boolean answerForOpenQuestion(Object answer) {
+    private boolean answerIsString(Object answer) {
         return answer instanceof String;
     }
 
