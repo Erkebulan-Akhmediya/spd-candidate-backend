@@ -32,6 +32,7 @@ public class CandidateResponseBody {
     public String additionalData;
     public String username;
     public String areaOfActivity;
+    public String photoFileName;
 
     public CandidateResponseBody(CandidateEntity candidate, List<ExperienceEntity> experiences, List<EducationEntity> education) {
         this.lastName = candidate.getLastName();
@@ -64,6 +65,8 @@ public class CandidateResponseBody {
 
         AreaOfActivityEntity areaOfActivity = candidate.getAreaOfActivity();
         this.areaOfActivity = areaOfActivity == null ? null : areaOfActivity.getName();
+
+        this.photoFileName = candidate.getPhotoFileName();
     }
 
 }

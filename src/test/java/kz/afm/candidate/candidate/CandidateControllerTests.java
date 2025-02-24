@@ -80,7 +80,8 @@ public class CandidateControllerTests {
                         "security check result",
                         new HashSet<>(),
                         "username",
-                        "password"
+                        "password",
+                        ""
                 )
         );
     }

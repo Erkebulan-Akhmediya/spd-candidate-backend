@@ -95,4 +95,6 @@ public class CandidateEntity {
     @JoinColumn(name = "area_of_activity", referencedColumnName = "name")
     private AreaOfActivityEntity areaOfActivity;
 
+    private String photoFileName;
+
 }

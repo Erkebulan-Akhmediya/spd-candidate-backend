@@ -16,69 +16,68 @@ public class CandidateRequest {
 
     @NotNull(message = "ИИН обязателен")
     @NotEmpty(message = "ИИН не должен быть пуст")
-    private String identificationNumber;
+    public String identificationNumber;
 
     @NotNull(message = "фамилия обязательна")
     @NotEmpty(message = "фамилия не должна быть пуста")
-    private String lastName;
+    public String lastName;
 
     @NotNull(message = "имя обязательно")
     @NotEmpty(message = "имя не должено быть пустым")
-    private String firstName;
+    public String firstName;
 
-    private String middleName;
+    public String middleName;
 
     @NotNull(message = "дата рождения обязательна")
     @NotEmpty(message = "дата рождения не должна быть пуста")
-    private Date birthDate;
+    public Date birthDate;
 
     @NotNull(message = "место рождения обязательно")
     @NotEmpty(message = "место рождения не должно быть пусто")
-    private String birthPlace;
+    public String birthPlace;
 
-    @NotNull(message = "регион тестирования обязателен")
     @NotEmpty(message = "регион тестирования не должен быть пуст")
-    private int testingRegionId;
+    public int testingRegionId;
 
     @NotNull(message = "номер телефона обязателен")
     @NotEmpty(message = "номер телефона не должен быть пуст")
-    private String phoneNumber;
+    public String phoneNumber;
 
-    @NotNull(message = "национальность обязательна")
     @NotEmpty(message = "национальность не должна быть пустой")
-    private int nationalityCode;
+    public int nationalityCode;
 
     @NotNull(message = "образование обязательно")
     @NotEmpty(message = "образование не должно быть пустым")
-    private Set<EducationDto> education;
+    public Set<EducationDto> education;
 
-    private Set<String> languageCodes;
+    public Set<String> languageCodes;
 
-    private Set<String> driverLicenseCodes;
+    public Set<String> driverLicenseCodes;
 
     @NotNull(message = "отношение к спорту обязательно")
     @NotEmpty(message = "отношение к спорту не должно быть пустым")
-    private String sport;
+    public String sport;
 
-    private String additionalData;
+    public String additionalData;
 
-    @NotNull(message = "место откуда подобран кандидат обязательно")
     @NotEmpty(message = "место откуда подобран кандидат не должно быть пустым")
-    private int recruitedMethodId;
+    public int recruitedMethodId;
 
-    private String recruitedMethodComment;
+    public String recruitedMethodComment;
 
     @NotNull(message = "результат проверки ВБ обязателен")
     @NotEmpty(message = "результат проверки ВБ не должен быть пуст")
-    private String securityCheckResult;
+    public String securityCheckResult;
 
-    private Set<ExperienceDto> experiences;
+    public Set<ExperienceDto> experiences;
 
     @NotNull(message = "имя пользователя обязательно")
     @NotEmpty(message = "имя пользователя не должно быть пустым")
-    private String username;
+    public String username;
 
     @NotNull(message = "пароль обязателен")
     @NotEmpty(message = "пароль не должен быть пуст")
-    private String password;
+    public String password;
+
+    public String photoFileName;
 }

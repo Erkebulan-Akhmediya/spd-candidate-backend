@@ -28,79 +28,58 @@ public class CandidateEntityFactory {
     private final RegionService regionService;
     private final UserService userService;
 
-    private CandidateEntity candidate;
-
     public CandidateEntity createFrom(CandidateRequest candidateDto) {
-        CandidateEntity candidate = new CandidateEntity();
-        candidate.setIdentificationNumber(candidateDto.getIdentificationNumber());
-        candidate = this.updateEntityUsingRequestDtoValues(candidate, candidateDto);
-
-        final UserEntity user = this.userService.createForCandidate(
-                candidateDto.getUsername(),
-                candidateDto.getPassword()
-        );
+        CandidateEntity candidate = this.updateEntityUsingRequestDtoValues(new CandidateEntity(), candidateDto);
+        UserEntity user = this.userService.createForCandidate(candidateDto.username, candidateDto.password);
         candidate.setUser(user);
-
         return candidate;
     }
 
     public CandidateEntity updateEntityUsingRequestDtoValues(CandidateEntity candidate, CandidateRequest candidateDto) {
-        this.candidate = candidate;
-        this.setCandidateEntityFieldsUsingValuesFrom(candidateDto);
-        this.setCandidateEntityFieldsUsingServicesAndValuesFrom(candidateDto);
-        return this.candidate;
-    }
+        NationalityEntity nationality = this.getNationality(candidateDto);
+        Set<LanguageEntity> languages = this.getLanguages(candidateDto);
+        Set<DriverLicenseEntity> driverLicenses = this.getDriverLicenses(candidateDto);
+        RecruitedMethodEntity recruitedMethod = this.getRecruitedMethod(candidateDto);
+        RegionEntity testingRegion = this.getTestingRegion(candidateDto);
 
-    private void setCandidateEntityFieldsUsingValuesFrom(CandidateRequest candidateDto) {
-        candidate.setLastName(candidateDto.getLastName());
-        candidate.setFirstName(candidateDto.getFirstName());
-        candidate.setMiddleName(candidateDto.getMiddleName());
-        candidate.setBirthDate(candidateDto.getBirthDate());
-        candidate.setBirthPlace(candidateDto.getBirthPlace());
-        candidate.setPhoneNumber(candidateDto.getPhoneNumber());
-        candidate.setSport(candidateDto.getSport());
-        candidate.setAdditionalData(candidateDto.getAdditionalData());
-        candidate.setRecruitedMethodComment(candidateDto.getRecruitedMethodComment());
-        candidate.setSecurityCheckResult(candidateDto.getSecurityCheckResult());
-    }
-
-    private void setCandidateEntityFieldsUsingServicesAndValuesFrom(CandidateRequest candidateDto) {
-        this.setNationality(candidateDto);
-        this.setLanguages(candidateDto);
-        this.setDriverLicenses(candidateDto);
-        this.setRecruitedMethod(candidateDto);
-        this.setTestingRegion(candidateDto);
-    }
-
-    private void setNationality(CandidateRequest candidateDto) {
-        NationalityEntity nationality = this.nationalityService.getById(candidateDto.getNationalityCode());
+        candidate.setIdentificationNumber(candidateDto.identificationNumber);
+        candidate.setLastName(candidateDto.lastName);
+        candidate.setFirstName(candidateDto.firstName);
+        candidate.setMiddleName(candidateDto.middleName);
+        candidate.setBirthDate(candidateDto.birthDate);
+        candidate.setBirthPlace(candidateDto.birthPlace);
+        candidate.setPhoneNumber(candidateDto.phoneNumber);
+        candidate.setSport(candidateDto.sport);
+        candidate.setAdditionalData(candidateDto.additionalData);
+        candidate.setRecruitedMethodComment(candidateDto.recruitedMethodComment);
+        candidate.setSecurityCheckResult(candidateDto.securityCheckResult);
+        candidate.setPhotoFileName(candidateDto.photoFileName);
         candidate.setNationality(nationality);
-    }
-
-    private void setLanguages(CandidateRequest candidateDto) {
-        Set<String> languageCodes = candidateDto.getLanguageCodes();
-        boolean notEmpty = true;
-        Set<LanguageEntity> languages = this.languageService.getAllSetByCodes(languageCodes, notEmpty);
         candidate.setLanguages(languages);
-    }
-
-    private void setDriverLicenses(CandidateRequest candidateDto) {
-        Set<String> driverLicenseCodes = candidateDto.getDriverLicenseCodes();
-        boolean notEmpty = true;
-        Set<DriverLicenseEntity> driverLicenses = this.driverLicenseService.getAllSetByCodes(driverLicenseCodes, notEmpty);
         candidate.setDriverLicenses(driverLicenses);
-    }
-
-    private void setRecruitedMethod(CandidateRequest candidateDto) {
-        int recruitedMethodId = candidateDto.getRecruitedMethodId();
-        RecruitedMethodEntity recruitedMethod = this.recruitedMethodService.getById(recruitedMethodId);
         candidate.setRecruitedMethod(recruitedMethod);
+        candidate.setTestingRegion(testingRegion);
+        return candidate;
     }
 
-    private void setTestingRegion(CandidateRequest candidateDto) {
-        int testingRegionId = candidateDto.getTestingRegionId();
-        RegionEntity testingRegion = this.regionService.getById(testingRegionId);
-        candidate.setTestingRegion(testingRegion);
+    private NationalityEntity getNationality(CandidateRequest candidateDto) {
+        return this.nationalityService.getById(candidateDto.nationalityCode);
+    }
+
+    private Set<LanguageEntity> getLanguages(CandidateRequest candidateDto) {
+        return this.languageService.getAllSetByCodes(candidateDto.languageCodes, true);
+    }
+
+    private Set<DriverLicenseEntity> getDriverLicenses(CandidateRequest candidateDto) {
+        return this.driverLicenseService.getAllSetByCodes(candidateDto.driverLicenseCodes, true);
+    }
+
+    private RecruitedMethodEntity getRecruitedMethod(CandidateRequest candidateDto) {
+        return this.recruitedMethodService.getById(candidateDto.recruitedMethodId);
+    }
+
+    private RegionEntity getTestingRegion(CandidateRequest candidateDto) {
+        return this.regionService.getById(candidateDto.testingRegionId);
     }
 
 }

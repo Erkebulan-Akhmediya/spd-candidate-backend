@@ -79,7 +79,7 @@ public class CandidateService {
 
     @Transactional
     public void sendToSecurityCheck(CandidateRequest candidateDto) throws NoSuchElementException {
-        CandidateEntity candidate = this.getById(candidateDto.getIdentificationNumber());
+        CandidateEntity candidate = this.getById(candidateDto.identificationNumber);
         candidate = this.candidateEntityFactory.updateEntityUsingRequestDtoValues(candidate, candidateDto);
 
         final int onSecurityCheckStatusId = 2;
@@ -88,16 +88,16 @@ public class CandidateService {
 
         this.candidateRepository.save(candidate);
 
-        this.userService.updateUsername(candidateDto.getUsername(), candidate.getUser());
-        this.experienceService.updateAll(candidate, candidateDto.getExperiences());
-        this.educationService.updateAll(candidate, candidateDto.getEducation());
+        this.userService.updateUsername(candidateDto.username, candidate.getUser());
+        this.experienceService.updateAll(candidate, candidateDto.experiences);
+        this.educationService.updateAll(candidate, candidateDto.education);
     }
 
     public void sendToApproval(CandidateRequest candidateDto) throws NoSuchElementException {
         final CandidateStatusEntity status = this.candidateStatusService.getById(3);
-        final CandidateEntity candidate = this.candidateRepository.findById(candidateDto.getIdentificationNumber())
+        final CandidateEntity candidate = this.candidateRepository.findById(candidateDto.identificationNumber)
                 .orElseThrow(() -> new NoSuchElementException("Кандидат не найден"));
-        candidate.setSecurityCheckResult(candidateDto.getSecurityCheckResult());
+        candidate.setSecurityCheckResult(candidateDto.securityCheckResult);
         candidate.setStatus(status);
         this.candidateRepository.save(candidate);
     }
