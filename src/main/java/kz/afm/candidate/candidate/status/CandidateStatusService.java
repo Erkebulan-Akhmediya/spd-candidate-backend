@@ -16,6 +16,31 @@ public class CandidateStatusService {
         this.candidateStatusRepository.save(new CandidateStatusEntity(id, nameRus, nameKaz));
     }
 
+    public CandidateStatusEntity getNewCandidateStatus() {
+        final int newCandidateStatusId = 1;
+        return this.getById(newCandidateStatusId);
+    }
+
+    public CandidateStatusEntity getOnSecurityCheckStatus() {
+        final int onSecurityCheckStatusId = 2;
+        return this.getById(onSecurityCheckStatusId);
+    }
+
+    public CandidateStatusEntity getOnApprovalStatus() {
+        final int onApprovalStatusId = 3;
+        return this.getById(onApprovalStatusId);
+    }
+
+    public CandidateStatusEntity getApprovedStatus() {
+        final int approvedStatusId = 4;
+        return this.getById(approvedStatusId);
+    }
+
+    public CandidateStatusEntity getRejectedStatus() {
+        final int rejectedStatusId = 5;
+        return this.getById(rejectedStatusId);
+    }
+
     public CandidateStatusEntity getById(final int id) throws NoSuchElementException {
         return this.candidateStatusRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("Статус с ID: " + id + " не найден")

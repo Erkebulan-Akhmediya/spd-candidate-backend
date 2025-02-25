@@ -1,5 +1,6 @@
 package kz.afm.candidate.reference.recruited_method;
 
+import kz.afm.candidate.candidate.dto.CandidateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,10 @@ import java.util.NoSuchElementException;
 public class RecruitedMethodService {
 
     private final RecruitedMethodRepository recruitedMethodRepository;
+
+    public RecruitedMethodEntity getUsing(CandidateRequest candidateDto) {
+        return this.getById(candidateDto.recruitedMethodId);
+    }
 
     public RecruitedMethodEntity getById(int id) throws NoSuchElementException {
         return this.recruitedMethodRepository

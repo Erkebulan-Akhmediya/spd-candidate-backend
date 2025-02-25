@@ -1,5 +1,6 @@
 package kz.afm.candidate.reference.nationality;
 
+import kz.afm.candidate.candidate.dto.CandidateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,10 @@ import java.util.NoSuchElementException;
 public class NationalityService {
 
     private final NationalityRepository nationalityRepository;
+
+    public NationalityEntity getUsing(CandidateRequest candidateDto) {
+        return this.getById(candidateDto.nationalityCode);
+    }
 
     public NationalityEntity getById(int id) throws NoSuchElementException {
         return this.nationalityRepository

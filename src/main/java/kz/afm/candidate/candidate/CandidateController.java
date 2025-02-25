@@ -38,6 +38,16 @@ public class CandidateController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity<ResponseBodyWrapper<Void>> update(@RequestBody CandidateRequest candidate) {
+        try {
+            this.candidateService.update(candidate);
+            return ResponseEntity.ok(ResponseBodyWrapper.success());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
+        }
+    }
+
     @GetMapping("all")
     public ResponseEntity<ResponseBodyWrapper<GetAllCandidateResponseBody>> getAll(
             @RequestParam int statusId,

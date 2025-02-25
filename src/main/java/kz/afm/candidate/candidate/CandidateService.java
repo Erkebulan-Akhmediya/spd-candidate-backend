@@ -59,20 +59,29 @@ public class CandidateService {
     public void create(CandidateRequest candidateDto) throws NoSuchElementException {
         final CandidateEntity candidate = this.candidateEntityFactory.createFrom(candidateDto);
 
-        final int newCandidateStatusId = 1;
-        CandidateStatusEntity status = this.candidateStatusService.getById(newCandidateStatusId);
+        CandidateStatusEntity status = this.candidateStatusService.getNewCandidateStatus();
         candidate.setStatus(status);
 
         final CandidateEntity savedCandidate = this.candidateRepository.save(candidate);
 
-        this.experienceService.createAll(savedCandidate, candidateDto.getExperiences());
-        this.educationService.createAll(savedCandidate, candidateDto.getEducation());
+        this.experienceService.createAll(savedCandidate, candidateDto.experiences);
+        this.educationService.createAll(savedCandidate, candidateDto.education);
+    }
+
+    @Transactional
+    public void update(CandidateRequest candidateDto) throws NoSuchElementException {
+        CandidateEntity candidate = this.getById(candidateDto.identificationNumber);
+        candidate = this.candidateEntityFactory.updateEntityUsingRequestDtoValues(candidate, candidateDto);
+        this.candidateRepository.save(candidate);
+
+        this.userService.updateUsername(candidateDto.username, candidate.getUser());
+        this.experienceService.updateAll(candidate, candidateDto.experiences);
+        this.educationService.updateAll(candidate, candidateDto.education);
     }
 
     public void reject(String iin) {
-        final CandidateEntity candidate = this.candidateRepository.findById(iin)
-                .orElseThrow(() -> new NoSuchElementException("Кандидат не найден"));
-        final CandidateStatusEntity status = this.candidateStatusService.getById(5);
+        final CandidateEntity candidate = this.getById(iin);
+        final CandidateStatusEntity status = this.candidateStatusService.getRejectedStatus();
         candidate.setStatus(status);
         this.candidateRepository.save(candidate);
     }
@@ -82,8 +91,7 @@ public class CandidateService {
         CandidateEntity candidate = this.getById(candidateDto.identificationNumber);
         candidate = this.candidateEntityFactory.updateEntityUsingRequestDtoValues(candidate, candidateDto);
 
-        final int onSecurityCheckStatusId = 2;
-        CandidateStatusEntity status = this.candidateStatusService.getById(onSecurityCheckStatusId);
+        CandidateStatusEntity status = this.candidateStatusService.getOnSecurityCheckStatus();
         candidate.setStatus(status);
 
         this.candidateRepository.save(candidate);
@@ -94,18 +102,16 @@ public class CandidateService {
     }
 
     public void sendToApproval(CandidateRequest candidateDto) throws NoSuchElementException {
-        final CandidateStatusEntity status = this.candidateStatusService.getById(3);
-        final CandidateEntity candidate = this.candidateRepository.findById(candidateDto.identificationNumber)
-                .orElseThrow(() -> new NoSuchElementException("Кандидат не найден"));
+        final CandidateStatusEntity status = this.candidateStatusService.getOnApprovalStatus()  ;
+        final CandidateEntity candidate = this.getById(candidateDto.identificationNumber);
         candidate.setSecurityCheckResult(candidateDto.securityCheckResult);
         candidate.setStatus(status);
         this.candidateRepository.save(candidate);
     }
 
     public void approve(String iin, String areaOfActivity) throws NoSuchElementException {
-        final CandidateStatusEntity status = this.candidateStatusService.getById(4);
-        final CandidateEntity candidate = this.candidateRepository.findById(iin)
-                .orElseThrow(() -> new NoSuchElementException("Кандидат не найден"));
+        final CandidateStatusEntity status = this.candidateStatusService.getApprovedStatus();
+        final CandidateEntity candidate = this.getById(iin);
         candidate.setStatus(status);
         candidate.setAreaOfActivity(this.areaOfActivityService.getByName(areaOfActivity));
         this.candidateRepository.save(candidate);

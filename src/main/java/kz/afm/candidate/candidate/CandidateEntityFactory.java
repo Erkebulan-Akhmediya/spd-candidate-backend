@@ -36,11 +36,11 @@ public class CandidateEntityFactory {
     }
 
     public CandidateEntity updateEntityUsingRequestDtoValues(CandidateEntity candidate, CandidateRequest candidateDto) {
-        NationalityEntity nationality = this.getNationality(candidateDto);
-        Set<LanguageEntity> languages = this.getLanguages(candidateDto);
-        Set<DriverLicenseEntity> driverLicenses = this.getDriverLicenses(candidateDto);
-        RecruitedMethodEntity recruitedMethod = this.getRecruitedMethod(candidateDto);
-        RegionEntity testingRegion = this.getTestingRegion(candidateDto);
+        NationalityEntity nationality = this.nationalityService.getUsing(candidateDto);
+        Set<LanguageEntity> languages = this.languageService.getSetOfAllUsing(candidateDto);
+        Set<DriverLicenseEntity> driverLicenses = this.driverLicenseService.getSetOfAllUsing(candidateDto);
+        RecruitedMethodEntity recruitedMethod = this.recruitedMethodService.getUsing(candidateDto);
+        RegionEntity testingRegion = this.regionService.getUsing(candidateDto);
 
         candidate.setIdentificationNumber(candidateDto.identificationNumber);
         candidate.setLastName(candidateDto.lastName);
@@ -60,26 +60,6 @@ public class CandidateEntityFactory {
         candidate.setRecruitedMethod(recruitedMethod);
         candidate.setTestingRegion(testingRegion);
         return candidate;
-    }
-
-    private NationalityEntity getNationality(CandidateRequest candidateDto) {
-        return this.nationalityService.getById(candidateDto.nationalityCode);
-    }
-
-    private Set<LanguageEntity> getLanguages(CandidateRequest candidateDto) {
-        return this.languageService.getAllSetByCodes(candidateDto.languageCodes, true);
-    }
-
-    private Set<DriverLicenseEntity> getDriverLicenses(CandidateRequest candidateDto) {
-        return this.driverLicenseService.getAllSetByCodes(candidateDto.driverLicenseCodes, true);
-    }
-
-    private RecruitedMethodEntity getRecruitedMethod(CandidateRequest candidateDto) {
-        return this.recruitedMethodService.getById(candidateDto.recruitedMethodId);
-    }
-
-    private RegionEntity getTestingRegion(CandidateRequest candidateDto) {
-        return this.regionService.getById(candidateDto.testingRegionId);
     }
 
 }

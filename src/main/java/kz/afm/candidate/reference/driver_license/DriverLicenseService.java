@@ -1,5 +1,6 @@
 package kz.afm.candidate.reference.driver_license;
 
+import kz.afm.candidate.candidate.dto.CandidateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,11 @@ public class DriverLicenseService {
 
     private final DriverLicenseRepository driverLicenseRepository;
 
-    public Set<DriverLicenseEntity> getAllSetByCodes(Set<String> codes, boolean notEmpty) throws NoSuchElementException {
+    public Set<DriverLicenseEntity> getSetOfAllUsing(CandidateRequest candidateDto) {
+        return this.getSetOfAllByCodes(candidateDto.driverLicenseCodes, true);
+    }
+
+    public Set<DriverLicenseEntity> getSetOfAllByCodes(Set<String> codes, boolean notEmpty) throws NoSuchElementException {
         if (codes.isEmpty()) return new HashSet<>();
         final Set<DriverLicenseEntity> driverLicenses = new HashSet<>(
                 this.driverLicenseRepository.findAllById(codes)
