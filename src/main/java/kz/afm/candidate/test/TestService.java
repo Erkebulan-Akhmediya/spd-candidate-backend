@@ -50,16 +50,18 @@ public class TestService {
 
     private TestEntity save(CreateTestRequest testDto) throws RuntimeException {
         final TestTypeEntity type = this.testTypeService.getById(testDto.type);
-        return this.testRepository.save(
-                new TestEntity(
-                        testDto.nameRus,
-                        testDto.nameKaz,
-                        Boolean.parseBoolean(testDto.isLimitless),
-                        testDto.duration,
-                        this.areaOfActivityService.getAllSetByNames(testDto.areasOfActivities),
-                        type
-                )
+        final Set<AreaOfActivityEntity> areasOfActivity = this.areaOfActivityService.getSetOfAllByNames(testDto.areasOfActivities);
+        final TestEntity test = new TestEntity(
+                testDto.nameRus,
+                testDto.nameKaz,
+                testDto.descriptionRus,
+                testDto.descriptionKaz,
+                Boolean.parseBoolean(testDto.isLimitless),
+                testDto.duration,
+                areasOfActivity,
+                type
         );
+        return this.testRepository.save(test);
     }
 
     public List<TestEntity> getAll(UserEntity requestingUser, int pageNumber, int pageSize) {
@@ -74,7 +76,7 @@ public class TestService {
     }
 
     private List<TestEntity> getAllForCandidate(CandidateEntity candidate) {
-        final Set<AreaOfActivityEntity> areas = new LinkedHashSet<>() ;
+        final Set<AreaOfActivityEntity> areas = new LinkedHashSet<>();
         areas.add(candidate.getAreaOfActivity());
         final Set<Long> passedTestIds = this.getAllPassed(candidate);
         return this.testRepository.findAllByAreaOfActivitiesContaining(areas)

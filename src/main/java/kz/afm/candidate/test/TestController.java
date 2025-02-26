@@ -11,7 +11,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @RequestMapping("test")
@@ -25,10 +24,8 @@ public class TestController {
         try {
             this.testService.create(test);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
         }
     }
 
@@ -39,13 +36,13 @@ public class TestController {
             @RequestParam(required = false, defaultValue = "0") int pageNumber
     ) {
         try {
-            final List<TestEntity> entities = this.testService.getAll(requestingUser, pageNumber, pageSize);
+            final List<TestEntity> tests = this.testService.getAll(requestingUser, pageNumber, pageSize);
             final long allTestCount = this.testService.getAllCount();
-            final List<TestResponse> tests = TestResponse.fromEntities(entities);
-            final GetAllTestsResponseBody responseBody = new GetAllTestsResponseBody(tests, allTestCount);
+            final List<TestResponse> testDtoList = tests.stream().map(TestResponse::new).toList();
+            final GetAllTestsResponseBody responseBody = new GetAllTestsResponseBody(testDtoList, allTestCount);
             return ResponseEntity.ok(ResponseBodyWrapper.success(responseBody));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
         }
     }
 

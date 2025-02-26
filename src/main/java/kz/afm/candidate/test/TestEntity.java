@@ -29,6 +29,12 @@ public class TestEntity {
     @Column(nullable = false, length = 1000)
     private String nameKaz;
 
+    @Column(nullable = false, length = 10000)
+    private String descriptionRus = "";
+
+    @Column(nullable = false, length = 10000)
+    private String descriptionKaz = "";
+
     @Column(nullable = false)
     private boolean isLimitless;
 
@@ -49,6 +55,8 @@ public class TestEntity {
     public TestEntity(
             String nameRus,
             String nameKaz,
+            String descriptionRus,
+            String descriptionKaz,
             boolean isLimitless,
             int duration,
             Set<AreaOfActivityEntity> areaOfActivities,
@@ -56,6 +64,8 @@ public class TestEntity {
     ) {
         this.nameRus = nameRus;
         this.nameKaz = nameKaz;
+        this.descriptionRus = descriptionRus;
+        this.descriptionKaz = descriptionKaz;
         this.isLimitless = isLimitless;
         this.duration = duration;
         this.areaOfActivities = areaOfActivities;

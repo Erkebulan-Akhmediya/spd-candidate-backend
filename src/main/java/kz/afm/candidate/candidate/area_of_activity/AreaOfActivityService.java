@@ -23,7 +23,7 @@ public class AreaOfActivityService {
         );
     }
 
-    public Set<AreaOfActivityEntity> getAllSetByNames(Collection<String> nameList) throws RuntimeException {
+    public Set<AreaOfActivityEntity> getSetOfAllByNames(Collection<String> nameList) throws RuntimeException {
         List<AreaOfActivityEntity> areas = this.areaOfActivityRepository.findAllByNameIn(nameList);
         if (areas.isEmpty()) throw new RuntimeException("Направления деятельности теста не могут быть пустыми");
         return new LinkedHashSet<>(areas);

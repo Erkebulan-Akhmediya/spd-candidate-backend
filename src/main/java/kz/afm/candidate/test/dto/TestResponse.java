@@ -14,6 +14,8 @@ public class TestResponse {
     public long id;
     public String nameRus;
     public String nameKaz;
+    public String descriptionRus;
+    public String descriptionKaz;
     public List<String> areasOfActivities;
     public int duration;
     @JsonProperty("isLimitless")
@@ -26,10 +28,8 @@ public class TestResponse {
         this.areasOfActivities = test.getAreaOfActivities().stream().map(AreaOfActivityEntity::getName).toList();
         this.duration = test.getDuration();
         this.limitless = test.isLimitless();
-    }
-
-    public static List<TestResponse> fromEntities(List<TestEntity> tests) {
-        return tests.stream().map(TestResponse::new).toList();
+        this.descriptionRus = test.getDescriptionRus();
+        this.descriptionKaz = test.getDescriptionKaz();
     }
 
 }
