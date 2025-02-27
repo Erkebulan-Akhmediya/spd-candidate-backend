@@ -3,11 +3,13 @@ package kz.afm.candidate.candidate;
 import kz.afm.candidate.candidate.dto.*;
 import kz.afm.candidate.candidate.dto.get_all.CandidateListItemResponse;
 import kz.afm.candidate.candidate.dto.get_all.GetAllCandidateResponseBody;
-import kz.afm.candidate.candidate.dto.CandidateResponseBody;
+import kz.afm.candidate.candidate.dto.CandidateResponseDto;
 import kz.afm.candidate.candidate.education.EducationEntity;
 import kz.afm.candidate.candidate.education.EducationService;
 import kz.afm.candidate.candidate.experience.ExperienceEntity;
 import kz.afm.candidate.candidate.experience.ExperienceService;
+import kz.afm.candidate.candidate.language_knowledge.LanguageKnowledgeEntity;
+import kz.afm.candidate.candidate.language_knowledge.LanguageKnowledgeService;
 import kz.afm.candidate.dto.ResponseBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +26,10 @@ public class CandidateController {
     private final CandidateService candidateService;
     private final ExperienceService experienceService;
     private final EducationService educationService;
+    private final LanguageKnowledgeService languageKnowledgeService;
 
     @PostMapping
-    public ResponseEntity<ResponseBodyWrapper<Void>> create(@RequestBody CandidateRequest candidate) {
+    public ResponseEntity<ResponseBodyWrapper<Void>> create(@RequestBody CandidateRequestDto candidate) {
         try {
             this.candidateService.create(candidate);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
@@ -39,7 +42,7 @@ public class CandidateController {
     }
 
     @PutMapping
-    public ResponseEntity<ResponseBodyWrapper<Void>> update(@RequestBody CandidateRequest candidate) {
+    public ResponseEntity<ResponseBodyWrapper<Void>> update(@RequestBody CandidateRequestDto candidate) {
         try {
             this.candidateService.update(candidate);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
@@ -75,12 +78,13 @@ public class CandidateController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ResponseBodyWrapper<CandidateResponseBody>> getById(@PathVariable String id) {
+    public ResponseEntity<ResponseBodyWrapper<CandidateResponseDto>> getById(@PathVariable String id) {
         try {
             final CandidateEntity candidate = this.candidateService.getById(id);
             final List<ExperienceEntity> experiences = this.experienceService.getByCandidate(candidate);
             final List<EducationEntity> education = this.educationService.getAllByCandidate(candidate);
-            final CandidateResponseBody candidateDto = new CandidateResponseBody(candidate, experiences, education);
+            final List<LanguageKnowledgeEntity> languageKnowledge = this.languageKnowledgeService.getAllByCandidate(candidate);
+            final CandidateResponseDto candidateDto = new CandidateResponseDto(candidate, experiences, education, languageKnowledge);
             return ResponseEntity.ok(ResponseBodyWrapper.success(candidateDto));
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
@@ -103,7 +107,7 @@ public class CandidateController {
     }
 
     @PutMapping("to/security")
-    public ResponseEntity<ResponseBodyWrapper<Void>> sendToSecurityCheck(@RequestBody CandidateRequest candidate) {
+    public ResponseEntity<ResponseBodyWrapper<Void>> sendToSecurityCheck(@RequestBody CandidateRequestDto candidate) {
         try {
             this.candidateService.sendToSecurityCheck(candidate);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
@@ -116,7 +120,7 @@ public class CandidateController {
     }
 
     @PutMapping("to/approval")
-    public ResponseEntity<ResponseBodyWrapper<Void>> sendToApproval(@RequestBody CandidateRequest candidate) {
+    public ResponseEntity<ResponseBodyWrapper<Void>> sendToApproval(@RequestBody CandidateRequestDto candidate) {
         try {
             this.candidateService.sendToApproval(candidate);
             return ResponseEntity.ok(ResponseBodyWrapper.success());

@@ -3,16 +3,15 @@ package kz.afm.candidate.candidate.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
-@Getter
-@Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public class CandidateRequest {
+public class CandidateRequestDto {
 
     @NotNull(message = "ИИН обязателен")
     @NotEmpty(message = "ИИН не должен быть пуст")
@@ -50,7 +49,7 @@ public class CandidateRequest {
     @NotEmpty(message = "образование не должно быть пустым")
     public Set<EducationDto> education;
 
-    public Set<String> languageCodes;
+    public List<LanguageKnowledgeDto> languageKnowledge;
 
     public Set<String> driverLicenseCodes;
 

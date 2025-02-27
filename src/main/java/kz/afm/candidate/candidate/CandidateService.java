@@ -2,8 +2,9 @@ package kz.afm.candidate.candidate;
 
 import jakarta.transaction.Transactional;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
-import kz.afm.candidate.candidate.dto.CandidateRequest;
+import kz.afm.candidate.candidate.dto.CandidateRequestDto;
 import kz.afm.candidate.candidate.education.EducationService;
+import kz.afm.candidate.candidate.language_knowledge.LanguageKnowledgeService;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusService;
 import kz.afm.candidate.candidate.experience.ExperienceService;
@@ -27,6 +28,7 @@ public class CandidateService {
     private final AreaOfActivityService areaOfActivityService;
     private final EducationService educationService;
     private final CandidateEntityFactory candidateEntityFactory;
+    private final LanguageKnowledgeService languageKnowledgeService;
 
     private final CandidateRepository candidateRepository;
 
@@ -56,7 +58,7 @@ public class CandidateService {
     }
 
     @Transactional
-    public void create(CandidateRequest candidateDto) throws NoSuchElementException {
+    public void create(CandidateRequestDto candidateDto) throws NoSuchElementException {
         final CandidateEntity candidate = this.candidateEntityFactory.createFrom(candidateDto);
 
         CandidateStatusEntity status = this.candidateStatusService.getNewCandidateStatus();
@@ -66,10 +68,11 @@ public class CandidateService {
 
         this.experienceService.createAll(savedCandidate, candidateDto.experiences);
         this.educationService.createAll(savedCandidate, candidateDto.education);
+        this.languageKnowledgeService.createAll(savedCandidate, candidateDto.languageKnowledge);
     }
 
     @Transactional
-    public void update(CandidateRequest candidateDto) throws NoSuchElementException {
+    public void update(CandidateRequestDto candidateDto) throws NoSuchElementException {
         CandidateEntity candidate = this.getById(candidateDto.identificationNumber);
         candidate = this.candidateEntityFactory.updateEntityUsingRequestDtoValues(candidate, candidateDto);
         this.candidateRepository.save(candidate);
@@ -77,6 +80,7 @@ public class CandidateService {
         this.userService.updateUsername(candidateDto.username, candidate.getUser());
         this.experienceService.updateAll(candidate, candidateDto.experiences);
         this.educationService.updateAll(candidate, candidateDto.education);
+        this.languageKnowledgeService.updateAll(candidate, candidateDto.languageKnowledge);
     }
 
     public void reject(String iin) {
@@ -87,7 +91,7 @@ public class CandidateService {
     }
 
     @Transactional
-    public void sendToSecurityCheck(CandidateRequest candidateDto) throws NoSuchElementException {
+    public void sendToSecurityCheck(CandidateRequestDto candidateDto) throws NoSuchElementException {
         CandidateEntity candidate = this.getById(candidateDto.identificationNumber);
         candidate = this.candidateEntityFactory.updateEntityUsingRequestDtoValues(candidate, candidateDto);
 
@@ -101,7 +105,7 @@ public class CandidateService {
         this.educationService.updateAll(candidate, candidateDto.education);
     }
 
-    public void sendToApproval(CandidateRequest candidateDto) throws NoSuchElementException {
+    public void sendToApproval(CandidateRequestDto candidateDto) throws NoSuchElementException {
         final CandidateStatusEntity status = this.candidateStatusService.getOnApprovalStatus()  ;
         final CandidateEntity candidate = this.getById(candidateDto.identificationNumber);
         candidate.setSecurityCheckResult(candidateDto.securityCheckResult);

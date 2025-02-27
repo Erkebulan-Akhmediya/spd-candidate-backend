@@ -1,10 +1,8 @@
 package kz.afm.candidate.candidate;
 
-import kz.afm.candidate.candidate.dto.CandidateRequest;
+import kz.afm.candidate.candidate.dto.CandidateRequestDto;
 import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
 import kz.afm.candidate.reference.driver_license.DriverLicenseService;
-import kz.afm.candidate.reference.language.LanguageEntity;
-import kz.afm.candidate.reference.language.LanguageService;
 import kz.afm.candidate.reference.nationality.NationalityEntity;
 import kz.afm.candidate.reference.nationality.NationalityService;
 import kz.afm.candidate.reference.recruited_method.RecruitedMethodEntity;
@@ -22,22 +20,20 @@ import java.util.Set;
 @Component
 public class CandidateEntityFactory {
     private final NationalityService nationalityService;
-    private final LanguageService languageService;
     private final DriverLicenseService driverLicenseService;
     private final RecruitedMethodService recruitedMethodService;
     private final RegionService regionService;
     private final UserService userService;
 
-    public CandidateEntity createFrom(CandidateRequest candidateDto) {
+    public CandidateEntity createFrom(CandidateRequestDto candidateDto) {
         CandidateEntity candidate = this.updateEntityUsingRequestDtoValues(new CandidateEntity(), candidateDto);
         UserEntity user = this.userService.createForCandidate(candidateDto.username, candidateDto.password);
         candidate.setUser(user);
         return candidate;
     }
 
-    public CandidateEntity updateEntityUsingRequestDtoValues(CandidateEntity candidate, CandidateRequest candidateDto) {
+    public CandidateEntity updateEntityUsingRequestDtoValues(CandidateEntity candidate, CandidateRequestDto candidateDto) {
         NationalityEntity nationality = this.nationalityService.getUsing(candidateDto);
-        Set<LanguageEntity> languages = this.languageService.getSetOfAllUsing(candidateDto);
         Set<DriverLicenseEntity> driverLicenses = this.driverLicenseService.getSetOfAllUsing(candidateDto);
         RecruitedMethodEntity recruitedMethod = this.recruitedMethodService.getUsing(candidateDto);
         RegionEntity testingRegion = this.regionService.getUsing(candidateDto);
@@ -55,7 +51,6 @@ public class CandidateEntityFactory {
         candidate.setSecurityCheckResult(candidateDto.securityCheckResult);
         candidate.setPhotoFileName(candidateDto.photoFileName);
         candidate.setNationality(nationality);
-        candidate.setLanguages(languages);
         candidate.setDriverLicenses(driverLicenses);
         candidate.setRecruitedMethod(recruitedMethod);
         candidate.setTestingRegion(testingRegion);

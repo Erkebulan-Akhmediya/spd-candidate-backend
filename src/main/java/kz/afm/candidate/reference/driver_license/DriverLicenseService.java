@@ -1,6 +1,6 @@
 package kz.afm.candidate.reference.driver_license;
 
-import kz.afm.candidate.candidate.dto.CandidateRequest;
+import kz.afm.candidate.candidate.dto.CandidateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ public class DriverLicenseService {
 
     private final DriverLicenseRepository driverLicenseRepository;
 
-    public Set<DriverLicenseEntity> getSetOfAllUsing(CandidateRequest candidateDto) {
+    public Set<DriverLicenseEntity> getSetOfAllUsing(CandidateRequestDto candidateDto) {
         return this.getSetOfAllByCodes(candidateDto.driverLicenseCodes, true);
     }
 

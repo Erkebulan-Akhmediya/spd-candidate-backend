@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.status.CandidateStatusEntity;
 import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
-import kz.afm.candidate.reference.language.LanguageEntity;
 import kz.afm.candidate.reference.nationality.NationalityEntity;
 import kz.afm.candidate.reference.recruited_method.RecruitedMethodEntity;
 import kz.afm.candidate.reference.region.RegionEntity;
@@ -47,14 +46,6 @@ public class CandidateEntity {
     @ManyToOne
     @JoinColumn(name = "nationality_code", referencedColumnName = "code")
     private NationalityEntity nationality;
-
-    @ManyToMany
-    @JoinTable(
-            name = "candidate_language_rel",
-            joinColumns = @JoinColumn(name = "candidate_identification_number"),
-            inverseJoinColumns = @JoinColumn(name = "language_code")
-    )
-    private Set<LanguageEntity> languages;
 
     @ManyToMany
     @JoinTable(

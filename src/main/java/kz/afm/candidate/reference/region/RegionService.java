@@ -1,6 +1,6 @@
 package kz.afm.candidate.reference.region;
 
-import kz.afm.candidate.candidate.dto.CandidateRequest;
+import kz.afm.candidate.candidate.dto.CandidateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class RegionService {
         return this.regionRepository.findAll();
     }
 
-    public RegionEntity getUsing(CandidateRequest candidateDto) {
+    public RegionEntity getUsing(CandidateRequestDto candidateDto) {
         return this.getById(candidateDto.testingRegionId);
     }
 

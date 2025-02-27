@@ -2,7 +2,7 @@ package kz.afm.candidate.candidate;
 
 import kz.afm.candidate.TestUtils;
 import kz.afm.candidate.auth.AuthFilter;
-import kz.afm.candidate.candidate.dto.CandidateRequest;
+import kz.afm.candidate.candidate.dto.CandidateRequestDto;
 import kz.afm.candidate.candidate.education.EducationService;
 import kz.afm.candidate.candidate.experience.ExperienceService;
 import org.junit.jupiter.api.Test;
@@ -55,12 +55,12 @@ public class CandidateControllerTests {
     }
 
     private void mock_create_Methods() {
-        doNothing().when(this.candidateService).create(any(CandidateRequest.class));
+        doNothing().when(this.candidateService).create(any(CandidateRequestDto.class));
     }
 
     private String mock_CandidateRequest() {
         return TestUtils.toJsonString(
-                new CandidateRequest(
+                new CandidateRequestDto(
                         "123123123123",
                         "lastName",
                         "firstName",
@@ -71,7 +71,7 @@ public class CandidateControllerTests {
                         "phoneNumber",
                         -1,
                         new HashSet<>(),
-                        new HashSet<>(),
+                        new LinkedList<>(),
                         new HashSet<>(),
                         "sport",
                         "additionalData",
@@ -190,7 +190,7 @@ public class CandidateControllerTests {
     }
 
     private void mock_sendToSecurityCheck_Methods() {
-        doNothing().when(this.candidateService).sendToSecurityCheck(any(CandidateRequest.class));
+        doNothing().when(this.candidateService).sendToSecurityCheck(any(CandidateRequestDto.class));
     }
 
     private ResultActions perform_sendToSecurityCheck(String mockCandidateRequest) throws Exception {
@@ -210,7 +210,7 @@ public class CandidateControllerTests {
     }
 
     private void mock_sendToApproval_Methods() {
-        doNothing().when(this.candidateService).sendToApproval(any(CandidateRequest.class));
+        doNothing().when(this.candidateService).sendToApproval(any(CandidateRequestDto.class));
     }
 
     private ResultActions perform_sendToApproval(String mockCandidateRequest) throws Exception {

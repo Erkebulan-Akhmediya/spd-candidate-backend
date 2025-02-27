@@ -4,14 +4,14 @@ import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.education.EducationEntity;
 import kz.afm.candidate.candidate.experience.ExperienceEntity;
+import kz.afm.candidate.candidate.language_knowledge.LanguageKnowledgeEntity;
 import kz.afm.candidate.reference.driver_license.DriverLicenseEntity;
-import kz.afm.candidate.reference.language.LanguageEntity;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class CandidateResponseBody {
+public class CandidateResponseDto {
     public String lastName;
     public String firstName;
     public String middleName;
@@ -21,7 +21,7 @@ public class CandidateResponseBody {
     public String identificationNumber;
     public String phoneNumber;
     public int nationalityCode;
-    public List<String> languageCodes;
+    public List<LanguageKnowledgeDto> languageKnowledge;
     public List<String> driverLicenseCodes;
     public List<EducationDto> education;
     public String sport;
@@ -34,7 +34,12 @@ public class CandidateResponseBody {
     public String areaOfActivity;
     public String photoFileName;
 
-    public CandidateResponseBody(CandidateEntity candidate, List<ExperienceEntity> experiences, List<EducationEntity> education) {
+    public CandidateResponseDto(
+            CandidateEntity candidate,
+            List<ExperienceEntity> experiences,
+            List<EducationEntity> education,
+            List<LanguageKnowledgeEntity> languageKnowledge
+    ) {
         this.lastName = candidate.getLastName();
         this.firstName = candidate.getFirstName();
         this.middleName = candidate.getMiddleName();
@@ -44,9 +49,7 @@ public class CandidateResponseBody {
         this.identificationNumber = candidate.getIdentificationNumber();
         this.phoneNumber = candidate.getPhoneNumber();
         this.nationalityCode = candidate.getNationality().getCode();
-
-        Set<LanguageEntity> languages = candidate.getLanguages();
-        this.languageCodes = languages.stream().map(LanguageEntity::getCode).toList();
+        this.languageKnowledge = languageKnowledge.stream().map(LanguageKnowledgeDto::new).toList();
 
         Set<DriverLicenseEntity> driverLicenses = candidate.getDriverLicenses();
         this.driverLicenseCodes = driverLicenses.stream().map(DriverLicenseEntity::getCode).toList();

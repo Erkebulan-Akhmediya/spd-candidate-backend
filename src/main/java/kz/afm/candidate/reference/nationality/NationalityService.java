@@ -1,6 +1,6 @@
 package kz.afm.candidate.reference.nationality;
 
-import kz.afm.candidate.candidate.dto.CandidateRequest;
+import kz.afm.candidate.candidate.dto.CandidateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ public class NationalityService {
 
     private final NationalityRepository nationalityRepository;
 
-    public NationalityEntity getUsing(CandidateRequest candidateDto) {
+    public NationalityEntity getUsing(CandidateRequestDto candidateDto) {
         return this.getById(candidateDto.nationalityCode);
     }
 

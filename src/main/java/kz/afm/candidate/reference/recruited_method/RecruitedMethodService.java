@@ -1,6 +1,6 @@
 package kz.afm.candidate.reference.recruited_method;
 
-import kz.afm.candidate.candidate.dto.CandidateRequest;
+import kz.afm.candidate.candidate.dto.CandidateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ public class RecruitedMethodService {
 
     private final RecruitedMethodRepository recruitedMethodRepository;
 
-    public RecruitedMethodEntity getUsing(CandidateRequest candidateDto) {
+    public RecruitedMethodEntity getUsing(CandidateRequestDto candidateDto) {
         return this.getById(candidateDto.recruitedMethodId);
     }
 
