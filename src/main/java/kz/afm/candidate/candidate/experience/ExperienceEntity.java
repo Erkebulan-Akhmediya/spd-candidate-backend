@@ -6,8 +6,6 @@ import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -16,22 +14,22 @@ public class ExperienceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    public Long id;
 
     @Column(nullable = false)
-    private Date startDate;
+    public Date startDate;
 
-    private Date endDate;
-
-    @Column(nullable = false)
-    private String position;
+    public Date endDate;
 
     @Column(nullable = false)
-    private String companyName;
+    public String position;
+
+    @Column(nullable = false)
+    public String companyName;
 
     @ManyToOne
     @JoinColumn(name = "candidate_identification_number", nullable = false)
-    private CandidateEntity candidate;
+    public CandidateEntity candidate;
 
     public ExperienceEntity(
             Date startDate,

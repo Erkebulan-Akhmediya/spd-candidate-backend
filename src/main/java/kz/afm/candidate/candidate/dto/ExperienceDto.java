@@ -16,11 +16,11 @@ public class ExperienceDto {
     public String companyName;
 
     public ExperienceDto(ExperienceEntity experience) {
-        this.startDate = experience.getStartDate();
-        this.untilNow = experience.getEndDate() == null;
-        this.endDate = experience.getEndDate();
-        this.position = experience.getPosition();
-        this.companyName = experience.getCompanyName();
+        this.startDate = experience.startDate;
+        this.untilNow = experience.endDate == null;
+        this.endDate = experience.endDate;
+        this.position = experience.position;
+        this.companyName = experience.companyName;
     }
 
 }
