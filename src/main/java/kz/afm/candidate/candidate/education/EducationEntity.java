@@ -26,6 +26,7 @@ public class EducationEntity {
     @JoinColumn(name = "education_type_id", nullable = false)
     private EducationTypeEntity educationType;
 
+    @Column(nullable = false)
     private Date startDate;
 
     private Date endDate;

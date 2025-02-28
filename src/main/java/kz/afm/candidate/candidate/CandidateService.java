@@ -73,36 +73,29 @@ public class CandidateService {
 
     @Transactional
     public void update(CandidateRequestDto candidateDto) throws NoSuchElementException {
+        CandidateEntity updatedCandidate = this.updateUsing(candidateDto);
+        this.candidateRepository.save(updatedCandidate);
+    }
+
+    @Transactional
+    public void sendToSecurityCheck(CandidateRequestDto candidateDto) throws NoSuchElementException {
+        CandidateEntity updatedCandidate = this.updateUsing(candidateDto);
+
+        CandidateStatusEntity status = this.candidateStatusService.getOnSecurityCheckStatus();
+        updatedCandidate.setStatus(status);
+
+        this.candidateRepository.save(updatedCandidate);
+    }
+
+    private CandidateEntity updateUsing(CandidateRequestDto candidateDto) throws NoSuchElementException {
         CandidateEntity candidate = this.getById(candidateDto.identificationNumber);
-        candidate = this.candidateEntityFactory.updateEntityUsingRequestDtoValues(candidate, candidateDto);
-        this.candidateRepository.save(candidate);
 
         this.userService.updateUsername(candidateDto.username, candidate.getUser());
         this.experienceService.updateAll(candidate, candidateDto.experiences);
         this.educationService.updateAll(candidate, candidateDto.education);
         this.languageKnowledgeService.updateAll(candidate, candidateDto.languageKnowledge);
-    }
 
-    public void reject(String iin) {
-        final CandidateEntity candidate = this.getById(iin);
-        final CandidateStatusEntity status = this.candidateStatusService.getRejectedStatus();
-        candidate.setStatus(status);
-        this.candidateRepository.save(candidate);
-    }
-
-    @Transactional
-    public void sendToSecurityCheck(CandidateRequestDto candidateDto) throws NoSuchElementException {
-        CandidateEntity candidate = this.getById(candidateDto.identificationNumber);
-        candidate = this.candidateEntityFactory.updateEntityUsingRequestDtoValues(candidate, candidateDto);
-
-        CandidateStatusEntity status = this.candidateStatusService.getOnSecurityCheckStatus();
-        candidate.setStatus(status);
-
-        this.candidateRepository.save(candidate);
-
-        this.userService.updateUsername(candidateDto.username, candidate.getUser());
-        this.experienceService.updateAll(candidate, candidateDto.experiences);
-        this.educationService.updateAll(candidate, candidateDto.education);
+        return this.candidateEntityFactory.updateEntityUsingRequestDtoValues(candidate, candidateDto);
     }
 
     public void sendToApproval(CandidateRequestDto candidateDto) throws NoSuchElementException {
@@ -118,6 +111,13 @@ public class CandidateService {
         final CandidateEntity candidate = this.getById(iin);
         candidate.setStatus(status);
         candidate.setAreaOfActivity(this.areaOfActivityService.getByName(areaOfActivity));
+        this.candidateRepository.save(candidate);
+    }
+
+    public void reject(String iin) {
+        final CandidateEntity candidate = this.getById(iin);
+        final CandidateStatusEntity status = this.candidateStatusService.getRejectedStatus();
+        candidate.setStatus(status);
         this.candidateRepository.save(candidate);
     }
 

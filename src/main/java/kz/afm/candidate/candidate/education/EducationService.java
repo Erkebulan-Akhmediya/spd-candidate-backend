@@ -7,6 +7,7 @@ import kz.afm.candidate.candidate.education.type.EducationTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,24 +24,24 @@ public class EducationService {
         this.createAll(candidate, educations);
     }
 
-    public void createAll(CandidateEntity candidate, Set<EducationDto> educations) {
+    public void createAll(CandidateEntity candidate, Set<EducationDto> educationDtoSet) {
         final Map<Integer, EducationTypeEntity> typesMap = this.educationTypeService.getAllMap();
-        final List<EducationEntity> entities = educations
-                .stream()
+        final List<EducationEntity> educations = educationDtoSet.stream()
                 .map(
-                        (EducationDto education) -> {
-                            final EducationTypeEntity type = typesMap.get(education.getType());
+                        (EducationDto educationDto) -> {
+                            final EducationTypeEntity type = typesMap.get(educationDto.type);
+                            final Date endDate = educationDto.untilNow ? null : educationDto.endDate;
                             return new EducationEntity(
                                     type,
-                                    education.startDate,
-                                    education.endDate,
-                                    education.organization,
-                                    education.major,
+                                    educationDto.startDate,
+                                    endDate,
+                                    educationDto.organization,
+                                    educationDto.major,
                                     candidate
                             );
                         }
                 ).toList();
-        this.educationRepository.saveAll(entities);
+        this.educationRepository.saveAll(educations);
     }
 
     public List<EducationEntity> getAllByCandidate(CandidateEntity candidate) {
