@@ -17,12 +17,12 @@ public class EducationDto {
     public String major;
 
     public EducationDto(EducationEntity education) {
-        this.startDate = education.getStartDate();
-        this.endDate = education.getEndDate();
-        this.untilNow = education.getEndDate() == null;
-        this.type = education.getEducationType().getId();
-        this.organization = education.getOrganization();
-        this.major = education.getMajor();
+        this.startDate = education.startDate;
+        this.endDate = education.endDate;
+        this.untilNow = education.endDate == null;
+        this.type = education.educationType.getId();
+        this.organization = education.organization;
+        this.major = education.major;
     }
 
 }

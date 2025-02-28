@@ -4,14 +4,10 @@ import jakarta.persistence.*;
 import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.education.type.EducationTypeEntity;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Date;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -20,24 +16,24 @@ public class EducationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    public long id;
 
     @ManyToOne
     @JoinColumn(name = "education_type_id", nullable = false)
-    private EducationTypeEntity educationType;
+    public EducationTypeEntity educationType;
 
     @Column(nullable = false)
-    private Date startDate;
+    public Date startDate;
 
-    private Date endDate;
+    public Date endDate;
 
-    private String organization;
+    public String organization;
 
-    private String major;
+    public String major;
 
     @ManyToOne
     @JoinColumn(name = "candidate_id", nullable = false)
-    private CandidateEntity candidate;
+    public CandidateEntity candidate;
 
     public EducationEntity(
             EducationTypeEntity type,
