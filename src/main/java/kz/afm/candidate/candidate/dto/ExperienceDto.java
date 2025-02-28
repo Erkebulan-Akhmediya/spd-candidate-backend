@@ -10,12 +10,14 @@ import java.util.Date;
 @AllArgsConstructor
 public class ExperienceDto {
     public Date startDate;
+    public boolean untilNow;
     public Date endDate;
     public String position;
     public String companyName;
 
     public ExperienceDto(ExperienceEntity experience) {
         this.startDate = experience.getStartDate();
+        this.untilNow = experience.getEndDate() == null;
         this.endDate = experience.getEndDate();
         this.position = experience.getPosition();
         this.companyName = experience.getCompanyName();

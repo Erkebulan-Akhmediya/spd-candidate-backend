@@ -10,7 +10,6 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "experience")
 public class ExperienceEntity {
@@ -33,5 +32,19 @@ public class ExperienceEntity {
     @ManyToOne
     @JoinColumn(name = "candidate_identification_number", nullable = false)
     private CandidateEntity candidate;
+
+    public ExperienceEntity(
+            Date startDate,
+            Date endDate,
+            String position,
+            String companyName,
+            CandidateEntity candidate
+    ) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.position = position;
+        this.companyName = companyName;
+        this.candidate = candidate;
+    }
 
 }

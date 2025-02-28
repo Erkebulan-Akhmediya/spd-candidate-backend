@@ -5,6 +5,7 @@ import kz.afm.candidate.candidate.dto.ExperienceDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -20,19 +21,21 @@ public class ExperienceService {
     }
 
     public void createAll(CandidateEntity candidate, Set<ExperienceDto> experienceRequests) {
-        final List<ExperienceEntity> experiences = experienceRequests
-                .stream()
+        final List<ExperienceEntity> experiences = experienceRequests.stream()
                 .map(
-                        (ExperienceDto experience) -> ExperienceEntity.builder()
-                                .startDate(experience.startDate)
-                                .endDate(experience.endDate)
-                                .companyName(experience.companyName)
-                                .position(experience.position)
-                                .candidate(candidate)
-                                .build()
+                        (ExperienceDto experienceDto) -> {
+                            final Date endDate = experienceDto.untilNow ? null : experienceDto.endDate;
+                            return new ExperienceEntity(
+                                    experienceDto.startDate,
+                                    endDate,
+                                    experienceDto.position,
+                                    experienceDto.companyName,
+                                    candidate
+                            );
+                        }
                 )
                 .toList();
-        experienceRepository.saveAll(experiences);
+        this.experienceRepository.saveAll(experiences);
     }
 
     public List<ExperienceEntity> getByCandidate(CandidateEntity candidate) {
