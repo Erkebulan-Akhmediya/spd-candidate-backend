@@ -20,7 +20,7 @@ public class EducationDto {
         this.startDate = education.startDate;
         this.endDate = education.endDate;
         this.untilNow = education.endDate == null;
-        this.type = education.educationType.getId();
+        this.type = education.educationType.id;
         this.organization = education.organization;
         this.major = education.major;
     }

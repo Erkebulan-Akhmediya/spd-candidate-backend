@@ -30,7 +30,7 @@ public class EducationTypeService {
         final List<EducationTypeEntity> types = this.educationTypeRepository.findAll();
         final Map<Integer, EducationTypeEntity> map = new HashMap<>();
         for (EducationTypeEntity type : types) {
-            map.putIfAbsent(type.getId(), type);
+            map.putIfAbsent(type.id, type);
         }
         return map;
     }

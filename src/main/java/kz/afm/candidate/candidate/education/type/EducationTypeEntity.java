@@ -4,12 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -17,10 +13,10 @@ import lombok.Setter;
 public class EducationTypeEntity {
 
     @Id
-    private int id;
+    public int id;
 
-    private String nameRus;
+    public String nameRus;
 
-    private String nameKaz;
+    public String nameKaz;
 
 }

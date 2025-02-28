@@ -1,6 +1,6 @@
 package kz.afm.candidate.candidate.education.type;
 
-import kz.afm.candidate.candidate.education.type.dto.EducationTypeResponseBody;
+import kz.afm.candidate.candidate.education.type.dto.EducationTypeResponseDto;
 import kz.afm.candidate.dto.ResponseBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +18,10 @@ public class EducationTypeController {
     private final EducationTypeService educationTypeService;
 
     @GetMapping("all")
-    public ResponseEntity<ResponseBodyWrapper<List<EducationTypeResponseBody>>> getAll() {
+    public ResponseEntity<ResponseBodyWrapper<List<EducationTypeResponseDto>>> getAll() {
         try {
             final List<EducationTypeEntity> types = this.educationTypeService.getAll();
-            final List<EducationTypeResponseBody> typeDtos = types.stream().map(EducationTypeResponseBody::new).toList();
+            final List<EducationTypeResponseDto> typeDtos = types.stream().map(EducationTypeResponseDto::new).toList();
             return ResponseEntity.ok(ResponseBodyWrapper.success(typeDtos));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
