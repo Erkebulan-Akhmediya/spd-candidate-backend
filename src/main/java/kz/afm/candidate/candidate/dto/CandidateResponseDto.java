@@ -45,7 +45,7 @@ public class CandidateResponseDto {
         this.middleName = candidate.getMiddleName();
         this.birthDate = candidate.getBirthDate();
         this.birthPlace = candidate.getBirthPlace();
-        this.testingRegionId = candidate.getTestingRegion().getId();
+        this.testingRegionId = candidate.getTestingRegion().id;
         this.identificationNumber = candidate.getIdentificationNumber();
         this.phoneNumber = candidate.getPhoneNumber();
         this.nationalityCode = candidate.getNationality().getCode();

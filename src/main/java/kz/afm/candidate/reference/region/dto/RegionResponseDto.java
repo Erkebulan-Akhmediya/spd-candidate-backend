@@ -12,8 +12,9 @@ public class RegionResponseDto {
     public String nameKaz;
 
     public RegionResponseDto(RegionEntity region) {
-        this.id = region.getId();
-        this.nameRus = region.getNameRus();
+        this.id = region.id;
+        this.nameRus = region.nameRus;
+        this.nameKaz = region.nameKaz;
     }
 
 }

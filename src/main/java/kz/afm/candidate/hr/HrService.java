@@ -12,7 +12,7 @@ public class HrService {
 
     public int getRegionByUser(UserEntity user) {
         HrEntity hr = this.hrRepository.findByUser(user).orElseThrow();
-        return hr.getRegion().getId();
+        return hr.getRegion().id;
     }
 
 }
