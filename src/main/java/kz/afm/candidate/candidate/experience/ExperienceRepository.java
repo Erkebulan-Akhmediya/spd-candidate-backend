@@ -9,5 +9,5 @@ import java.util.List;
 public interface ExperienceRepository extends JpaRepository<ExperienceEntity, Long> {
     List<ExperienceEntity> findByCandidate_IdentificationNumber(String candidateIdentificationNumber);
 
-    void deleteAllByCandidate_IdentificationNumber(String candidateIdentificationNumber);
+    void deleteByCandidate_IdentificationNumber(String candidateIdentificationNumber);
 }

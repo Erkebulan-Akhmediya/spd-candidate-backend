@@ -54,4 +54,8 @@ public class TestSessionAnswerService {
         return answer.getTestSession().getVariant().getTest();
     }
 
+    public void deleteByTestSession(TestSessionEntity testSession) {
+        this.testSessionAnswerRepository.deleteByTestSession(testSession);
+    }
+
 }

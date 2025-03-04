@@ -23,4 +23,6 @@ public interface TestSessionRepository extends JpaRepository<TestSessionEntity, 
     long countAllByStatusAndCandidate_TestingRegion_Id(TestSessionStatusEntity status, int candidateTestingRegionId);
 
     List<TestSessionEntity> findAllByCandidate(CandidateEntity candidate);
+
+    List<TestSessionEntity> findAllByCandidate_IdentificationNumber(String candidateIdentificationNumber);
 }

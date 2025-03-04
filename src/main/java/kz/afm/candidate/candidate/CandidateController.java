@@ -11,6 +11,7 @@ import kz.afm.candidate.candidate.experience.ExperienceService;
 import kz.afm.candidate.candidate.language_knowledge.LanguageKnowledgeEntity;
 import kz.afm.candidate.candidate.language_knowledge.LanguageKnowledgeService;
 import kz.afm.candidate.dto.ResponseBodyWrapper;
+import kz.afm.candidate.test.session.TestSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class CandidateController {
     private final ExperienceService experienceService;
     private final EducationService educationService;
     private final LanguageKnowledgeService languageKnowledgeService;
+    private final TestSessionService testSessionService;
 
     @PostMapping
     public ResponseEntity<ResponseBodyWrapper<Void>> create(@RequestBody CandidateRequestDto candidate) {
@@ -148,6 +150,8 @@ public class CandidateController {
     @DeleteMapping("{iin}")
     public ResponseEntity<ResponseBodyWrapper<Void>> delete(@PathVariable String iin) {
         try {
+            this.testSessionService.deleteByCandidateIdentificationNumber(iin);
+            this.candidateService.delete(iin);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));

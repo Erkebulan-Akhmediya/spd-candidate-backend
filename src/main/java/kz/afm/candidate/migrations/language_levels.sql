@@ -4,4 +4,4 @@ values ('A1', 'Beginner + Elementary (Начальный)', 'Beginner + Elementa
        ('B1', 'Intermediate (Средний)', 'Intermediate (Ортаңғы)'),
        ('B2', 'Upper-Intermediate (Выше среднего)', 'Upper-Intermediate (Ортадан жоғары)'),
        ('C1', 'Advanced (Продвинутый)', 'Advanced (Жетік)'),
-       ('C2', 'Proficient (Продвинутый)', 'Proficient (Мінсіз)');
+       ('C2', 'Proficient (В соверщенстве)', 'Proficient (Мінсіз)');

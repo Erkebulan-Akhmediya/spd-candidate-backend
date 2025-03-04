@@ -27,7 +27,7 @@ public class LanguageKnowledgeService {
     }
 
     public void updateAll(CandidateEntity candidate, List<LanguageKnowledgeDto> languageKnowledgeDtoList) {
-        this.languageKnowledgeRepository.deleteAllByCandidate(candidate);
+        this.languageKnowledgeRepository.deleteByCandidate(candidate);
         this.createAll(candidate, languageKnowledgeDtoList);
     }
 
@@ -52,6 +52,10 @@ public class LanguageKnowledgeService {
                 )
                 .toList();
         this.languageKnowledgeRepository.saveAll(knowledge);
+    }
+
+    public void deleteByCandidateIdentificationNumber(String candidateIdentificationNumber) {
+        this.languageKnowledgeRepository.deleteByCandidate_IdentificationNumber(candidateIdentificationNumber);
     }
 
 }

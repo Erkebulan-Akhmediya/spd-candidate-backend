@@ -30,6 +30,10 @@ public class ResultService {
         return this.resultRepository.findAllByTestSession(testSession);
     }
 
+    public void deleteByTestSession(TestSessionEntity testSession) {
+        this.resultRepository.deleteByTestSession(testSession);
+    }
+
     public void evaluate(TestSessionEntity testSession) {
         List<TestSessionAnswerEntity> answers = this.testSessionAnswerService.getAllByTestSession(testSession);
         final Map<Long, ResultEntity> results = this.createResultMapFor(testSession);

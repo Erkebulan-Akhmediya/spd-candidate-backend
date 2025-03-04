@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface TestSessionAnswerRepository extends JpaRepository<TestSessionAnswerEntity, Long> {
     List<TestSessionAnswerEntity> findAllByTestSession(TestSessionEntity testSession);
+
+    void deleteByTestSession(TestSessionEntity testSession);
 }

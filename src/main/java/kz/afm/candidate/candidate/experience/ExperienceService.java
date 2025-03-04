@@ -16,7 +16,7 @@ public class ExperienceService {
     private final ExperienceRepository experienceRepository;
 
     public void updateAll(CandidateEntity candidate, Set<ExperienceDto> experienceRequests) {
-        this.experienceRepository.deleteAllByCandidate_IdentificationNumber(candidate.getIdentificationNumber());
+        this.experienceRepository.deleteByCandidate_IdentificationNumber(candidate.getIdentificationNumber());
         this.createAll(candidate, experienceRequests);
     }
 
@@ -41,6 +41,10 @@ public class ExperienceService {
     public List<ExperienceEntity> getByCandidate(CandidateEntity candidate) {
         final String identificationNumber = candidate.getIdentificationNumber();
         return this.experienceRepository.findByCandidate_IdentificationNumber(identificationNumber);
+    }
+
+    public void deleteByCandidateIdentificationNumber(String candidateIdentificationNumber) {
+        this.experienceRepository.deleteByCandidate_IdentificationNumber(candidateIdentificationNumber);
     }
 
 }

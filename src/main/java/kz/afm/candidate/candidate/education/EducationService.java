@@ -20,7 +20,7 @@ public class EducationService {
     private final EducationTypeService educationTypeService;
 
     public void updateAll(CandidateEntity candidate, Set<EducationDto> educations) {
-        this.educationRepository.deleteAllByCandidate(candidate);
+        this.educationRepository.deleteByCandidate(candidate);
         this.createAll(candidate, educations);
     }
 
@@ -46,6 +46,10 @@ public class EducationService {
 
     public List<EducationEntity> getAllByCandidate(CandidateEntity candidate) {
         return this.educationRepository.findAllByCandidate(candidate);
+    }
+
+    public void deleteByCandidateIdentificationNumber(String candidateIdentificationNumber) {
+        this.educationRepository.deleteByCandidate_IdentificationNumber(candidateIdentificationNumber);
     }
 
 }

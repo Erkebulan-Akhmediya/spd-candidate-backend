@@ -121,4 +121,12 @@ public class CandidateService {
         this.candidateRepository.save(candidate);
     }
 
+    @Transactional
+    public void delete(String iin) {
+        this.experienceService.deleteByCandidateIdentificationNumber(iin);
+        this.educationService.deleteByCandidateIdentificationNumber(iin);
+        this.languageKnowledgeService.deleteByCandidateIdentificationNumber(iin);
+        this.candidateRepository.deleteById(iin);
+    }
+
 }

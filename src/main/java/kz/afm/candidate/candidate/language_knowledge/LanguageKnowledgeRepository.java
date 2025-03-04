@@ -8,7 +8,9 @@ import java.util.List;
 
 @Repository
 public interface LanguageKnowledgeRepository extends JpaRepository<LanguageKnowledgeEntity, Long> {
-    void deleteAllByCandidate(CandidateEntity candidate);
+    void deleteByCandidate(CandidateEntity candidate);
+
+    void deleteByCandidate_IdentificationNumber(String candidateIdentificationNumber);
 
     List<LanguageKnowledgeEntity> findAllByCandidate(CandidateEntity candidate);
 }

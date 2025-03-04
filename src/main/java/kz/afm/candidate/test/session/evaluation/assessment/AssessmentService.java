@@ -34,4 +34,9 @@ public class AssessmentService {
         return this.assessmentRepository.findAllByTestSessionAnswer_TestSession(testSession);
     }
 
+    public void deleteByTestSession(TestSessionEntity testSession) {
+        final List<TestSessionAnswerEntity> answers = this.testSessionAnswerService.getAllByTestSession(testSession);
+        answers.forEach(this.assessmentRepository::deleteByTestSessionAnswer);
+    }
+
 }

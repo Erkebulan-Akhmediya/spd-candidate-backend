@@ -8,6 +8,9 @@ import java.util.List;
 
 @Repository
 public interface EducationRepository extends JpaRepository<EducationEntity, Long> {
-    void deleteAllByCandidate(CandidateEntity candidate);
+    void deleteByCandidate(CandidateEntity candidate);
+
+    void deleteByCandidate_IdentificationNumber(String candidateIdentificationNumber);
+
     List<EducationEntity> findAllByCandidate(CandidateEntity candidate);
 }

@@ -1,5 +1,6 @@
 package kz.afm.candidate.test.session;
 
+import jakarta.transaction.Transactional;
 import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.CandidateService;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerService;
@@ -55,6 +56,19 @@ public class TestSessionService {
         testSession.setStatus(endStatus);
         testSession.setEndDate(new Date());
         return this.testSessionRepository.save(testSession);
+    }
+
+    @Transactional
+    public void deleteByCandidateIdentificationNumber(String candidateIdentificationNumber) {
+        List<TestSessionEntity> testSessions = this.testSessionRepository.findAllByCandidate_IdentificationNumber(
+                candidateIdentificationNumber
+        );
+        testSessions.forEach((TestSessionEntity testSession) -> {
+            this.assessmentService.deleteByTestSession(testSession);
+            this.resultService.deleteByTestSession(testSession);
+            this.testSessionAnswerService.deleteByTestSession(testSession);
+            this.testSessionRepository.delete(testSession);
+        });
     }
 
     @Async
