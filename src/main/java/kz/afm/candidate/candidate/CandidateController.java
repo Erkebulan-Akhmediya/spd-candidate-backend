@@ -145,4 +145,13 @@ public class CandidateController {
         }
     }
 
+    @DeleteMapping("{iin}")
+    public ResponseEntity<ResponseBodyWrapper<Void>> delete(@PathVariable String iin) {
+        try {
+            return ResponseEntity.ok(ResponseBodyWrapper.success());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
+        }
+    }
+
 }
