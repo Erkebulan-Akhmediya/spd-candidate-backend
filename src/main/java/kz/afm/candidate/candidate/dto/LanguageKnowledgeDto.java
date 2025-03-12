@@ -11,7 +11,7 @@ public class LanguageKnowledgeDto {
     public String levelCode;
 
     public LanguageKnowledgeDto(LanguageKnowledgeEntity knowledge) {
-        this.languageCode = knowledge.language.getCode();
+        this.languageCode = knowledge.language.code;
         this.levelCode = knowledge.level.code;
     }
 }

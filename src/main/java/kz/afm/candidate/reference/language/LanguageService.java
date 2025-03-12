@@ -26,7 +26,7 @@ public class LanguageService {
         final List<LanguageEntity> languages = this.languageRepository.findAllByCodeIn(codes);
         final Map<String, LanguageEntity> codeToLanguage = new HashMap<>();
         for (LanguageEntity languageEntity : languages) {
-            codeToLanguage.put(languageEntity.getCode(), languageEntity);
+            codeToLanguage.put(languageEntity.code, languageEntity);
         }
         return codeToLanguage;
     }

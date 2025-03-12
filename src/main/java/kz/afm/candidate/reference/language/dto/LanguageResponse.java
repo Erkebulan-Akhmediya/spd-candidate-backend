@@ -11,7 +11,10 @@ public class LanguageResponse {
     private String nameRus;
     private String nameKaz;
 
-    public static LanguageResponse fromEntity(LanguageEntity language) {
-        return new LanguageResponse(language.getCode(), language.getNameRus(), language.getNameKaz());
+    public LanguageResponse(LanguageEntity languageEntity) {
+        this.code = languageEntity.code;
+        this.nameRus = languageEntity.nameRus;
+        this.nameKaz = languageEntity.nameKaz;
     }
+
 }

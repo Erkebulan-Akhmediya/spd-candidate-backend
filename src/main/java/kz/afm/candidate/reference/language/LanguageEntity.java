@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -15,12 +13,12 @@ import lombok.Setter;
 public class LanguageEntity {
 
     @Id
-    private String code;
+    public String code;
 
     @Column(name = "name_rus", nullable = false)
-    private String nameRus;
+    public String nameRus;
 
     @Column(name = "name_kaz", nullable = false)
-    private String nameKaz;
+    public String nameKaz;
 
 }

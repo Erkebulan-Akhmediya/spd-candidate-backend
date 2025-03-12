@@ -23,7 +23,7 @@ public class LanguageController {
         try {
             final List<LanguageResponse> languages = this.languageService.getAll(true)
                     .stream()
-                    .map(LanguageResponse::fromEntity)
+                    .map(LanguageResponse::new)
                     .toList();
             return ResponseEntity.ok(ResponseBodyWrapper.success(languages));
         } catch (NoSuchElementException e) {
