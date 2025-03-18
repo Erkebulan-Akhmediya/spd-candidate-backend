@@ -14,7 +14,6 @@ import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -71,17 +70,13 @@ public class TestSessionService {
         });
     }
 
-    @Async
-    public void evaluateAfterResponse(TestSessionEntity testSession) {
+    public void evaluate(TestSessionEntity testSession) {
         if (!testSession.getVariant().getTest().getType().isAutomaticallyEvaluated()) return;
-        try {
-            this.resultService.evaluate(testSession);
-            final TestSessionStatusEntity checkedStatus = this.testSessionStatusService.getCheckedStatus();
-            testSession.setStatus(checkedStatus);
-            this.testSessionRepository.save(testSession);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+
+        this.resultService.evaluate(testSession);
+        final TestSessionStatusEntity checkedStatus = this.testSessionStatusService.getCheckedStatus();
+        testSession.setStatus(checkedStatus);
+        this.testSessionRepository.save(testSession);
     }
 
     public void assess(long testSessionId, List<TestSessionAnswerDto> answers) throws NoSuchElementException {

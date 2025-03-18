@@ -74,7 +74,7 @@ public class TestSessionController {
     ) {
         try {
             final TestSessionEntity endedTestSession = this.testSessionService.end(testSessionId, answers);
-            this.testSessionService.evaluateAfterResponse(endedTestSession);
+            this.testSessionService.evaluate(endedTestSession);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
