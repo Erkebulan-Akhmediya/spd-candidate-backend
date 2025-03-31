@@ -1,9 +1,7 @@
 package kz.afm.candidate.test;
 
 import kz.afm.candidate.dto.ResponseBodyWrapper;
-import kz.afm.candidate.test.dto.CreateTestRequest;
-import kz.afm.candidate.test.dto.GetAllTestsResponseBody;
-import kz.afm.candidate.test.dto.TestResponse;
+import kz.afm.candidate.test.dto.*;
 import kz.afm.candidate.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +39,52 @@ public class TestController {
             final List<TestResponse> testDtoList = tests.stream().map(TestResponse::new).toList();
             final GetAllTestsResponseBody responseBody = new GetAllTestsResponseBody(testDtoList, allTestCount);
             return ResponseEntity.ok(ResponseBodyWrapper.success(responseBody));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/essay/topic/all")
+    public ResponseEntity<ResponseBodyWrapper<List<EssayTopicResponse>>> getEssayTopics() {
+        try {
+            final List<EssayTopicResponse> topics = this.testService.getEssayTopics()
+                    .stream()
+                    .map(EssayTopicResponse::new)
+                    .toList();
+            return ResponseEntity.ok(ResponseBodyWrapper.success(topics));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
+        }
+    }
+
+    @PostMapping("/essay/topic")
+    public ResponseEntity<ResponseBodyWrapper<Void>> createEssayTopics(@RequestBody EssayTopicRequest topic) {
+        try {
+            this.testService.createEssayTopic(topic.nameRus, topic.nameKaz);
+            return ResponseEntity.ok(ResponseBodyWrapper.success());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
+        }
+    }
+
+    @PutMapping("/essay/topic/{variantId}")
+    public ResponseEntity<ResponseBodyWrapper<Void>> updateEssayTopic(
+            @PathVariable("variantId") long variantId,
+            @RequestBody EssayTopicRequest topic
+    ) {
+        try {
+            this.testService.updateEssayTopicByVariantId(variantId, topic.nameRus, topic.nameKaz);
+            return ResponseEntity.ok(ResponseBodyWrapper.success());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/essay/topic/{variantId}")
+    public ResponseEntity<ResponseBodyWrapper<Void>> deleteEssayTopic(@PathVariable long variantId) {
+        try {
+            this.testService.deleteEssayTopicByVariantId(variantId);
+            return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
         }

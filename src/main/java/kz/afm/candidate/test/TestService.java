@@ -5,7 +5,10 @@ import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.CandidateService;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
+import kz.afm.candidate.test.dto.CreateQuestionRequest;
 import kz.afm.candidate.test.dto.CreateTestRequest;
+import kz.afm.candidate.test.dto.CreateVariantRequest;
+import kz.afm.candidate.test.question.QuestionEntity;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import kz.afm.candidate.test.session.TestSessionService;
 import kz.afm.candidate.test.session.evaluation.scale.ScaleService;
@@ -104,6 +107,38 @@ public class TestService {
 
     public int getTypeIdByTestId(long testId) throws NoSuchElementException {
         return this.getById(testId).getType().getId();
+    }
+
+    public List<QuestionEntity> getEssayTopics() throws NoSuchElementException {
+        final TestEntity essay = this.testRepository.findAllByNameRus("Эссе").getFirst();
+        return this.variantService.getQuestionsByTestId(essay.getId());
+    }
+
+    public void createEssayTopic(String nameRus, String nameKaz) {
+        final CreateQuestionRequest question = new CreateQuestionRequest(
+                false,
+                null,
+                nameRus,
+                nameKaz,
+                null
+        );
+        final List<CreateQuestionRequest> questions = new LinkedList<>();
+        questions.add(question);
+
+        final CreateVariantRequest variant = new CreateVariantRequest(questions);
+        final List<CreateVariantRequest> variants = new LinkedList<>();
+        variants.add(variant);
+
+        final TestEntity essay = this.testRepository.findAllByNameRus("Эссе").getFirst();
+        this.variantService.create(essay, variants);
+    }
+
+    public void deleteEssayTopicByVariantId(long variantId) {
+        this.variantService.deleteVariantById(variantId);
+    }
+
+    public void updateEssayTopicByVariantId(long variantId, String nameRus, String nameKaz) {
+        this.variantService.updateEssayTopicByVariantId(variantId, nameRus, nameKaz);
     }
 
 }

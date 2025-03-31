@@ -54,6 +54,10 @@ public class QuestionService {
         return questions;
     }
 
+    public List<QuestionEntity> getByVariantList(List<VariantEntity> variantList) throws NoSuchElementException {
+        return this.questionRepository.findAllByVariantIn(variantList);
+    }
+
     public QuestionEntity getById(Long id) throws NoSuchElementException {
         return this.questionRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("Вопрос с ID: " + id + "не найден")
@@ -62,6 +66,13 @@ public class QuestionService {
 
     public Set<Long> extractIds(List<QuestionEntity> questions) {
         return questions.stream().map(QuestionEntity::getId).collect(Collectors.toSet());
+    }
+
+    public void updateEssayTopicByVariantId(long variantId, String nameRus, String nameKaz) {
+        final QuestionEntity question = this.questionRepository.findAllByVariant_Id(variantId).getFirst();
+        question.setNameRus(nameRus);
+        question.setNameKaz(nameKaz);
+        this.questionRepository.save(question);
     }
 
 }

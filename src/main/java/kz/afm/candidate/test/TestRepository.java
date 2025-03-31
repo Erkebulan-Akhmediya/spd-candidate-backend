@@ -10,4 +10,6 @@ import java.util.Set;
 @Repository
 public interface TestRepository extends JpaRepository<TestEntity, Long> {
     List<TestEntity> findAllByAreaOfActivitiesContaining(Set<AreaOfActivityEntity> areaOfActivities);
+
+    List<TestEntity> findAllByNameRus(String nameRus);
 }

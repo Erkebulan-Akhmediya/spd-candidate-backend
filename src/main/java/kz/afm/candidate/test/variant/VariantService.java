@@ -2,6 +2,7 @@ package kz.afm.candidate.test.variant;
 
 import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.dto.CreateVariantRequest;
+import kz.afm.candidate.test.question.QuestionEntity;
 import kz.afm.candidate.test.question.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,23 @@ public class VariantService {
         }
         final int randomIndex = (int) (Math.random() * (variants.size() - 1));
         return variants.get(randomIndex);
+    }
+
+    public List<QuestionEntity> getQuestionsByTestId(long testId) throws NoSuchElementException {
+        final List<VariantEntity> variants = this.getByTestId(testId);
+        return this.questionService.getByVariantList(variants);
+    }
+
+    public List<VariantEntity> getByTestId(long testId) throws NoSuchElementException {
+        return this.variantRepository.findAllByTest_Id(testId);
+    }
+
+    public void deleteVariantById(long id) throws NoSuchElementException {
+        this.variantRepository.deleteById(id);
+    }
+
+    public void updateEssayTopicByVariantId(long variantId, String nameRus, String nameKaz) {
+        this.questionService.updateEssayTopicByVariantId(variantId, nameRus, nameKaz);
     }
 
 }
