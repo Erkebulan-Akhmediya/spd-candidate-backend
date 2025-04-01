@@ -43,6 +43,7 @@ public class VariantService {
     }
 
     public void deleteVariantById(long id) throws NoSuchElementException {
+        this.questionService.deleteQuestionByVariantId(id);
         this.variantRepository.deleteById(id);
     }
 

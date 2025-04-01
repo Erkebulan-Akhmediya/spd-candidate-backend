@@ -114,6 +114,7 @@ public class TestService {
         return this.variantService.getQuestionsByTestId(essay.getId());
     }
 
+    @Transactional
     public void createEssayTopic(String nameRus, String nameKaz) {
         final CreateQuestionRequest question = new CreateQuestionRequest(
                 false,
@@ -133,10 +134,12 @@ public class TestService {
         this.variantService.create(essay, variants);
     }
 
+    @Transactional
     public void deleteEssayTopicByVariantId(long variantId) {
         this.variantService.deleteVariantById(variantId);
     }
 
+    @Transactional
     public void updateEssayTopicByVariantId(long variantId, String nameRus, String nameKaz) {
         this.variantService.updateEssayTopicByVariantId(variantId, nameRus, nameKaz);
     }

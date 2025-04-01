@@ -86,6 +86,15 @@ public class TestController {
             this.testService.deleteEssayTopicByVariantId(variantId);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (Exception e) {
+            System.out.println("-----------------------------------------------------------------------------------");
+            System.out.println("Error message: " + e.getMessage());
+            System.out.println("Stack trace:");
+            for (StackTraceElement el: e.getStackTrace()) {
+                if (el.getClassName().startsWith("kz.afm.candidate")) {
+                    System.out.println(el);
+                }
+            }
+            System.out.println("-----------------------------------------------------------------------------------");
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
         }
     }

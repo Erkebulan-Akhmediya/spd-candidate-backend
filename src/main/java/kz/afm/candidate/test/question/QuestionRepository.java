@@ -15,4 +15,6 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
     List<QuestionEntity> findAllByVariantIn(Collection<VariantEntity> variants);
 
     List<QuestionEntity> findAllByVariant_Id(long variantId);
+
+    void deleteByVariant_Id(long variantId);
 }

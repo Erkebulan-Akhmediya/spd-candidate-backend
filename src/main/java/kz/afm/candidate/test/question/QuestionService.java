@@ -75,4 +75,8 @@ public class QuestionService {
         this.questionRepository.save(question);
     }
 
+    public void deleteQuestionByVariantId(long variantId) {
+        this.questionRepository.deleteByVariant_Id(variantId);
+    }
+
 }
