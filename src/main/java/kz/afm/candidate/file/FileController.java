@@ -24,4 +24,14 @@ public class FileController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<ResponseBodyWrapper<String>> getByName(@RequestParam String name) {
+        try {
+            final String base64 = this.fileService.getBase64Url(name);
+            return ResponseEntity.ok(ResponseBodyWrapper.success(base64));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
+        }
+    }
+
 }
