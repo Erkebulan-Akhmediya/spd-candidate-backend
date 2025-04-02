@@ -18,6 +18,7 @@ import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.test.variant.VariantService;
 import kz.afm.candidate.user.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,9 @@ public class TestSessionController {
     private final ResultService resultService;
     private final AssessmentService assessmentService;
     private final SectionService sectionService;
+    @Autowired
+    private TestSessionAnswerMapper answerMapper;
+
 
     @PostMapping
     public ResponseEntity<ResponseBodyWrapper<CreateTestSessionResponse>> createAndSend(
@@ -117,7 +121,10 @@ public class TestSessionController {
         try {
             final TestSessionEntity testSession = this.testSessionService.getById(testSessionId);
             final List<TestSessionAnswerEntity> answers = this.testSessionAnswerService.getAllByTestSession(testSession);
-            final TestSessionDto testSessionDto = new TestSessionDto(testSession, answers);
+            final List<TestSessionAnswerDto> answerDtos = answers.stream()
+                    .map(answerMapper::toDto)
+                    .toList();
+            final TestSessionDto testSessionDto = new TestSessionDto(testSession, answerDtos);
             return ResponseEntity.ok(ResponseBodyWrapper.success(testSessionDto));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));

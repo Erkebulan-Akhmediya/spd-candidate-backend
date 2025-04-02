@@ -23,7 +23,7 @@ public class TestSessionDto {
         this(testSession, new LinkedList<>());
     }
 
-    public TestSessionDto(TestSessionEntity testSession, List<TestSessionAnswerEntity> answers) {
+    public TestSessionDto(TestSessionEntity testSession, List<TestSessionAnswerDto> answers) {
         this.id = testSession.getId();
 
         CandidateEntity candidate = testSession.getCandidate();
@@ -36,9 +36,7 @@ public class TestSessionDto {
         this.testNameRus = test.getNameRus();
         this.testNameKaz = test.getNameKaz();
 
-        this.answers = answers.stream()
-                .map(TestSessionAnswerDto::new)
-                .toList();
+        this.answers = answers;
     }
 
 }
