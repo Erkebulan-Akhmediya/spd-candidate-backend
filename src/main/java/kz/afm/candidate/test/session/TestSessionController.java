@@ -41,8 +41,8 @@ public class TestSessionController {
     private final ResultService resultService;
     private final AssessmentService assessmentService;
     private final SectionService sectionService;
-    @Autowired
     private TestSessionAnswerMapper answerMapper;
+    private TestSessionResultMapper resultMapper;
 
 
     @PostMapping
@@ -149,34 +149,28 @@ public class TestSessionController {
     ) {
         try {
             final TestSessionEntity testSession = this.testSessionService.getById(testSessionId);
-
             final TestEntity test = testSession.getVariant().getTest();
             final String resultType = this.resultService.getType(test);
 
             final List<TestSessionResultDto> resultDtos;
+
             if (test.getType().isAutomaticallyEvaluated()) {
                 final List<ResultEntity> results = this.resultService.getByTestSession(testSession);
                 resultDtos = results.stream()
-                        .map(
-                                (ResultEntity result) -> {
-                                    final SectionEntity section = this.sectionService.getByResult(result);
-                                    return new TestSessionResultDto(result, section);
-                                }
-                        )
+                        .map(resultMapper::toDto)
                         .toList();
             } else {
                 final List<AssessmentEntity> assessments = this.assessmentService.getByTestSession(testSession);
                 resultDtos = assessments.stream()
-                        .map(TestSessionResultDto::new)
+                        .map(resultMapper::toDto)
                         .toList();
             }
 
             final TestSessionResultDtoList resultDtoList = new TestSessionResultDtoList(resultType, resultDtos);
-
             return ResponseEntity.ok(ResponseBodyWrapper.success(resultDtoList));
+
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
     }
-
 }

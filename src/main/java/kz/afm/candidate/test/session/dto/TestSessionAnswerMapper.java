@@ -1,16 +1,14 @@
 package kz.afm.candidate.test.session.dto;
 
-import kz.afm.candidate.test.session.dto.TestSessionAnswerDto;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerEntity;
 import kz.afm.candidate.file.FileService;
-import kz.afm.candidate.test.test_type.TestTypeEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class TestSessionAnswerMapper {
-
-    @Autowired
     private FileService fileService;
 
     public TestSessionAnswerDto toDto(TestSessionAnswerEntity entity) {
