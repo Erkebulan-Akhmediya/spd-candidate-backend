@@ -11,14 +11,12 @@ import kz.afm.candidate.test.session.evaluation.assessment.AssessmentEntity;
 import kz.afm.candidate.test.session.evaluation.assessment.AssessmentService;
 import kz.afm.candidate.test.session.evaluation.result.ResultEntity;
 import kz.afm.candidate.test.session.evaluation.result.ResultService;
-import kz.afm.candidate.test.session.evaluation.section.SectionEntity;
 import kz.afm.candidate.test.session.evaluation.section.SectionService;
 import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.test.variant.VariantService;
 import kz.afm.candidate.user.UserEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +39,8 @@ public class TestSessionController {
     private final ResultService resultService;
     private final AssessmentService assessmentService;
     private final SectionService sectionService;
-    private TestSessionAnswerMapper answerMapper;
-    private TestSessionResultMapper resultMapper;
+    private final TestSessionAnswerMapper answerMapper;
+    private final TestSessionResultMapper resultMapper;
 
 
     @PostMapping
@@ -127,7 +125,7 @@ public class TestSessionController {
             final TestSessionDto testSessionDto = new TestSessionDto(testSession, answerDtos);
             return ResponseEntity.ok(ResponseBodyWrapper.success(testSessionDto));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера: " + e.getMessage()));
         }
     }
 
