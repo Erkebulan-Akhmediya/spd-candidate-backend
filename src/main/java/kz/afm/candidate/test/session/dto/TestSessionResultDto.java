@@ -17,6 +17,7 @@ public class TestSessionResultDto {
     public String scaleNameKaz;
     public String descriptionRus;
     public String descriptionKaz;
+    public String fileUrl;
 
     public TestSessionResultDto(AssessmentEntity assessment) {
         QuestionEntity question = assessment.getTestSessionAnswer().getQuestion();

@@ -11,7 +11,6 @@ import kz.afm.candidate.test.session.evaluation.assessment.AssessmentEntity;
 import kz.afm.candidate.test.session.evaluation.assessment.AssessmentService;
 import kz.afm.candidate.test.session.evaluation.result.ResultEntity;
 import kz.afm.candidate.test.session.evaluation.result.ResultService;
-import kz.afm.candidate.test.session.evaluation.section.SectionEntity;
 import kz.afm.candidate.test.session.evaluation.section.SectionService;
 import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
 import kz.afm.candidate.test.variant.VariantEntity;
@@ -40,6 +39,9 @@ public class TestSessionController {
     private final ResultService resultService;
     private final AssessmentService assessmentService;
     private final SectionService sectionService;
+    private final TestSessionAnswerMapper answerMapper;
+    private final TestSessionResultMapper resultMapper;
+
 
     @PostMapping
     public ResponseEntity<ResponseBodyWrapper<CreateTestSessionResponse>> createAndSend(
@@ -117,10 +119,13 @@ public class TestSessionController {
         try {
             final TestSessionEntity testSession = this.testSessionService.getById(testSessionId);
             final List<TestSessionAnswerEntity> answers = this.testSessionAnswerService.getAllByTestSession(testSession);
-            final TestSessionDto testSessionDto = new TestSessionDto(testSession, answers);
+            final List<TestSessionAnswerDto> answerDtos = answers.stream()
+                    .map(answerMapper::toDto)
+                    .toList();
+            final TestSessionDto testSessionDto = new TestSessionDto(testSession, answerDtos);
             return ResponseEntity.ok(ResponseBodyWrapper.success(testSessionDto));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера: " + e.getMessage()));
         }
     }
 
@@ -142,34 +147,28 @@ public class TestSessionController {
     ) {
         try {
             final TestSessionEntity testSession = this.testSessionService.getById(testSessionId);
-
             final TestEntity test = testSession.getVariant().getTest();
             final String resultType = this.resultService.getType(test);
 
             final List<TestSessionResultDto> resultDtos;
+
             if (test.getType().isAutomaticallyEvaluated()) {
                 final List<ResultEntity> results = this.resultService.getByTestSession(testSession);
                 resultDtos = results.stream()
-                        .map(
-                                (ResultEntity result) -> {
-                                    final SectionEntity section = this.sectionService.getByResult(result);
-                                    return new TestSessionResultDto(result, section);
-                                }
-                        )
+                        .map(resultMapper::toDto)
                         .toList();
             } else {
                 final List<AssessmentEntity> assessments = this.assessmentService.getByTestSession(testSession);
                 resultDtos = assessments.stream()
-                        .map(TestSessionResultDto::new)
+                        .map(resultMapper::toDto)
                         .toList();
             }
 
             final TestSessionResultDtoList resultDtoList = new TestSessionResultDtoList(resultType, resultDtos);
-
             return ResponseEntity.ok(ResponseBodyWrapper.success(resultDtoList));
+
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error("Ошибка сервера"));
         }
     }
-
 }
