@@ -21,8 +21,8 @@ public class TestSessionResultDto {
 
     public TestSessionResultDto(AssessmentEntity assessment) {
         QuestionEntity question = assessment.getTestSessionAnswer().getQuestion();
-        this.questionNameRus = question.getNameRus();
-        this.questionNameKaz = question.getNameKaz();
+        this.questionNameRus = question.nameRus ;
+        this.questionNameKaz = question.nameKaz;
 
         TestSessionAnswerEntity answer = assessment.getTestSessionAnswer();
         this.answer = answer.getAnswer();

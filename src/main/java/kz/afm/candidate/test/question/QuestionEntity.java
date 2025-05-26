@@ -5,8 +5,6 @@ import kz.afm.candidate.test.variant.VariantEntity;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -15,19 +13,19 @@ public class QuestionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    public long id;
 
     @Column(nullable = false)
-    private boolean withFile;
+    public boolean withFile;
 
     @Column(length = 1000)
-    private String fileName;
+    public String fileName;
 
     @Column(nullable = false, length = 10000)
-    private String nameRus;
+    public String nameRus;
 
     @Column(nullable = false, length = 10000)
-    private String nameKaz;
+    public String nameKaz;
 
     @ColumnDefault("false")
     @Column(nullable = false)
@@ -39,7 +37,7 @@ public class QuestionEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "variant_id", nullable = false)
-    private VariantEntity variant;
+    public VariantEntity variant;
 
     public QuestionEntity(
             boolean withFile,
