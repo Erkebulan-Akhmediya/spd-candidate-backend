@@ -36,6 +36,19 @@ public class UserInitializer implements CommandLineRunner {
             this.userRepository.save(user);
         }
 
+        final RoleEntity psychoRole = this.roleRepository.findById("psycho").orElseThrow();
+        final boolean isPsychoUserExists = this.userRepository.findByUsername("psycho").isPresent();
+
+        if (!isPsychoUserExists) {
+            final Set<RoleEntity> psychoRoles = new HashSet<>() {{ add(psychoRole); }};
+            final UserEntity psychoUser = UserEntity.builder()
+                    .username("psycho")
+                    .password(this.passwordEncoder.encode("psycho"))
+                    .roles(psychoRoles)
+                    .build();
+            this.userRepository.save(psychoUser);
+        }
+
     }
 
 }
