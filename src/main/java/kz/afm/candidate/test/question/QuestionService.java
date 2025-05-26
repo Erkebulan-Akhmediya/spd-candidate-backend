@@ -20,7 +20,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    public void create(VariantEntity variant, List<CreateQuestionRequest> dtos) throws NoSuchElementException {
+    public void create(VariantEntity variant, List<CreateQuestionRequest> dtos) throws RuntimeException {
         dtos.forEach((CreateQuestionRequest dto) -> {
             try {
                 final QuestionEntity newQuestion = new QuestionEntity(
@@ -28,6 +28,8 @@ public class QuestionService {
                         dto.fileName,
                         dto.nameRus,
                         dto.nameKaz,
+                        dto.isDisappearing,
+                        dto.timeToDisappear,
                         variant
                 );
                 final QuestionEntity savedQuestion = this.questionRepository.save(newQuestion);
