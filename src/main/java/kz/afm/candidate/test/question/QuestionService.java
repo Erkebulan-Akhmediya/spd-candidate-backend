@@ -20,7 +20,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    public void create(VariantEntity variant, List<CreateQuestionRequest> dtos) throws NoSuchElementException {
+    public void create(VariantEntity variant, List<CreateQuestionRequest> dtos) throws RuntimeException {
         dtos.forEach((CreateQuestionRequest dto) -> {
             try {
                 final QuestionEntity newQuestion = new QuestionEntity(
@@ -28,6 +28,8 @@ public class QuestionService {
                         dto.fileName,
                         dto.nameRus,
                         dto.nameKaz,
+                        dto.isDisappearing,
+                        dto.timeToDisappear,
                         variant
                 );
                 final QuestionEntity savedQuestion = this.questionRepository.save(newQuestion);
@@ -65,13 +67,15 @@ public class QuestionService {
     }
 
     public Set<Long> extractIds(List<QuestionEntity> questions) {
-        return questions.stream().map(QuestionEntity::getId).collect(Collectors.toSet());
+        return questions.stream()
+                .map((QuestionEntity question) -> question.id)
+                .collect(Collectors.toSet());
     }
 
     public void updateEssayTopicByVariantId(long variantId, String nameRus, String nameKaz) {
         final QuestionEntity question = this.questionRepository.findAllByVariant_Id(variantId).getFirst();
-        question.setNameRus(nameRus);
-        question.setNameKaz(nameKaz);
+        question.nameRus = nameRus;
+        question.nameKaz = nameKaz;
         this.questionRepository.save(question);
     }
 

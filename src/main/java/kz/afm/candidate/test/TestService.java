@@ -121,6 +121,8 @@ public class TestService {
                 null,
                 nameRus,
                 nameKaz,
+                false,
+                0,
                 null
         );
         final List<CreateQuestionRequest> questions = new LinkedList<>();

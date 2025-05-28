@@ -1,12 +1,11 @@
 package kz.afm.candidate.test.question;
 
 import kz.afm.candidate.dto.ResponseBodyWrapper;
+import kz.afm.candidate.file.FileService;
 import kz.afm.candidate.test.option.OptionEntity;
 import kz.afm.candidate.test.option.OptionService;
 import kz.afm.candidate.test.question.dto.OptionResponseBody;
-import kz.afm.candidate.test.question.dto.OptionResponseBodyFactory;
 import kz.afm.candidate.test.question.dto.QuestionResponseBody;
-import kz.afm.candidate.test.question.dto.QuestionResponseBodyFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +22,8 @@ import java.util.NoSuchElementException;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final QuestionResponseBodyFactory questionResponseBodyFactory;
     private final OptionService optionService;
-    private final OptionResponseBodyFactory optionResponseBodyFactory;
+    private final FileService fileService;
 
     @GetMapping("{id}")
     public ResponseEntity<ResponseBodyWrapper<QuestionResponseBody>> getByIdAndSend(@PathVariable long id) {
@@ -43,9 +41,24 @@ public class QuestionController {
     private ResponseBodyWrapper<QuestionResponseBody> getById(long id) {
         final QuestionEntity question = this.questionService.getById(id);
         final List<OptionEntity> options = this.optionService.getAllByQuestion(question);
-        final List<OptionResponseBody> optionsResponseBody = this.optionResponseBodyFactory.createList(options);
-        final QuestionResponseBody questionResponseBody = this.questionResponseBodyFactory.create(question, optionsResponseBody);
+        final List<OptionResponseBody> optionsResponseBody = this.createOptionsResponse(options);
+        final QuestionResponseBody questionResponseBody = new QuestionResponseBody(
+                question,
+                optionsResponseBody,
+                question.withFile ? this.fileService.getBase64Url(question.fileName) : null
+        );
         return ResponseBodyWrapper.success(questionResponseBody);
+    }
+
+    private List<OptionResponseBody> createOptionsResponse(List<OptionEntity> options) {
+        return options.stream()
+                .map(
+                        (OptionEntity option) -> new OptionResponseBody(
+                                option,
+                                option.isWithFile() ? this.fileService.getBase64Url(option.getFileName()) : null
+                        )
+                )
+                .toList();
     }
 
 }

@@ -12,9 +12,9 @@ public class EssayTopicResponse {
     public String nameKaz;
 
     public EssayTopicResponse(QuestionEntity question) {
-        this.variantId = question.getVariant().getId();
-        this.nameRus = question.getNameRus();
-        this.nameKaz = question.getNameKaz();
+        this.variantId = question.variant.getId();
+        this.nameRus = question.nameRus;
+        this.nameKaz = question.nameKaz;
     }
 
 }

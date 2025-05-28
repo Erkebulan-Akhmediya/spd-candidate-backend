@@ -12,5 +12,7 @@ public class CreateQuestionRequest {
     public String fileName;
     public String nameRus;
     public String nameKaz;
+    public boolean isDisappearing;
+    public int timeToDisappear;
     public List<CreateOptionRequest> options;
 }
