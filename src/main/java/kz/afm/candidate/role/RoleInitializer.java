@@ -50,6 +50,14 @@ public class RoleInitializer implements CommandLineRunner {
                     .build();
             this.roleRepository.save(role);
         }
+        if (this.roleRepository.findById("psycho").isEmpty()) {
+            final RoleEntity role = RoleEntity.builder()
+                    .code("psycho")
+                    .nameRus("Психолог")
+                    .nameKaz("Психолог")
+                    .build();
+            this.roleRepository.save(role);
+        }
 
     }
 
