@@ -2,6 +2,7 @@ package kz.afm.candidate.test.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import kz.afm.candidate.test.dto.evaluation.ConditionalSectioningVariableDto;
 import kz.afm.candidate.test.dto.evaluation.CreateScaleRequest;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,8 @@ public class CreateTestRequest {
 
     public int type;
     public int maxPointsPerQuestion;
+    public boolean conditionallySectioned;
+    public List<ConditionalSectioningVariableDto> conditionalVars;
 
     @NotNull(message = "шкалы теста обязательны")
     public List<CreateScaleRequest> scales;

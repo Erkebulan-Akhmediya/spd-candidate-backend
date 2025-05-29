@@ -12,6 +12,7 @@ import kz.afm.candidate.test.question.QuestionEntity;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import kz.afm.candidate.test.session.TestSessionService;
 import kz.afm.candidate.test.session.evaluation.scale.ScaleService;
+import kz.afm.candidate.test.session.evaluation.section.conditional.variable.ConditionalSectioningVariableService;
 import kz.afm.candidate.test.test_type.TestTypeEntity;
 import kz.afm.candidate.test.test_type.TestTypeService;
 import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
@@ -35,6 +36,7 @@ public class TestService {
     private final ScaleService scaleService;
     private final CandidateService candidateService;
     private final TestSessionService testSessionService;
+    private final ConditionalSectioningVariableService conditionalSectioningVariableService;
 
     private final TestRepository testRepository;
 
@@ -42,6 +44,7 @@ public class TestService {
     public void create(CreateTestRequest testDto) throws RuntimeException {
         final TestEntity test = this.save(testDto);
 
+        this.conditionalSectioningVariableService.create(test, testDto.conditionalVars);
         this.scaleService.create(test, testDto.scales);
         this.variantService.create(test, testDto.variants);
 
@@ -62,7 +65,8 @@ public class TestService {
                 Boolean.parseBoolean(testDto.isLimitless),
                 testDto.duration,
                 areasOfActivity,
-                type
+                type,
+                testDto.conditionallySectioned
         );
         return this.testRepository.save(test);
     }

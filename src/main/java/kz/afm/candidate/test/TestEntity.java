@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Set;
 
@@ -40,6 +41,10 @@ public class TestEntity {
 
     private int duration;
 
+    @ColumnDefault("false")
+    @Column(nullable = false)
+    public boolean conditionallySectioned;
+
     @ManyToMany
     @JoinTable(
             name = "test_area_of_activity_rel",
@@ -60,7 +65,8 @@ public class TestEntity {
             boolean isLimitless,
             int duration,
             Set<AreaOfActivityEntity> areaOfActivities,
-            TestTypeEntity type
+            TestTypeEntity type,
+            boolean conditionallySectioned
     ) {
         this.nameRus = nameRus;
         this.nameKaz = nameKaz;
@@ -70,6 +76,7 @@ public class TestEntity {
         this.duration = duration;
         this.areaOfActivities = areaOfActivities;
         this.type = type;
+        this.conditionallySectioned = conditionallySectioned;
     }
 
 }
