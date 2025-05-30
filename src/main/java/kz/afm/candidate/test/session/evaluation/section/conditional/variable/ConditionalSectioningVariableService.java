@@ -22,6 +22,17 @@ public class ConditionalSectioningVariableService {
         put(3, "reference");
     }};
 
+    private final Map<String, Integer> typeIndexes = new LinkedHashMap<>() {{
+        put("number", 0);
+        put("string", 1);
+        put("boolean", 2);
+        put("reference", 3);
+    }};
+
+    public int getTypeIndex(String typeName) {
+        return this.typeIndexes.get(typeName);
+    }
+
     public void create(TestEntity test, List<ConditionalSectioningVariableDto> varDtos) {
         final List<ConditionalSectioningVariableEntity> vars = varDtos.stream()
                 .map(
@@ -38,9 +49,12 @@ public class ConditionalSectioningVariableService {
 
     public Map<String, ConditionalSectioningVariableEntity> getAllByTestAsMap(TestEntity test) {
         final Map<String, ConditionalSectioningVariableEntity> vars = new LinkedHashMap<>();
-        this.conditionalSectioningVariableRepository.findAllByTest(test)
-                .forEach((ConditionalSectioningVariableEntity var) -> vars.put(var.name, var));
+        this.getAllByTest(test).forEach((ConditionalSectioningVariableEntity var) -> vars.put(var.name, var));
         return vars;
+    }
+
+    public List<ConditionalSectioningVariableEntity> getAllByTest(TestEntity test) {
+        return this.conditionalSectioningVariableRepository.findAllByTest(test);
     }
 
 }

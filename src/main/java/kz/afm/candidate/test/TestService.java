@@ -111,10 +111,6 @@ public class TestService {
         );
     }
 
-    public int getTypeIdByTestId(long testId) throws NoSuchElementException {
-        return this.getById(testId).getType().getId();
-    }
-
     public List<QuestionEntity> getEssayTopics() throws NoSuchElementException {
         final TestEntity essay = this.testRepository.findAllByNameRus("Эссе").getFirst();
         return this.variantService.getQuestionsByTestId(essay.getId());
