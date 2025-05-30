@@ -92,10 +92,10 @@ public class TestSessionController {
     @PutMapping("{test_session_id}")
     public ResponseEntity<ResponseBodyWrapper<Void>> end(
             @PathVariable(name = "test_session_id") long testSessionId,
-            @RequestBody List<TestSessionAnswerRequest> answers
+            @RequestBody EndTestSessionRequest req
     ) {
         try {
-            final TestSessionEntity endedTestSession = this.testSessionService.end(testSessionId, answers);
+            final TestSessionEntity endedTestSession = this.testSessionService.end(testSessionId, req.answers);
             this.testSessionService.evaluate(endedTestSession);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (NoSuchElementException e) {
