@@ -44,7 +44,9 @@ public class TestService {
     public void create(CreateTestRequest testDto) throws RuntimeException {
         final TestEntity test = this.save(testDto);
 
-        this.conditionalSectioningVariableService.create(test, testDto.conditionalVars);
+        if (test.conditionallySectioned) {
+            this.conditionalSectioningVariableService.create(test, testDto.conditionalVars);
+        }
         this.scaleService.create(test, testDto.scales);
         this.variantService.create(test, testDto.variants);
 

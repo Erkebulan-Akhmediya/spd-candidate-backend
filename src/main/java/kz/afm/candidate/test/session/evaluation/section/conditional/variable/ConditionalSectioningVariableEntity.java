@@ -17,10 +17,13 @@ public class ConditionalSectioningVariableEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public long id;
 
+    @Column(nullable = false)
     public String name;
 
+    @Column(nullable = false)
     public String type;
 
+    @Column(nullable = false)
     public List<String> reference;
 
     @ManyToOne

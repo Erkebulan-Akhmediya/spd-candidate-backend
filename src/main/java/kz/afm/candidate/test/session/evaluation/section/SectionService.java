@@ -28,7 +28,9 @@ public class SectionService {
                             scale
                     );
                     section = this.sectionRepository.save(section);
-                    this.sectioningConditionService.create(section, sectionDto.conditions);
+                    if (section.getScale().getTest().conditionallySectioned) {
+                        this.sectioningConditionService.create(section, sectionDto.conditions);
+                    }
                 }
         );
 

@@ -22,8 +22,10 @@ public class SectioningConditionEntity {
     @JoinColumn(name = "variable_id", nullable = false)
     public ConditionalSectioningVariableEntity variable;
 
+    @Column(nullable = false)
     public String operator;
 
+    @Column(nullable = false)
     public List<String> value;
 
     @ManyToOne
