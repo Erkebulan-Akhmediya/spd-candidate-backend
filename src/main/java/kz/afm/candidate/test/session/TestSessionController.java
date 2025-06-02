@@ -96,7 +96,7 @@ public class TestSessionController {
     ) {
         try {
             final TestSessionEntity endedTestSession = this.testSessionService.end(testSessionId, req.answers);
-            this.testSessionService.evaluate(endedTestSession);
+            this.testSessionService.evaluate(endedTestSession, req.conditionalSectioningVariableValues);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
@@ -168,10 +168,8 @@ public class TestSessionController {
         try {
             final TestSessionEntity testSession = this.testSessionService.getById(testSessionId);
             final TestEntity test = testSession.getVariant().getTest();
-            final String resultType = this.resultService.getType(test);
 
             final List<TestSessionResultDto> resultDtos;
-
             if (test.getType().isAutomaticallyEvaluated()) {
                 final List<ResultEntity> results = this.resultService.getByTestSession(testSession);
                 resultDtos = results.stream()
@@ -184,6 +182,7 @@ public class TestSessionController {
                         .toList();
             }
 
+            final String resultType = this.resultService.getType(test);
             final TestSessionResultDtoList resultDtoList = new TestSessionResultDtoList(resultType, resultDtos);
             return ResponseEntity.ok(ResponseBodyWrapper.success(resultDtoList));
 

@@ -37,6 +37,7 @@ public class SectionService {
     }
 
     public SectionEntity getByResult(ResultEntity result) {
+        // TODO: find section based on conditions if test is conditionally sectioned
         return this.sectionRepository
                 .findAllByScaleAndLowerBoundLessThanEqualAndUpperBoundGreaterThanEqual(
                         result.getScale(),

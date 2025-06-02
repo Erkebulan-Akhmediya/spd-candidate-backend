@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.CandidateService;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerService;
+import kz.afm.candidate.test.session.dto.ConditionalSectioningVariableValueDto;
 import kz.afm.candidate.test.session.dto.TestSessionAnswerDto;
 import kz.afm.candidate.test.session.dto.TestSessionAnswerRequest;
 import kz.afm.candidate.test.session.evaluation.assessment.AssessmentService;
@@ -70,10 +71,10 @@ public class TestSessionService {
         });
     }
 
-    public void evaluate(TestSessionEntity testSession) {
+    public void evaluate(TestSessionEntity testSession, List<ConditionalSectioningVariableValueDto> varValues) {
         if (!testSession.getVariant().getTest().getType().isAutomaticallyEvaluated()) return;
 
-        this.resultService.evaluate(testSession);
+        this.resultService.evaluate(testSession, varValues);
         final TestSessionStatusEntity checkedStatus = this.testSessionStatusService.getCheckedStatus();
         testSession.setStatus(checkedStatus);
         this.testSessionRepository.save(testSession);
