@@ -3,6 +3,7 @@ package kz.afm.candidate.test.session;
 import kz.afm.candidate.dto.ResponseBodyWrapper;
 import kz.afm.candidate.test.TestEntity;
 import kz.afm.candidate.test.TestService;
+import kz.afm.candidate.test.dto.evaluation.ConditionalSectioningVariableDto;
 import kz.afm.candidate.test.question.QuestionService;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerEntity;
 import kz.afm.candidate.test.session.answer.TestSessionAnswerService;
@@ -11,7 +12,8 @@ import kz.afm.candidate.test.session.evaluation.assessment.AssessmentEntity;
 import kz.afm.candidate.test.session.evaluation.assessment.AssessmentService;
 import kz.afm.candidate.test.session.evaluation.result.ResultEntity;
 import kz.afm.candidate.test.session.evaluation.result.ResultService;
-import kz.afm.candidate.test.session.evaluation.section.SectionService;
+import kz.afm.candidate.test.session.evaluation.section.conditional.variable.ConditionalSectioningVariableEntity;
+import kz.afm.candidate.test.session.evaluation.section.conditional.variable.ConditionalSectioningVariableService;
 import kz.afm.candidate.test.test_type.point_distribution.PointDistributionTestService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import kz.afm.candidate.test.variant.VariantService;
@@ -21,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -38,10 +41,10 @@ public class TestSessionController {
     private final TestSessionAnswerService testSessionAnswerService;
     private final ResultService resultService;
     private final AssessmentService assessmentService;
-    private final SectionService sectionService;
+    private final ConditionalSectioningVariableService conditionalSectioningVariableService;
+
     private final TestSessionAnswerMapper answerMapper;
     private final TestSessionResultMapper resultMapper;
-
 
     @PostMapping
     public ResponseEntity<ResponseBodyWrapper<CreateTestSessionResponse>> createAndSend(
@@ -58,25 +61,42 @@ public class TestSessionController {
     }
 
     private ResponseBodyWrapper<CreateTestSessionResponse> create(UserEntity requestingUser, long testId) {
-        final int testTypeId = this.testService.getTypeIdByTestId(testId);
+        final TestEntity test = this.testService.getById(testId);
         final VariantEntity variant = this.variantService.getRandom(testId);
         final Set<Long> questionIds = this.questionService.getIdsByVariant(variant);
         final long testSessionId = this.testSessionService.createFromUserAndVariant(requestingUser, variant);
-        final int maxPointsPerQuestion = this.pointDistributionTestService.getMaxPointsPerQuestionByTestIdAndTestTypeId(testId, testTypeId);
-
-        return ResponseBodyWrapper.success(
-                new CreateTestSessionResponse(testSessionId, questionIds, testTypeId, maxPointsPerQuestion)
+        final int maxPointsPerQuestion = this.pointDistributionTestService.getMaxPointsPerQuestionByTest(test);
+        List<ConditionalSectioningVariableDto> vars = new LinkedList<>();
+        if (test.conditionallySectioned) {
+            vars = this.conditionalSectioningVariableService.getAllByTest(test)
+                    .stream()
+                    .map(
+                            (ConditionalSectioningVariableEntity var) -> new ConditionalSectioningVariableDto(
+                                    var.name,
+                                    this.conditionalSectioningVariableService.getTypeIndex(var.type),
+                                    var.reference
+                            )
+                    )
+                    .toList();
+        }
+        final CreateTestSessionResponse testSession = new CreateTestSessionResponse(
+                test,
+                testSessionId,
+                questionIds,
+                maxPointsPerQuestion,
+                vars
         );
+        return ResponseBodyWrapper.success(testSession);
     }
 
     @PutMapping("{test_session_id}")
     public ResponseEntity<ResponseBodyWrapper<Void>> end(
             @PathVariable(name = "test_session_id") long testSessionId,
-            @RequestBody List<TestSessionAnswerRequest> answers
+            @RequestBody EndTestSessionRequest req
     ) {
         try {
-            final TestSessionEntity endedTestSession = this.testSessionService.end(testSessionId, answers);
-            this.testSessionService.evaluate(endedTestSession);
+            final TestSessionEntity endedTestSession = this.testSessionService.end(testSessionId, req.answers);
+            this.testSessionService.evaluate(endedTestSession, req.conditionalSectioningVariableValues);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (NoSuchElementException e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
@@ -148,10 +168,8 @@ public class TestSessionController {
         try {
             final TestSessionEntity testSession = this.testSessionService.getById(testSessionId);
             final TestEntity test = testSession.getVariant().getTest();
-            final String resultType = this.resultService.getType(test);
 
             final List<TestSessionResultDto> resultDtos;
-
             if (test.getType().isAutomaticallyEvaluated()) {
                 final List<ResultEntity> results = this.resultService.getByTestSession(testSession);
                 resultDtos = results.stream()
@@ -164,6 +182,7 @@ public class TestSessionController {
                         .toList();
             }
 
+            final String resultType = this.resultService.getType(test);
             final TestSessionResultDtoList resultDtoList = new TestSessionResultDtoList(resultType, resultDtos);
             return ResponseEntity.ok(ResponseBodyWrapper.success(resultDtoList));
 

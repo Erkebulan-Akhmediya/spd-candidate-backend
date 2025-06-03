@@ -16,21 +16,16 @@ public class TestSessionResultMapper {
     private final FileService fileService;
 
     public TestSessionResultDto toDto(ResultEntity result) {
-        SectionEntity section = sectionService.getByResult(result);
-        TestSessionResultDto dto = new TestSessionResultDto(result, section);
-
-        if (result.getTestSession().getVariant().getTest().getType().getId() == 6) {
-            dto.fileUrl = fileService.getBase64Url(dto.answer);
-        }
-
-        return dto;
+        SectionEntity section = this.sectionService.getByResult(result);
+        return new TestSessionResultDto(result, section);
     }
 
     public TestSessionResultDto toDto(AssessmentEntity assessment) {
         TestSessionResultDto dto = new TestSessionResultDto(assessment);
 
-        if (assessment.getTestSessionAnswer().getTestSession().getVariant().getTest().getType().getId() == 6) {
-            dto.fileUrl = fileService.getBase64Url(dto.answer);
+        final int testWithFileTypeId = 6;
+        if (assessment.getTestSessionAnswer().getTestSession().getVariant().getTest().getType().getId() == testWithFileTypeId) {
+            dto.fileUrl = this.fileService.getBase64Url(dto.answer);
         }
 
         return dto;
