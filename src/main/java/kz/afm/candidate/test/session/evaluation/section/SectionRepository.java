@@ -4,11 +4,11 @@ import kz.afm.candidate.test.session.evaluation.scale.ScaleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface SectionRepository extends JpaRepository<SectionEntity, Long> {
-    Optional<SectionEntity> findAllByScaleAndLowerBoundLessThanEqualAndUpperBoundGreaterThanEqual(
+    List<SectionEntity> findAllByScaleAndLowerBoundLessThanEqualAndUpperBoundGreaterThanEqual(
             ScaleEntity scale,
             int lowerBoundIsLessThan,
             int upperBoundIsGreaterThan

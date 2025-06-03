@@ -7,6 +7,7 @@ import kz.afm.candidate.test.session.evaluation.section.conditional.variable.Con
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,19 @@ public class ConditionalSectioningVariableValueService {
             values.add(value);
         }
         this.conditionalSectioningVariableValueRepository.saveAll(values);
+    }
+
+    public Map<Long, ConditionalSectioningVariableValueEntity> getAllByTestSessionAsMap(TestSessionEntity testSession) {
+        final Map<Long, ConditionalSectioningVariableValueEntity> varsAndValues = new LinkedHashMap<>();
+        final List<ConditionalSectioningVariableValueEntity> values = this.getAllByTestSession(testSession);
+        for (ConditionalSectioningVariableValueEntity value : values) {
+            varsAndValues.put(value.variable.id, value);
+        }
+        return varsAndValues;
+    }
+
+    public List<ConditionalSectioningVariableValueEntity> getAllByTestSession(TestSessionEntity testSession) {
+        return this.conditionalSectioningVariableValueRepository.findAllByTestSession(testSession);
     }
 
 }
