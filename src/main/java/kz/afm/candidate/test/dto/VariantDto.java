@@ -7,6 +7,6 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateVariantRequest {
-    public List<CreateQuestionRequest> questions;
+public class VariantDto {
+    public List<QuestionDto> questions;
 }

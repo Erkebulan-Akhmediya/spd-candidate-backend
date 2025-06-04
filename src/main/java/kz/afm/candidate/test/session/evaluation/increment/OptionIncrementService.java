@@ -1,7 +1,7 @@
 package kz.afm.candidate.test.session.evaluation.increment;
 
 import kz.afm.candidate.test.TestEntity;
-import kz.afm.candidate.test.dto.evaluation.CreateOptionIncrementRequest;
+import kz.afm.candidate.test.dto.evaluation.OptionIncrementDto;
 import kz.afm.candidate.test.session.evaluation.scale.ScaleEntity;
 import kz.afm.candidate.test.session.evaluation.scale.ScaleService;
 import kz.afm.candidate.test.option.OptionEntity;
@@ -17,7 +17,7 @@ public class OptionIncrementService {
     private final ScaleService scaleService;
     private final OptionIncrementRepository optionIncrementRepository;
 
-    public void create(OptionEntity option, CreateOptionIncrementRequest incrementDto) {
+    public void create(OptionEntity option, OptionIncrementDto incrementDto) {
         final TestEntity optionTest = option.getQuestion().variant.getTest();
         final int zeroBasedScaleIndex = incrementDto.scaleIndex - 1;
         final ScaleEntity optionScale = this.scaleService.getByTestAndIndex(optionTest, zeroBasedScaleIndex);

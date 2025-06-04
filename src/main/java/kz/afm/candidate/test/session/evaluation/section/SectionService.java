@@ -1,6 +1,6 @@
 package kz.afm.candidate.test.session.evaluation.section;
 
-import kz.afm.candidate.test.dto.evaluation.CreateScaleSectionRequest;
+import kz.afm.candidate.test.dto.evaluation.ScaleSectionDto;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import kz.afm.candidate.test.session.evaluation.result.ResultEntity;
 import kz.afm.candidate.test.session.evaluation.scale.ScaleEntity;
@@ -22,9 +22,9 @@ public class SectionService {
 
     private final SectionRepository sectionRepository;
 
-    public void create(ScaleEntity scale, List<CreateScaleSectionRequest> sectionDtoList) {
+    public void create(ScaleEntity scale, List<ScaleSectionDto> sectionDtoList) {
         sectionDtoList.forEach(
-                (CreateScaleSectionRequest sectionDto) -> {
+                (ScaleSectionDto sectionDto) -> {
                     SectionEntity section = new SectionEntity(
                             sectionDto.descriptionRus,
                             sectionDto.descriptionKaz,
@@ -78,6 +78,8 @@ public class SectionService {
         return true;
     }
 
-
+    public List<SectionEntity> getAllByScale(ScaleEntity scale) {
+        return this.sectionRepository.findAllByScale(scale);
+    }
 
 }

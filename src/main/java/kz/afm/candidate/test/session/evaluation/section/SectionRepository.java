@@ -13,4 +13,6 @@ public interface SectionRepository extends JpaRepository<SectionEntity, Long> {
             int lowerBoundIsLessThan,
             int upperBoundIsGreaterThan
     );
+
+    List<SectionEntity> findAllByScale(ScaleEntity scale);
 }

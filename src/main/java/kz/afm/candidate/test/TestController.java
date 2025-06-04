@@ -16,11 +16,33 @@ import java.util.List;
 public class TestController {
 
     private final TestService testService;
+    private final TestMapper testMapper;
 
     @PostMapping
-    public ResponseEntity<ResponseBodyWrapper<Void>> create(@RequestBody CreateTestRequest test) {
+    public ResponseEntity<ResponseBodyWrapper<Void>> create(@RequestBody TestDto test) {
         try {
             this.testService.create(test);
+            return ResponseEntity.ok(ResponseBodyWrapper.success());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
+        }
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ResponseBodyWrapper<TestDto>> getById(@PathVariable("id") Long id) {
+        try {
+            final TestEntity test = this.testService.getById(id);
+            final TestDto testDto = this.testMapper.toDto(test);
+            return ResponseEntity.ok(ResponseBodyWrapper.success(testDto));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
+        }
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<ResponseBodyWrapper<Void>> update(@PathVariable("id") long id, @RequestBody TestDto test) {
+        try {
+            this.testService.update(id, test);
             return ResponseEntity.ok(ResponseBodyWrapper.success());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ResponseBodyWrapper.error(e.getMessage()));
@@ -89,7 +111,7 @@ public class TestController {
             System.out.println("-----------------------------------------------------------------------------------");
             System.out.println("Error message: " + e.getMessage());
             System.out.println("Stack trace:");
-            for (StackTraceElement el: e.getStackTrace()) {
+            for (StackTraceElement el : e.getStackTrace()) {
                 if (el.getClassName().startsWith("kz.afm.candidate")) {
                     System.out.println(el);
                 }

@@ -1,6 +1,6 @@
 package kz.afm.candidate.test.option;
 
-import kz.afm.candidate.test.dto.CreateOptionRequest;
+import kz.afm.candidate.test.dto.OptionDto;
 import kz.afm.candidate.test.session.evaluation.increment.OptionIncrementService;
 import kz.afm.candidate.test.question.QuestionEntity;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +17,11 @@ public class OptionService {
     private final OptionIncrementService optionIncrementService;
     private final OptionRepository optionRepository;
 
-    public void create(QuestionEntity question, List<CreateOptionRequest> optionDtoList) {
+    public void create(QuestionEntity question, List<OptionDto> optionDtoList) {
 
         if (optionDtoList == null || optionDtoList.isEmpty()) return;
 
-        optionDtoList.forEach((CreateOptionRequest optionDto) -> {
+        optionDtoList.forEach((OptionDto optionDto) -> {
             final OptionEntity newOption = new OptionEntity(
                     optionDto.withFile,
                     optionDto.fileName,

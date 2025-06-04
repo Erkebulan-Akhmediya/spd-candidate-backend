@@ -1,7 +1,7 @@
 package kz.afm.candidate.test.session.evaluation.scale;
 
 import kz.afm.candidate.test.TestEntity;
-import kz.afm.candidate.test.dto.evaluation.CreateScaleRequest;
+import kz.afm.candidate.test.dto.evaluation.ScaleDto;
 import kz.afm.candidate.test.session.evaluation.section.SectionService;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,8 @@ public class ScaleService {
     private final SectionService sectionService;
     private final ScaleRepository scaleRepository;
 
-    public void create(TestEntity test, List<CreateScaleRequest> scaleDtoList) {
-        scaleDtoList.forEach((CreateScaleRequest scaleDto) -> {
+    public void create(TestEntity test, List<ScaleDto> scaleDtoList) {
+        scaleDtoList.forEach((ScaleDto scaleDto) -> {
             final ScaleEntity newScale = new ScaleEntity(
                     scaleDto.nameRus,
                     scaleDto.nameKaz,

@@ -1,7 +1,7 @@
 package kz.afm.candidate.test.variant;
 
 import kz.afm.candidate.test.TestEntity;
-import kz.afm.candidate.test.dto.CreateVariantRequest;
+import kz.afm.candidate.test.dto.VariantDto;
 import kz.afm.candidate.test.question.QuestionEntity;
 import kz.afm.candidate.test.question.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,8 @@ public class VariantService {
     private final QuestionService questionService;
     private final VariantRepository variantRepository;
 
-    public void create(TestEntity test, List<CreateVariantRequest> variantDtoList) throws NoSuchElementException {
-        variantDtoList.forEach((CreateVariantRequest variantDto) -> {
+    public void create(TestEntity test, List<VariantDto> variantDtoList) throws NoSuchElementException {
+        variantDtoList.forEach((VariantDto variantDto) -> {
             final VariantEntity variant = this.variantRepository.save(new VariantEntity(test));
             this.questionService.create(variant, variantDto.questions);
         });

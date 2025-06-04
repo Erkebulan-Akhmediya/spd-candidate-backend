@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOptionIncrementRequest {
+public class OptionIncrementDto {
     public int index;
     public int scaleIndex;
     public int score;

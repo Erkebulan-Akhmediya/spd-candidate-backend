@@ -1,6 +1,6 @@
 package kz.afm.candidate.test.question;
 
-import kz.afm.candidate.test.dto.CreateQuestionRequest;
+import kz.afm.candidate.test.dto.QuestionDto;
 import kz.afm.candidate.test.option.OptionService;
 import kz.afm.candidate.test.variant.VariantEntity;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    public void create(VariantEntity variant, List<CreateQuestionRequest> dtos) throws RuntimeException {
-        dtos.forEach((CreateQuestionRequest dto) -> {
+    public void create(VariantEntity variant, List<QuestionDto> dtos) throws RuntimeException {
+        dtos.forEach((QuestionDto dto) -> {
             try {
                 final QuestionEntity newQuestion = new QuestionEntity(
                         dto.withFile,

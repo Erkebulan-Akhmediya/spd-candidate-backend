@@ -5,9 +5,9 @@ import kz.afm.candidate.candidate.CandidateEntity;
 import kz.afm.candidate.candidate.CandidateService;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityEntity;
 import kz.afm.candidate.candidate.area_of_activity.AreaOfActivityService;
-import kz.afm.candidate.test.dto.CreateQuestionRequest;
-import kz.afm.candidate.test.dto.CreateTestRequest;
-import kz.afm.candidate.test.dto.CreateVariantRequest;
+import kz.afm.candidate.test.dto.QuestionDto;
+import kz.afm.candidate.test.dto.TestDto;
+import kz.afm.candidate.test.dto.VariantDto;
 import kz.afm.candidate.test.question.QuestionEntity;
 import kz.afm.candidate.test.session.TestSessionEntity;
 import kz.afm.candidate.test.session.TestSessionService;
@@ -41,7 +41,7 @@ public class TestService {
     private final TestRepository testRepository;
 
     @Transactional
-    public void create(CreateTestRequest testDto) throws RuntimeException {
+    public void create(TestDto testDto) throws RuntimeException {
         final TestEntity test = this.save(testDto);
 
         if (test.conditionallySectioned) {
@@ -56,7 +56,7 @@ public class TestService {
         }
     }
 
-    private TestEntity save(CreateTestRequest testDto) throws RuntimeException {
+    private TestEntity save(TestDto testDto) throws RuntimeException {
         final TestTypeEntity type = this.testTypeService.getById(testDto.type);
         final Set<AreaOfActivityEntity> areasOfActivity = this.areaOfActivityService.getSetOfAllByNames(testDto.areasOfActivities);
         final TestEntity test = new TestEntity(
@@ -70,6 +70,24 @@ public class TestService {
                 type,
                 testDto.conditionallySectioned
         );
+        return this.testRepository.save(test);
+    }
+
+    @Transactional
+    public void update(long id, TestDto testDto) throws RuntimeException {
+        final TestEntity test = this.save(id, testDto);
+    }
+
+    private TestEntity save(long id, TestDto testDto) throws RuntimeException {
+        final TestEntity test = this.getById(id);
+        final Set<AreaOfActivityEntity> areasOfActivity = this.areaOfActivityService.getSetOfAllByNames(testDto.areasOfActivities);
+        test.setNameRus(testDto.nameRus);
+        test.setNameKaz(testDto.nameKaz);
+        test.setDescriptionRus(testDto.descriptionRus);
+        test.setDescriptionKaz(testDto.descriptionKaz);
+        test.setLimitless(Boolean.parseBoolean(testDto.isLimitless));
+        test.setDuration(testDto.duration);
+        test.setAreaOfActivities(areasOfActivity);
         return this.testRepository.save(test);
     }
 
@@ -118,7 +136,7 @@ public class TestService {
 
     @Transactional
     public void createEssayTopic(String nameRus, String nameKaz) {
-        final CreateQuestionRequest question = new CreateQuestionRequest(
+        final QuestionDto question = new QuestionDto(
                 false,
                 null,
                 nameRus,
@@ -127,11 +145,11 @@ public class TestService {
                 0,
                 null
         );
-        final List<CreateQuestionRequest> questions = new LinkedList<>();
+        final List<QuestionDto> questions = new LinkedList<>();
         questions.add(question);
 
-        final CreateVariantRequest variant = new CreateVariantRequest(questions);
-        final List<CreateVariantRequest> variants = new LinkedList<>();
+        final VariantDto variant = new VariantDto(questions);
+        final List<VariantDto> variants = new LinkedList<>();
         variants.add(variant);
 
         final TestEntity essay = this.testRepository.findAllByNameRus("Эссе").getFirst();

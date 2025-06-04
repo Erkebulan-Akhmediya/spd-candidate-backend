@@ -7,9 +7,9 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateScaleRequest {
+public class ScaleDto {
     public int index;
     public String nameRus;
     public String nameKaz;
-    public List<CreateScaleSectionRequest> sections;
+    public List<ScaleSectionDto> sections;
 }

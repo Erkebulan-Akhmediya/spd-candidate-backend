@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 @Service
 public class PointDistributionTestService {
 
-    public static final int POINT_DISTRIBUTION_TEST_TYPE_ID = 5;
+    public static final int TYPE_ID = 5;
 
     private final PointDistributionTestRepository pointDistributionTestRepository;
 
@@ -20,11 +20,11 @@ public class PointDistributionTestService {
     }
 
     public int getMaxPointsPerQuestionByTest(TestEntity test) {
-        if (test.getType().getId() != POINT_DISTRIBUTION_TEST_TYPE_ID) return 0;
-        return this.getPointDistributionTestById(test.getId()).getMaxPointsPerQuestion();
+        if (test.getType().getId() != TYPE_ID) return 0;
+        return this.getByTestId(test.getId()).getMaxPointsPerQuestion();
     }
 
-    private PointDistributionTestEntity getPointDistributionTestById(long testId) throws NoSuchElementException {
+    private PointDistributionTestEntity getByTestId(long testId) throws NoSuchElementException {
         return this.pointDistributionTestRepository.findByTest_Id(testId).orElseThrow(
                 () -> new NoSuchElementException("Нет данных для теста по распределению баллов с TestID: " + testId)
         );
