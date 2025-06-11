@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @RequestMapping("test/session")
@@ -63,7 +62,7 @@ public class TestSessionController {
     private ResponseBodyWrapper<CreateTestSessionResponse> create(UserEntity requestingUser, long testId) {
         final TestEntity test = this.testService.getById(testId);
         final VariantEntity variant = this.variantService.getRandom(testId);
-        final Set<Long> questionIds = this.questionService.getIdsByVariant(variant);
+        final List<Long> questionIds = this.questionService.getIdsByVariant(variant);
         final long testSessionId = this.testSessionService.createFromUserAndVariant(requestingUser, variant);
         final int maxPointsPerQuestion = this.pointDistributionTestService.getMaxPointsPerQuestionByTest(test);
         List<ConditionalSectioningVariableDto> vars = new LinkedList<>();

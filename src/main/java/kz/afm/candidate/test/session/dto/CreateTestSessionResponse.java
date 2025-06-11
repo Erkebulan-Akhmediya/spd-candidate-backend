@@ -5,12 +5,11 @@ import kz.afm.candidate.test.dto.evaluation.ConditionalSectioningVariableDto;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 public class CreateTestSessionResponse {
     public long testSessionId;
-    public Set<Long> questionIds;
+    public List<Long> questionIds;
     public int testTypeId;
     public int maxPointsPerQuestion;
     public boolean conditionallySectioned;
@@ -19,7 +18,7 @@ public class CreateTestSessionResponse {
     public CreateTestSessionResponse(
             TestEntity test,
             long testSessionId,
-            Set<Long> questionIds,
+            List<Long> questionIds,
             int maxPointsPerQuestion,
             List<ConditionalSectioningVariableDto> conditionalVars
     ) {

@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -43,7 +41,7 @@ public class QuestionService {
         });
     }
 
-    public Set<Long> getIdsByVariant(VariantEntity variant) throws NoSuchElementException {
+    public List<Long> getIdsByVariant(VariantEntity variant) throws NoSuchElementException {
         final List<QuestionEntity> questions = this.getByVariant(variant);
         return this.extractIds(questions);
     }
@@ -66,10 +64,10 @@ public class QuestionService {
         );
     }
 
-    public Set<Long> extractIds(List<QuestionEntity> questions) {
+    public List<Long> extractIds(List<QuestionEntity> questions) {
         return questions.stream()
                 .map((QuestionEntity question) -> question.id)
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     public void updateEssayTopicByVariantId(long variantId, String nameRus, String nameKaz) {
