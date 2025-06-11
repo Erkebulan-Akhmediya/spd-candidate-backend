@@ -45,13 +45,17 @@ public class TestEntity {
     @Column(nullable = false)
     public boolean conditionallySectioned;
 
+    @ColumnDefault("false")
+    @Column(nullable = false)
+    public boolean deleted;
+
     @ManyToMany
     @JoinTable(
             name = "test_area_of_activity_rel",
             joinColumns = @JoinColumn(name = "test_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "area_of_activity_name", nullable = false)
     )
-    Set<AreaOfActivityEntity> areaOfActivities;
+    public Set<AreaOfActivityEntity> areaOfActivities;
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
