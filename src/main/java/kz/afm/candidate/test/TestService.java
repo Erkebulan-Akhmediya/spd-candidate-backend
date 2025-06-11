@@ -78,17 +78,17 @@ public class TestService {
         if (requestingCandidate != null) return this.getAllForCandidate(requestingCandidate);
 
         final boolean ignorePagination = pageSize == -1;
-        if (ignorePagination) return this.testRepository.findAll();
+        if (ignorePagination) return this.testRepository.findAllByDeletedIsFalse();
 
         final PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-        return this.testRepository.findAll(pageRequest).getContent();
+        return this.testRepository.findAllByDeletedIsFalse(pageRequest).getContent();
     }
 
     private List<TestEntity> getAllForCandidate(CandidateEntity candidate) {
         final Set<AreaOfActivityEntity> areas = new LinkedHashSet<>();
         areas.add(candidate.getAreaOfActivity());
         final Set<Long> passedTestIds = this.getAllPassed(candidate);
-        return this.testRepository.findAllByAreaOfActivitiesContaining(areas)
+        return this.testRepository.findAllByAreaOfActivitiesContainingAndDeleted(areas, false)
                 .stream()
                 .filter((TestEntity test) -> !passedTestIds.contains(test.getId()))
                 .toList();
@@ -102,7 +102,7 @@ public class TestService {
     }
 
     public long getAllCount() {
-        return this.testRepository.count();
+        return this.testRepository.countAllByDeleted(false);
     }
 
     public TestEntity getById(long id) {
