@@ -42,13 +42,13 @@ public class TestSessionResultDto {
         this.answer = null;
         this.assessment = null;
 
-        this.score = result.getScore();
+        this.score = result.score;
 
-        ScaleEntity scale = result.getScale();
-        this.scaleNameRus = scale.getNameRus();
-        this.scaleNameKaz = scale.getNameKaz();
+        ScaleEntity scale = result.scale;
+        this.scaleNameRus = scale.nameRus;
+        this.scaleNameKaz = scale.nameKaz;
 
-        this.descriptionRus = section.getDescriptionRus();
-        this.descriptionKaz = section.getDescriptionKaz();
+        this.descriptionRus = section.descriptionRus;
+        this.descriptionKaz = section.descriptionKaz;
     }
 }

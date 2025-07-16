@@ -33,7 +33,7 @@ public class SectionService {
                             scale
                     );
                     section = this.sectionRepository.save(section);
-                    if (section.getScale().getTest().conditionallySectioned) {
+                    if (section.scale.test.conditionallySectioned) {
                         this.sectioningConditionService.create(section, sectionDto.conditions);
                     }
                 }
@@ -44,14 +44,14 @@ public class SectionService {
     public SectionEntity getByResult(ResultEntity result) {
         final List<SectionEntity> sections = this.sectionRepository
                 .findAllByScaleAndLowerBoundLessThanEqualAndUpperBoundGreaterThanEqual(
-                        result.getScale(),
-                        result.getScore(),
-                        result.getScore()
+                        result.scale,
+                        result.score,
+                        result.score
                 );
         if (sections.isEmpty()) {
             throw new NoSuchElementException("секции, удовлетворяющие условия, не найдены");
         }
-        final TestSessionEntity testSession = result.getTestSession();
+        final TestSessionEntity testSession = result.testSession;
         if (!testSession.getVariant().getTest().conditionallySectioned) {
             return sections.getFirst();
         }

@@ -51,7 +51,7 @@ public class ResultService {
 
         for (ScaleEntity scale : scales) {
             final ResultEntity result = new ResultEntity(testSession, scale);
-            scaleIdToResultMap.put(scale.getId(), result);
+            scaleIdToResultMap.put(scale.id, result);
         }
 
         return scaleIdToResultMap;
@@ -61,10 +61,9 @@ public class ResultService {
         answers.forEach((TestSessionAnswerEntity answer) -> {
             final OptionIncrementEntity increment = this.optionIncrementService.getByOption(answer.getOption());
 
-            final long incrementScaleId = increment.getScale().getId();
+            final long incrementScaleId = increment.scale.id;
             ResultEntity result = results.get(incrementScaleId);
-            final int pointsToAdd = this.pointsToAdd(answer, increment);
-            result.setScore(result.getScore() + pointsToAdd);
+            result.score += this.pointsToAdd(answer, increment);
             results.replace(incrementScaleId, result);
         });
 
@@ -76,7 +75,7 @@ public class ResultService {
         if (this.testSessionStatusService.isPointDistribution(answerTest)) {
             return Integer.parseInt(answer.getAnswer());
         } else {
-            return optionIncrement.getIncrement();
+            return optionIncrement.increment;
         }
     }
 

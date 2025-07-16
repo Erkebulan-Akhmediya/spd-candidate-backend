@@ -3,12 +3,8 @@ package kz.afm.candidate.test.session.evaluation.section;
 import jakarta.persistence.*;
 import kz.afm.candidate.test.session.evaluation.scale.ScaleEntity;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -17,21 +13,21 @@ public class SectionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    public long id;
 
     @Column(nullable = false, length = 50000)
-    private String descriptionRus;
+    public String descriptionRus;
 
     @Column(nullable = false, length = 50000)
-    private String descriptionKaz;
+    public String descriptionKaz;
 
-    private int lowerBound;
+    public int lowerBound;
 
-    private int upperBound;
+    public int upperBound;
 
     @ManyToOne
     @JoinColumn(name = "scale_id", nullable = false)
-    private ScaleEntity scale;
+    public ScaleEntity scale;
 
     public SectionEntity(
             String descriptionRus,

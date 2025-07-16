@@ -3,12 +3,8 @@ package kz.afm.candidate.test.session.evaluation.scale;
 import jakarta.persistence.*;
 import kz.afm.candidate.test.TestEntity;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -16,18 +12,18 @@ import lombok.Setter;
 public class ScaleEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public long id;
 
     @Column(nullable = false, length = 1000)
-    private String nameRus;
+    public String nameRus;
 
     @Column(nullable = false, length = 1000)
-    private String nameKaz;
+    public String nameKaz;
 
     @ManyToOne
     @JoinColumn(name = "test_id", nullable = false)
-    private TestEntity test;
+    public TestEntity test;
 
     public ScaleEntity(String nameRus, String nameKaz, TestEntity test) {
         this.nameRus = nameRus;

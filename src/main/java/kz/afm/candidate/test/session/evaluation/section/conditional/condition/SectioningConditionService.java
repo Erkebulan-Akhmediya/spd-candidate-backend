@@ -20,7 +20,7 @@ public class SectioningConditionService {
     private final SectioningConditionRepository sectioningConditionRepository;
 
     public void create(SectionEntity section, List<SectioningConditionDto> conditionDtos) {
-        final TestEntity test = section.getScale().getTest();
+        final TestEntity test = section.scale.test;
         final Map<String, ConditionalSectioningVariableEntity> vars = this.conditionalSectioningVariableService.getAllByTestAsMap(test);
         final List<SectioningConditionEntity> conditions = conditionDtos.parallelStream()
                 .map(
